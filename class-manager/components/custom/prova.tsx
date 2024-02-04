@@ -4,6 +4,7 @@ type ProvaProps = {
   className?: string;
   id?: string;
   children?: React.ReactNode;
+  onClick: () => string;
 }
 
 const Prova: React.FC<ProvaProps> = ({ className, id, children }) => {
