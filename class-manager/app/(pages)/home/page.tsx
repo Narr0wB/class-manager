@@ -5,9 +5,10 @@ type HomeProps = {
 
 const Home: React.FC<HomeProps> = ({ }) => {
   return (
-    <main className="flex min-h-screen items-center p-24">
-      <div className="flex items-center justify-center w-full">
+    <main className="flex min-h-screen h-screen items-center bg-green-500 dark:bg-blue-500 text-2xl">
+      <div className="flex flex-row items-center w-[50%] h-[50%]">
         <h1>NarrowB bestest eu</h1>
+        <h1>Luchina</h1>
       </div>
     </main>
   );
