@@ -7,7 +7,7 @@ import { ThemeProvider } from "../theme-provider";
 const font = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "I love narrow",
+  title: "Class manager",
   description: "Class manager",
 };
 
@@ -18,7 +18,7 @@ type RootLayoutProps = {
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(font.className, "bg-red-500")}>
+      <body className={cn(font.className, "bg-primary")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
         </ThemeProvider>
