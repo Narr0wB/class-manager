@@ -12,10 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 type DatePickerProps = {
   className?: string;
   id?: string;
-  children?: React.ReactNode;
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({ className, id, children }) => {
+const DatePicker: React.FC<DatePickerProps> = ({ className, id }) => {
   const [date, setDate] = useState<Date>()
 
   return (
@@ -31,7 +30,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ className, id, children }) => {
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, "PPP") : <span>Pick a date</span>}
+            {date ? format(date, "PPP") : <span>Seleziona una data</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent
@@ -44,13 +43,12 @@ const DatePicker: React.FC<DatePickerProps> = ({ className, id, children }) => {
             }
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select" />
+              <SelectValue placeholder="Seleziona" />
             </SelectTrigger>
             <SelectContent position="popper">
-              <SelectItem value="0">Today</SelectItem>
-              <SelectItem value="1">Tomorrow</SelectItem>
-              <SelectItem value="3">In 3 days</SelectItem>
-              <SelectItem value="7">In a week</SelectItem>
+              <SelectItem value="0">Oggi</SelectItem>
+              <SelectItem value="1">Domani</SelectItem>
+              <SelectItem value="3">Fra 3 giorni</SelectItem>
             </SelectContent>
           </Select>
           <div className="rounded-md border">
