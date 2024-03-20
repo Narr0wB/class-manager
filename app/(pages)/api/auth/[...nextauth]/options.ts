@@ -9,7 +9,7 @@ export const options: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       authorization: {
         params: {
-          prompt: "consent",
+          prompt: "select_account",
           access_type: "offline",
           response_type: "code"
         }
@@ -29,7 +29,7 @@ export const options: NextAuthOptions = {
       // if (account?.provider == "google" && await checkUser(profile?.email!)) {
 
       // TODO REMOVE THIS!! TEST ONLY
-      if (account?.provider == "google") {
+      if (account?.provider == "google" && await checkUser(profile?.email!)) {
         return true
       }
 
