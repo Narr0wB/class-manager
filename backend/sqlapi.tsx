@@ -3,14 +3,14 @@ import mysql from "mysql2"
 export const SQL_QUERY_INSERT_PRE_FOR = 1;
 export const SQL_QUERY_FETCH_ALL_PRE_FOR = 2;
 export const SQL_QUERY_INSERT_UTENTE = 3;
-export const SQL_QUERY_FETCH_UTENTE = 4;
+export const SQL_QUERY_FETCH_UTENTE_EMAIL = 4;
 export const SQL_QUERY_FETCH_AULA = 5;
 
 export const queries_strings: { [id: number] : string } = {
     [SQL_QUERY_INSERT_PRE_FOR]: "INSERT INTO AM_Prenotazioni(id_utente, id_aula, data_ora_pre) VALUES (?, ?, ?)",
     [SQL_QUERY_FETCH_ALL_PRE_FOR]: "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?",
     [SQL_QUERY_INSERT_UTENTE]: "INSERT INTO AM_Utenti(nome_utente, cognome_utente, email_utente, type_utente) VALUES (?, ?, ?, ?)",
-    [SQL_QUERY_FETCH_UTENTE]: "SELECT * FROM AM_Utenti WHERE",
+    [SQL_QUERY_FETCH_UTENTE_EMAIL]: "SELECT * FROM AM_Utenti WHERE email_utente = ?",
     [SQL_QUERY_FETCH_AULA]: "SELECT * FROM AM_Aule WHERE",
 }
 
