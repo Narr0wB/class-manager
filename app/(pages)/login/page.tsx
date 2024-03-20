@@ -1,15 +1,20 @@
 "use client"
 
-import { signIn } from "next-auth/react"
-import GoogleButton from "react-google-button"
-    // import { Button } from "react-day-picker";
+import GoogleButton from "react-google-button";
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from "next/navigation";
 
-export default function Login() {
-    return (
-        <main>
-            <h1>
-                <GoogleButton onClick={() => {signIn('google')}}></GoogleButton>
-            </h1>
-        </main>
-    );
+const Login: React.FC = () => {
+  const session = useSession();
+  const router = useRouter();
+  // Use router navigation instead of redirect for caching issues
+  if (session.data) { router.replace("/home"); router.refresh() };
+
+  return (
+    <main>
+      <GoogleButton onClick={() => { signIn("google") }}></GoogleButton>
+    </main>
+  )
 }
+
+export default Login;

@@ -4,19 +4,13 @@ import DatePicker from '@/components/custom/date-picker';
 import HourDrawer from '@/components/custom/hour-drawer';
 import ThemeButton from '@/components/custom/theme-button';
 import { Avatar } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Moon, Sun } from 'lucide-react';
-import { RefObject, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
+import { RefObject, useRef } from 'react';
 
-type HomeProps = {
-}
-
-const Home: React.FC<HomeProps> = ({ }) => {
-  //const session = useSession();
-
-  //if (!session.data) { console.log(session.data); redirect("/login"); }
+const Home: React.FC = () => {
+  const session = useSession();
+  if (!session.data) redirect("/login");
 
   const timeTextRef: RefObject<HTMLParagraphElement> = useRef(null);
 

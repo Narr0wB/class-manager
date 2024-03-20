@@ -1,13 +1,10 @@
-"use client"
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { cn } from "@/lib/utils";
-import { ThemeProvider } from "../theme-provider";
-import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "../../components/custom/theme/theme-provider";
 import { getServerSession } from "next-auth";
-import { hookPropertyMap } from "next/dist/server/require-hook";
+import SessionProvider from "@/components/custom/auth/session-provider";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -27,7 +24,7 @@ const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
     <html lang="en" suppressHydrationWarning>
       <body className={cn(font.className, "bg-primary")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <SessionProvider session={session}> 
+          <SessionProvider session={session}>
             {children}
           </SessionProvider>
         </ThemeProvider>

@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { isValidToken } from '@/backend/token'
+import { isValidToken } from '@/lib/backend/token'
 
 type TokenValidationReponse = {
-    valid: boolean
+  valid: boolean
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<TokenValidationReponse>) {
-    const body = JSON.parse(req.body)
+  const body = JSON.parse(req.body)
 
-    res.status(200).json({ valid: isValidToken(body.token) })
+  res.status(200).json({ valid: isValidToken(body.token) })
 }

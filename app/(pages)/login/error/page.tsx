@@ -1,6 +1,11 @@
-
-export default function LoginError() {
-    return (
-        <h1>eddu gaming</h1>
-    )
+const Error: React.FC = () => {
+  return (
+    <main>
+      <div>
+        Eddu gayming
+      </div>
+    </main>
+  )
 }
+
+export default Error;
