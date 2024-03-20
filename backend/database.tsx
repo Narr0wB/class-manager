@@ -1,4 +1,5 @@
 import mysql from "mysql2"
+import { RowDataPacket } from "mysql2";
 import * as db from "@/backend/sqlapi";
 
 export type Aula = {
@@ -58,7 +59,7 @@ export async function insertUtente(utente: Utente) {
 
 export async function insertPrenotazione(prenotazione: Prenotazione) {
     await db.execQuery(
-        db.queries_strings[db.SQL_QUERY_INSERT_PRE], 
+        db.queries_strings[db.SQL_QUERY_INSERT_PRE_FOR], 
         [prenotazione.utente.id_utente, prenotazione.aula.id_aula, prenotazione.data_ora_prenotazione, prenotazione.approvata]
     );
 
@@ -72,11 +73,13 @@ export async function insertPrenotazione(prenotazione: Prenotazione) {
 
 // Implement paramter-specific fetch (e.g. fetching a user while only knowing the email)
 
-export async function fetchUtente(utente: Utente) {
-    await db.execQuery(
-        db.queries_strings[db.SQL_QUERY_FETCH_UTENTE] + " id_utente = " + utente.id_utente, 
-        
+export async function fetchUtenteEmail(email: string) {
+    const ret = await db.execQuery(
+        db.queries_strings[db.SQL_QUERY_FETCH_UTENTE_EMAIL], 
+        [email]
     )
+
+    return (ret as RowDataPacket)
 }
 
 export async function fetchPrenotazione(prenotazione: Prenotazione) {

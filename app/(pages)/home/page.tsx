@@ -7,11 +7,17 @@ import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
 import { RefObject, useRef } from 'react';
+import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 type HomeProps = {
 }
 
 const Home: React.FC<HomeProps> = ({ }) => {
+  //const session = useSession();
+
+  //if (!session.data) { console.log(session.data); redirect("/login"); }
+
   const timeTextRef: RefObject<HTMLParagraphElement> = useRef(null);
 
   return (
