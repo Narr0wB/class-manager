@@ -1,6 +1,6 @@
 # Class manager
 
-### Commit convention syntax: [<commit type>] commit description
+### Commit convention syntax: [<'commit type'>] <'commit description'>
 
 #### Commit types
 
