@@ -1,12 +1,12 @@
 # Class manager
 
-## Add [] and one of these before each commit comment
+### Commit convention syntax: [<commit type>] commit description
 
-### Commit conventions
+#### Commit types
 
-- **Refactor** (_Renamed_/_Moved_)
-- **Fix**
-- **Docs**
-- **Add**
-- **Delete**
-- **Update**
+- **REF** (_Renamed_/_Moved_)
+- **FIX**
+- **DOC**
+- **ADD**
+- **DEL**
+- **UPD**
