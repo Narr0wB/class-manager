@@ -1,6 +1,6 @@
 import { fetchUtenteEmail } from "@/lib/backend/database"
 
-export default async function checkUser(userEmail: string) {
+export default async function checkValidUser(userEmail: string) {
   // Check if user is in database
   const utente = await fetchUtenteEmail(userEmail)
 
