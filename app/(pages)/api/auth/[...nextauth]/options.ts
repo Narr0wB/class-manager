@@ -1,4 +1,4 @@
-import checkUser from "@/lib/backend/auth";
+import checkValidUser from "@/lib/backend/auth";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -16,6 +16,7 @@ export const options: NextAuthOptions = {
       }
     })
   ],
+  secret: process.env.NEXTAUTH_SECRET as string,
   session: {
     maxAge: 3 * 24 * 60 * 60, // 3 days,
     updateAge: 24 * 60 * 60, // 24 hours
@@ -29,7 +30,7 @@ export const options: NextAuthOptions = {
       // if (account?.provider == "google" && await checkUser(profile?.email!)) {
 
       // TODO REMOVE THIS!! TEST ONLY
-      if (account?.provider == "google" && await checkUser(profile?.email!)) {
+      if (account?.provider == "google" && await checkValidUser(profile?.email!)) {
         return true
       }
 
