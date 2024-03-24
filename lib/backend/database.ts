@@ -1,6 +1,5 @@
-import mysql from "mysql2"
-import { RowDataPacket } from "mysql2";
 import * as db from "@/lib/backend/sqlapi";
+import { DatabaseResponse, DefaultResponse } from "@/lib/backend/sqlapi";
 
 export type Aula = {
   id_aula: number;
@@ -23,43 +22,9 @@ export type Prenotazione = {
   approvata: boolean;
 }
 
-export type DefaultResponse = {
-  ok: boolean
-}
-
-export type PrenotazioneInsertReponse = DefaultResponse & {
-  body: {
-    message: string
-  }
-}
-
-export type UtenteInsertResponse = DefaultResponse & {
-  body: {
-    message: string
-  } | {
-    utente: Utente
-  } | {
-    utenti: Utente[]
-  }
-}
-
-export type PrenotazioneFetchResponse = DefaultResponse & {
-  body: {
-    message: string
-  } | {
-    prenotazione: Prenotazione
-  } | {
-    prenotazione: Prenotazione[]
-  }
-}
-
-export async function insertUtente(utente: Utente) {
-
-}
-
 export async function insertPrenotazione(prenotazione: Prenotazione) {
-  await db.execQuery(
-    db.queries_strings[db.SQL_QUERY_INSERT_PRE_FOR],
+  await db.runQuery(
+    db.SQL_QUERY_INSERT_PRE_FOR,
     [prenotazione.utente.id_utente, prenotazione.aula.id_aula, prenotazione.data_ora_prenotazione, prenotazione.approvata]
   );
 
@@ -68,20 +33,37 @@ export async function insertPrenotazione(prenotazione: Prenotazione) {
     body: {
       message: "gaming"
     }
-  } satisfies PrenotazioneInsertReponse;
+  } satisfies DefaultResponse;
 }
 
 // Implement paramter-specific fetch (e.g. fetching a user while only knowing the email)
 
 export async function fetchUtenteEmail(email: string) {
-  const ret = await db.execQuery(
-    db.queries_strings[db.SQL_QUERY_FETCH_UTENTE_EMAIL],
+  const ret = await db.runQuery(
+    db.SQL_QUERY_FETCH_UTENTE_EMAIL,
     [email]
   )
 
-  return (ret as RowDataPacket)
+  return ret as DatabaseResponse
 }
 
-export async function fetchPrenotazione(prenotazione: Prenotazione) {
+export async function fetchPrenotazioniDate(date_start: Date, date_end: Date, aula?: Aula) {
+
+  const date_start_string = date_start.toISOString().slice(0, 19).replace("T", " ");
+  const date_end_string = date_end.toISOString().slice(0, 19).replace("T", " ");
+
+  const ret = await db.runQuery(
+    db.SQL_QUERY_FETCH_ALL_PRE_BETWEEN,
+    [date_start_string, date_end_string]
+  )
+
+  return ret as DatabaseResponse
+}
+
+export async function deletePrenotazione(id_prenotazione: number) {
+
+}
+
+export async function modifyPrenotazione(new_prenotazione: Prenotazione) {
 
 }

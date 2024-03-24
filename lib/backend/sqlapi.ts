@@ -1,19 +1,21 @@
 import mysql from "mysql2"
+import { RowDataPacket } from "mysql2";
 
-export const SQL_QUERY_INSERT_PRE_FOR = 1;
-export const SQL_QUERY_FETCH_ALL_PRE_FOR = 2;
-export const SQL_QUERY_INSERT_UTENTE = 3;
-export const SQL_QUERY_FETCH_UTENTE_EMAIL = 4;
-export const SQL_QUERY_FETCH_AULA = 5;
+export const SQL_QUERY_INSERT_PRE_FOR = "INSERT INTO AM_Prenotazioni(id_utente, id_aula, data_ora_pre) VALUES (?, ?, ?)";
+export const SQL_QUERY_FETCH_ALL_PRE_FOR = "SELECT * FROM AM_Prenotazioni WHERE email_utente = ?";
+export const SQL_QUERY_FETCH_ALL_PRE_BETWEEN = "SELECT * FROM AM_Prenotazioni WHERE data_ora_pre BETWEEN ? and ?"
+export const SQL_QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id_prenotazione = ?"
+export const SQL_QUERY_MODIFY_PRE = "UPDATE AM_Prenotazioni SET id_aula = ?, data_ora_pre = ? WHERE id_prenotazione = ?"
+export const SQL_QUERY_FETCH_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email_utente = ?";
+export const SQL_QUERY_FETCH_AULA = "SELECT * FROM AM_Aule WHERE";
 
-export const queries_strings: { [id: number]: string } = {
-  [SQL_QUERY_INSERT_PRE_FOR]: "INSERT INTO AM_Prenotazioni(id_utente, id_aula, data_ora_pre) VALUES (?, ?, ?)",
-  [SQL_QUERY_FETCH_ALL_PRE_FOR]: "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?",
-  [SQL_QUERY_INSERT_UTENTE]: "INSERT INTO AM_Utenti(nome_utente, cognome_utente, email_utente, type_utente) VALUES (?, ?, ?, ?)",
-  [SQL_QUERY_FETCH_UTENTE_EMAIL]: "SELECT * FROM AM_Utenti WHERE email_utente = ?",
-  [SQL_QUERY_FETCH_AULA]: "SELECT * FROM AM_Aule WHERE",
+export type DatabaseResponse = RowDataPacket;
+export type DefaultResponse = {
+  ok: boolean
+  body: {
+    message: string
+  }
 }
-
 
 // TODO: add these env vars in my system (eddu)
 const pool = mysql.createPool({
@@ -24,29 +26,27 @@ const pool = mysql.createPool({
   database: process.env.DB_DATABASE
 }).promise()
 
-export class DatabaseError extends Error {
-  errno?: number;
-  code?: string;
-  sql?: string;
-
-  constructor(message: string, sql?: string, errno?: number, code?: string, stack?: string) {
-    super(message);
-    this.name = "DatabaseError";
-    this.sql = sql;
-    this.errno = errno;
-    this.code = code;
-    this.stack = stack;
-  }
-}
-
-export async function execQuery(query: string, values?: any[]) {
+export async function runQuery(query: string, values?: any[]) {
   try {
-    let dbRes;
-    if (values) dbRes = await pool.query(query, values);
-    else dbRes = await pool.query(query);
+    let result;
 
-    return dbRes[0];
-  } catch (err: any) {
-    throw new DatabaseError(`Error while executing the query: "${query}"`, err.sql, err.errno, err.code, err.stack)
+    if (values) {
+      result = await pool.query(query, values)
+    }
+    else {
+      result = await pool.query(query)
+    }
+
+    return result[0]
+  }
+  catch (error: any) {
+    console.log(`Error while executing the query: "${query}" with values "${values}"`, error.sql, error.errno, error.code, error.stack)
+
+    return {
+      ok: false,
+      body: {
+        message: "Error while executing the query"
+      }
+    } satisfies DefaultResponse
   }
 }
