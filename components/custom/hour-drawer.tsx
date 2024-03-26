@@ -1,6 +1,6 @@
 "use client"
 
-import { RefObject, useEffect, useRef, useState } from 'react';
+import React, { RefObject, useEffect, useRef, useState } from 'react';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '../ui/drawer';
 import { Button } from '../ui/button';
 import { MinusIcon, PlusIcon } from 'lucide-react';
@@ -16,8 +16,8 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
   const [inizio_minutes, setInizioMinutes] = useState(() => {
     // 13:30
     const date = new Date();
-    date.setHours(10);
-    date.setMinutes(45);
+    date.setHours(13);
+    date.setMinutes(30);
 
     return date.getHours() * 60 + date.getMinutes();
   });
@@ -25,8 +25,8 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
   const [fine_minutes, setFineMinutes] = useState(() => {
     // 13:30
     const date = new Date();
-    date.setHours(10);
-    date.setMinutes(45);
+    date.setHours(14);
+    date.setMinutes(30);
 
     return date.getHours() * 60 + date.getMinutes();
   });
@@ -35,6 +35,15 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
 
   const inizioInputRef = useRef<HTMLInputElement>(null);
   const fineInputRef = useRef<HTMLInputElement>(null);
+
+  function stringToMinutes(string: string) {
+    const parts = string.split(":")
+
+    const hours = parseInt(parts[0])
+    const minutes = parseInt(parts[1])
+
+    return hours * 60 + minutes
+  }
 
   function minutesToString(minutes: number) {
     const date = new Date();
@@ -88,7 +97,7 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
   useEffect(() => {
     updateInizioTextRef();
     updateFineTextRef();
-  }, []);
+  }, [inizio_minutes, fine_minutes]);
 
   function updateInizioInputRef() {
     if (!inizioInputRef.current) { return; }
@@ -112,10 +121,32 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
     }
   }, [open]);
 
+  function inizioInputBlur(event: React.ChangeEvent<HTMLInputElement>) { 
+
+    const hours = event.target.valueAsDate?.getHours()! - 1;
+    const minutes = event.target.valueAsDate?.getMinutes()! - event.target.valueAsDate?.getMinutes()! % 10;
+    const final_value = hours * 60 + minutes % 60;
+
+    event.target.value = minutesToString(final_value)
+
+    setInizioMinutes(final_value)
+  }
+
+  function fineInputBlur(event: React.ChangeEvent<HTMLInputElement>) { 
+
+    const hours = event.target.valueAsDate?.getHours()! - 1;
+    const minutes = event.target.valueAsDate?.getMinutes()! - event.target.valueAsDate?.getMinutes()! % 10;
+    const final_value = hours * 60 + minutes % 60;
+
+    event.target.value = minutesToString(final_value)
+
+    setFineMinutes(final_value)
+  }
+
   return (
     <div id={id} className={className}>
       <Drawer>
-        <DrawerTrigger onClick={() => setOpen(true)} className="flex">Apri</DrawerTrigger>
+        <DrawerTrigger onClick={() => setOpen(true)} className="flex items-center text-black">Modifica...</DrawerTrigger>
         <DrawerContent className="ml-[10%] mr-[10%] flex items-center">
           <DrawerHeader className="max-w-[60%] p-0">
             <DrawerTitle>Ora</DrawerTitle>
@@ -126,23 +157,21 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
               <div className="flex items-center justify-between">
                 <div className="items-center flex px-10">
                   <Button
-                    variant="outline"
                     size="icon"
-                    className="h-8 w-8 shrink-0 rounded-full"
+                    className="h-8 w-8 shrink-0 rounded-full bg-purple-600"
                     onClick={() => setInizioMinutes(before => before - 10)}
                   >
                     <MinusIcon className="h-4 w-4" />
                     <span className="sr-only">Diminuisci</span>
                   </Button>
                   <div className="flex-1 text-center">
-                    <div className="text-7xl font-bold tracking-tighter">
-                      <input type="time" ref={inizioInputRef} />
+                    <div className="text-7xl font-bold tracking-tighter px-2">
+                      <input type="time" onBlur={inizioInputBlur} ref={inizioInputRef} defaultValue={minutesToString(inizio_minutes)}/>
                     </div>
                   </div>
                   <Button
-                    variant="outline"
                     size="icon"
-                    className="h-8 w-8 shrink-0 rounded-full"
+                    className="h-8 w-8 shrink-0 rounded-full bg-purple-600"
                     onClick={() => setInizioMinutes(before => before + 10)}
                   >
                     <PlusIcon className="h-4 w-4" />
@@ -151,23 +180,21 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
                 </div>
                 <div className="items-center flex px-10">
                   <Button
-                    variant="outline"
                     size="icon"
-                    className="h-8 w-8 shrink-0 rounded-full"
+                    className="h-8 w-8 shrink-0 rounded-full bg-purple-600"
                     onClick={() => setFineMinutes(before => before - 10)}
                   >
-                    <MinusIcon className="h-4 w-4" />
+                    <MinusIcon className="h-5 w-5" />
                     <span className="sr-only">Diminuisci</span>
                   </Button>
                   <div className="flex-1 text-center">
-                    <div className="text-7xl font-bold tracking-tighter">
-                      <input type="time" ref={fineInputRef} />
+                    <div className="text-7xl font-bold tracking-tighter px-2">
+                      <input type="time" onBlur={fineInputBlur} ref={fineInputRef} defaultValue={minutesToString(fine_minutes)}/>
                     </div>
                   </div>
                   <Button
-                    variant="outline"
                     size="icon"
-                    className="h-8 w-8 shrink-0 rounded-full"
+                    className="h-8 w-8 shrink-0 rounded-full bg-purple-600"
                     onClick={() => setFineMinutes(before => before + 10)}
                   >
                     <PlusIcon className="h-4 w-4" />
@@ -179,8 +206,9 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
             <div className="flex flex-col justify-center">
               <DrawerClose asChild>
                 <Button className="" onClick={() => {
-                  updateInizioTextRef();
-                  updateFineTextRef();
+                  // if (inizioInputRef.current) { setInizioMinutes(stringToMinutes(inizioInputRef.current.value)); }
+                  // if (fineInputRef.current) { setFineMinutes(stringToMinutes(fineInputRef.current.value)); }
+                  
                   setOpen(false);
                 }}>Salva</Button>
               </DrawerClose>

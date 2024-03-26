@@ -27,10 +27,11 @@ const DatePicker: React.FC<DatePickerProps> = ({ className, id }) => {
               "w-[240px] justify-start text-left font-normal",
               !date && "text-muted-foreground",
               className
-            )}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, "PPP") : <span>Seleziona una data</span>}
+            )}>
+            <div className='flex text-slate-600'>
+              <CalendarIcon className="mr-2 h-4 w-4"/>
+              {date ? format(date, "PPP") : <span>Selezionare una data...</span>}
+            </div>
           </Button>
         </PopoverTrigger>
         <PopoverContent
