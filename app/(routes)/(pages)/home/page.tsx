@@ -12,7 +12,8 @@ const Home: React.FC = () => {
   const session = useSession();
   if (!session.data) redirect("/login");
 
-  const timeTextRef: RefObject<HTMLParagraphElement> = useRef(null);
+  const oraInizio: RefObject<HTMLParagraphElement> = useRef(null);
+  const oraFine: RefObject<HTMLParagraphElement> = useRef(null);
 
   return (
     <main className="h-[100vh] w-[100vw] max-h-screen max-w-screen overflow-hidden grid grid-rows-[10%_89%]">
@@ -25,17 +26,19 @@ const Home: React.FC = () => {
         </div>
       </nav>
       <div id="content" className="grid grid-cols-[3fr_10fr] gap-4 py-2">
-        <div id="left-bar" className="p-2 grid grid-rows-[2fr_7fr] gap-2 border-solid border-[1px] border-black">
-          <div id="date-time" className="w-full flex flex-col border-solid border-[1px] border-black">
-            <div id="hour-selector" className="grid justify-between w-full aspect-[3] grid-cols-[5fr_2fr] border-solid border-[1px] border-black">
-              <div id="hours" className="flex justify-center items-center border-solid border-[1px] border-black">
-                <p ref={timeTextRef} className="text-2xl"></p>
+        <div id="left-bar" className="grid grid-rows-[2fr_7fr] border-solid border-[1px] border-black">
+          <div id="bookings" className="w-full border-solid"></div>
+          <div id="date-time" className="w-full ">
+            <div id="hour-selector" className="grid justify-between w-full aspect-[3] grid-cols-[5fr_2fr] border-solid border-[0px] border-black">
+              <div id="hours" className="flex justify-center items-center">
+                <p ref={oraInizio} className="text-4xl text-black px-4"></p>
+                <p className="text-4xl text-black">-</p>
+                <p ref={oraFine} className="text-4xl text-black px-4"></p>
               </div>
-              <HourDrawer id="hour-drawer" timeTextRef={timeTextRef} className="border-solid border-[1px] border-black" />
+              <HourDrawer id="hour-drawer" inizioTextRef={oraInizio} fineTextRef={oraFine} className=" border-[1px] border-black"/>
             </div>
-            <DatePicker id="date-picker" className="w-full border-solid border-[1px] border-black" />
+            <DatePicker id="date-picker" className="w-full" />
           </div>
-          <div id="bookings" className="w-full border-solid border-[1px] border-black"></div>
         </div>
         <div id="map" className="border-solid border-[1px] border-black"></div>
       </div>
