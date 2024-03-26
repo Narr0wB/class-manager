@@ -41,7 +41,7 @@ export async function runQuery(query: string, values?: any[]) {
   }
   catch (error: any) {
     console.log(`Error while executing the query: "${query}" with values "${values}"`, error.sql, error.errno, error.code, error.stack)
-    
+
     return {
       ok: false,
       body: {

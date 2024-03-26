@@ -62,6 +62,7 @@ export async function fetchPrenotazioniDate(date_start: Date, date_end: Date, au
 
 export async function deletePrenotazione(id_prenotazione: number) {
 
+
 }
 
 export async function modifyPrenotazione(new_prenotazione: Prenotazione) {
