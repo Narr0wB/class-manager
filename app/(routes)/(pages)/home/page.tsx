@@ -31,9 +31,9 @@ const Home: React.FC = () => {
           <div id="date-time" className="w-full ">
             <div id="hour-selector" className="grid justify-between w-full aspect-[3] grid-cols-[5fr_2fr] border-solid border-[0px] border-black">
               <div id="hours" className="flex justify-center items-center">
-                <p ref={oraInizio} className="text-4xl text-black px-4"></p>
+                <p ref={oraInizio} className="text-6xl font-bold text-purple-600 px-4"></p>
                 <p className="text-4xl text-black">-</p>
-                <p ref={oraFine} className="text-4xl text-black px-4"></p>
+                <p ref={oraFine} className="text-6xl font-bold text-purple-600 px-4"></p>
               </div>
               <HourDrawer id="hour-drawer" inizioTextRef={oraInizio} fineTextRef={oraFine} className=" border-[1px] border-black"/>
             </div>

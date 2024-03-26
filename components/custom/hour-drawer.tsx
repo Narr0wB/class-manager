@@ -123,7 +123,12 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
 
   function inizioInputBlur(event: React.ChangeEvent<HTMLInputElement>) { 
 
-    const hours = event.target.valueAsDate?.getHours()! - 1;
+    var hours = event.target.valueAsDate?.getHours()! - 1;
+
+    if (hours < 13) {
+      hours = 13
+    }
+
     const minutes = event.target.valueAsDate?.getMinutes()! - event.target.valueAsDate?.getMinutes()! % 10;
     const final_value = hours * 60 + minutes % 60;
 
@@ -134,7 +139,15 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
 
   function fineInputBlur(event: React.ChangeEvent<HTMLInputElement>) { 
 
-    const hours = event.target.valueAsDate?.getHours()! - 1;
+    var hours = event.target.valueAsDate?.getHours()! - 1;
+
+    if (hours < 13) {
+      hours = 13
+    }
+    if (hours <= Math.floor(inizio_minutes / 60)) {
+      hours = Math.floor(inizio_minutes / 60) + 1
+    }
+
     const minutes = event.target.valueAsDate?.getMinutes()! - event.target.valueAsDate?.getMinutes()! % 10;
     const final_value = hours * 60 + minutes % 60;
 
@@ -148,8 +161,7 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
       <Drawer>
         <DrawerTrigger onClick={() => setOpen(true)} className="flex items-center text-black">Modifica...</DrawerTrigger>
         <DrawerContent className="ml-[10%] mr-[10%] flex items-center">
-          <DrawerHeader className="max-w-[60%] p-0">
-            <DrawerTitle>Ora</DrawerTitle>
+          <DrawerHeader className="max-w-[60%] p-2">
             <DrawerDescription>Seleziona l'ora della prenotazione</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter className="max-w-[60%]">
@@ -166,7 +178,7 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
                   </Button>
                   <div className="flex-1 text-center">
                     <div className="text-7xl font-bold tracking-tighter px-2">
-                      <input type="time" onBlur={inizioInputBlur} ref={inizioInputRef} defaultValue={minutesToString(inizio_minutes)}/>
+                      <input className='rounded-sm px-2' type="time" onBlur={inizioInputBlur} ref={inizioInputRef} defaultValue={minutesToString(inizio_minutes)}/>
                     </div>
                   </div>
                   <Button
@@ -189,7 +201,7 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
                   </Button>
                   <div className="flex-1 text-center">
                     <div className="text-7xl font-bold tracking-tighter px-2">
-                      <input type="time" onBlur={fineInputBlur} ref={fineInputRef} defaultValue={minutesToString(fine_minutes)}/>
+                      <input className='rounded-sm px-2' type="time" onBlur={fineInputBlur} ref={fineInputRef} defaultValue={minutesToString(fine_minutes)}/>
                     </div>
                   </div>
                   <Button
@@ -205,15 +217,12 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
             </div>
             <div className="flex flex-col justify-center">
               <DrawerClose asChild>
-                <Button className="" onClick={() => {
-                  // if (inizioInputRef.current) { setInizioMinutes(stringToMinutes(inizioInputRef.current.value)); }
-                  // if (fineInputRef.current) { setFineMinutes(stringToMinutes(fineInputRef.current.value)); }
-                  
+                <Button className="bg-purple-600 my-3" onClick={() => {
                   setOpen(false);
                 }}>Salva</Button>
               </DrawerClose>
               <DrawerClose asChild>
-                <Button onClick={() => setOpen(false)} variant="outline">Chiudi</Button>
+                <Button className="bg-purple-400" onClick={() => setOpen(false)}>Chiudi</Button>
               </DrawerClose>
             </div>
           </DrawerFooter>
