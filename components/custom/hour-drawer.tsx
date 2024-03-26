@@ -8,22 +8,35 @@ import { MinusIcon, PlusIcon } from 'lucide-react';
 type HourDrawerProps = {
   id?: string;
   className?: string;
-  timeTextRef: RefObject<HTMLParagraphElement>;
+  inizioTextRef: RefObject<HTMLParagraphElement>;
+  fineTextRef: RefObject<HTMLParagraphElement>;
 }
 
-const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, timeTextRef }) => {
-  const [minutes, setMinutes] = useState(() => {
+const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, fineTextRef }) => {
+  const [inizio_minutes, setInizioMinutes] = useState(() => {
     // 13:30
     const date = new Date();
-    date.setHours(13);
-    date.setMinutes(30);
+    date.setHours(10);
+    date.setMinutes(45);
+
+    return date.getHours() * 60 + date.getMinutes();
+  });
+
+  const [fine_minutes, setFineMinutes] = useState(() => {
+    // 13:30
+    const date = new Date();
+    date.setHours(10);
+    date.setMinutes(45);
 
     return date.getHours() * 60 + date.getMinutes();
   });
 
   const [open, setOpen] = useState(false);
 
-  function minutesToString() {
+  const inizioInputRef = useRef<HTMLInputElement>(null);
+  const fineInputRef = useRef<HTMLInputElement>(null);
+
+  function minutesToString(minutes: number) {
     const date = new Date();
 
     date.setHours(parseInt("" + (minutes / 60)));
@@ -41,35 +54,62 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, timeTextRef }) =
     return date.getHours() + ":" + minsString;
   }
 
-  const timeInputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    updateInizioInputRef();
+  }, [inizio_minutes]);
 
   useEffect(() => {
-    if (!timeInputRef.current) return;
+    updateFineInputRef();
+  }, [fine_minutes]);
 
-    timeInputRef.current.value = minutesToString();
-  }, [minutes]);
+  function updateInizioTextRef() {
+    if (!inizioTextRef.current) {
+      return;
+    }
 
-  function updateTimeTextRef() {
-    if (!timeTextRef.current) return;
-    timeTextRef.current.innerText = minutesToString();
+    inizioTextRef.current.innerText = minutesToString(inizio_minutes);
 
-    if (timeInputRef.current) timeTextRef.current.innerText = timeInputRef.current.value;
+    // ???
+    //if (timeInputRef.current) inizioTextRef.current.innerText = timeInputRef.current.value;
+  }
 
+  function updateFineTextRef() {
+    if (!fineTextRef.current) {
+      return
+    }
+
+    fineTextRef.current.innerText = minutesToString(fine_minutes);
+
+    // ???
+    //if (timeInputRef.current) inizioTextRef.current.innerText = timeInputRef.current.value;
   }
 
   // Empty dependencies array to run only once
   useEffect(() => {
-    updateTimeTextRef();
+    updateInizioTextRef();
+    updateFineTextRef();
   }, []);
 
-  function updateInputTextRef() {
-    if (!timeInputRef.current) return;
-    timeInputRef.current.value = minutesToString();
+  function updateInizioInputRef() {
+    if (!inizioInputRef.current) { return; }
+
+    inizioInputRef.current.value = minutesToString(inizio_minutes);
+    setInizioMinutes(inizio_minutes);
+  }
+
+  function updateFineInputRef() {
+    if (!fineInputRef.current) { return; }
+    
+    fineInputRef.current.value = minutesToString(fine_minutes);
+    setFineMinutes(fine_minutes);
   }
 
   useEffect(() => {
     console.log(open);
-    if (open) updateInputTextRef();
+    if (open) {
+      updateInizioInputRef();
+      updateFineInputRef();
+    }
   }, [open]);
 
   return (
@@ -84,35 +124,63 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, timeTextRef }) =
           <DrawerFooter className="max-w-[60%]">
             <div className="p-4 pb-0">
               <div className="flex items-center justify-between">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8 shrink-0 rounded-full"
-                  onClick={() => setMinutes(before => before - 10)}
-                >
-                  <MinusIcon className="h-4 w-4" />
-                  <span className="sr-only">Diminuisci</span>
-                </Button>
-                <div className="flex-1 text-center">
-                  <div className="text-7xl font-bold tracking-tighter">
-                    <input type="datetime-local" ref={timeInputRef} />
+                <div className="items-center flex px-10">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8 shrink-0 rounded-full"
+                    onClick={() => setInizioMinutes(before => before - 10)}
+                  >
+                    <MinusIcon className="h-4 w-4" />
+                    <span className="sr-only">Diminuisci</span>
+                  </Button>
+                  <div className="flex-1 text-center">
+                    <div className="text-7xl font-bold tracking-tighter">
+                      <input type="time" ref={inizioInputRef} />
+                    </div>
                   </div>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8 shrink-0 rounded-full"
+                    onClick={() => setInizioMinutes(before => before + 10)}
+                  >
+                    <PlusIcon className="h-4 w-4" />
+                    <span className="sr-only">Aumenta</span>
+                  </Button>
                 </div>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8 shrink-0 rounded-full"
-                  onClick={() => setMinutes(before => before + 10)}
-                >
-                  <PlusIcon className="h-4 w-4" />
-                  <span className="sr-only">Aumenta</span>
-                </Button>
+                <div className="items-center flex px-10">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8 shrink-0 rounded-full"
+                    onClick={() => setFineMinutes(before => before - 10)}
+                  >
+                    <MinusIcon className="h-4 w-4" />
+                    <span className="sr-only">Diminuisci</span>
+                  </Button>
+                  <div className="flex-1 text-center">
+                    <div className="text-7xl font-bold tracking-tighter">
+                      <input type="time" ref={fineInputRef} />
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8 shrink-0 rounded-full"
+                    onClick={() => setFineMinutes(before => before + 10)}
+                  >
+                    <PlusIcon className="h-4 w-4" />
+                    <span className="sr-only">Aumenta</span>
+                  </Button>
+                </div>
               </div>
             </div>
             <div className="flex flex-col justify-center">
               <DrawerClose asChild>
-                <Button onClick={() => {
-                  updateTimeTextRef();
+                <Button className="" onClick={() => {
+                  updateInizioTextRef();
+                  updateFineTextRef();
                   setOpen(false);
                 }}>Salva</Button>
               </DrawerClose>
