@@ -1,7 +1,7 @@
 "use client"
 
 import DatePicker from '@/components/custom/date-picker';
-import HourDrawer from '@/components/custom/hour-drawer';
+import HourDrawer from '@/components/custom/home/bookings-input/hour-select-drawer/hour-drawer';
 import ThemeButton from '@/components/custom/theme-button';
 import { Avatar } from '@/components/ui/avatar';
 import { useSession } from 'next-auth/react';
@@ -35,7 +35,7 @@ const Home: React.FC = () => {
                 <p className="text-4xl text-black">-</p>
                 <p ref={oraFine} className="text-6xl font-bold text-purple-600 px-4"></p>
               </div>
-              <HourDrawer id="hour-drawer" inizioTextRef={oraInizio} fineTextRef={oraFine} className=" border-[1px] border-black"/>
+              <HourDrawer id="hour-drawer" inizioTextRef={oraInizio} fineTextRef={oraFine} className=" border-[1px] border-black" />
             </div>
             <DatePicker id="date-picker" className="w-full" />
           </div>
