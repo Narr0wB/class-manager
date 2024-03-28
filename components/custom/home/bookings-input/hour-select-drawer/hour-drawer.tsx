@@ -1,7 +1,7 @@
 "use client"
 
 import React, { RefObject, useEffect, useRef, useState } from 'react';
-import { MinusIcon, PlusIcon } from 'lucide-react';
+import { Clock10Icon, MinusIcon, PlusIcon } from 'lucide-react';
 import { setMinutes } from 'date-fns';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTrigger } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -124,7 +124,9 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
   return (
     <div id={id} className={className}>
       <Drawer>
-        <DrawerTrigger onClick={() => setOpen(true)} className="flex items-center text-black">Modifica...</DrawerTrigger>
+        <DrawerTrigger onClick={() => setOpen(true)} className="flex items-center text-black row-start-3 col-start-2">
+          <Clock10Icon className="h-10 w-10 text-purple-600 border-[2px] border-black rounded-[10px] hover:text-purple-300 hover:border-purple-300"></Clock10Icon>
+        </DrawerTrigger>
         <DrawerContent className="ml-[10%] mr-[10%] flex items-center">
           <DrawerHeader className="max-w-[60%] p-2">
             <DrawerDescription>Seleziona l'ora della prenotazione</DrawerDescription>
