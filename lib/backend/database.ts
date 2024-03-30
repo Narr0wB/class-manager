@@ -1,6 +1,17 @@
 import * as db from "@/lib/backend/sqlapi";
 import { DatabaseResponse, DefaultResponse } from "@/lib/backend/sqlapi";
 
+export type TimeFrame = {
+  data: Date,
+  inizio: number,
+  fine: number,
+}
+
+var TimeFrame: {
+  new (): TimeFrame;
+  prototype: TimeFrame;
+}
+
 export type Aula = {
   id_aula: number;
   type_aula: string;

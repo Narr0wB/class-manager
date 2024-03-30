@@ -6,15 +6,17 @@ import { setMinutes } from 'date-fns';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTrigger } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import HourInput from './hour-input';
+import { TimeFrame } from '@/lib/backend/database';
 
 type HourDrawerProps = {
   id?: string;
   className?: string;
   inizioTextRef: RefObject<HTMLParagraphElement>;
   fineTextRef: RefObject<HTMLParagraphElement>;
+  timeFrameRef: RefObject<TimeFrame>;
 }
 
-const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, fineTextRef }) => {
+const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, fineTextRef, timeFrameRef }) => {
   const [inizio_minutes, setInizioMinutes] = useState(() => {
     // 13:30
     const date = new Date();
@@ -68,10 +70,14 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
 
   useEffect(() => {
     updateRef(inizioInputRef, inizio_minutes);
+
+
   }, [inizio_minutes]);
 
   useEffect(() => {
     updateRef(fineInputRef, fine_minutes);
+
+    
   }, [fine_minutes]);
 
   useEffect(() => {
@@ -84,7 +90,11 @@ const HourDrawer: React.FC<HourDrawerProps> = ({ id, className, inizioTextRef, f
     updateRef(inizioInputRef, inizio_minutes);
     updateRef(fineInputRef, fine_minutes);
 
-    setOpen(true)
+    // setOpen(true)
+    if (!timeFrameRef.current) { return; }
+
+    timeFrameRef.current!.inizio = inizio_minutes;
+    timeFrameRef.current!.fine = fine_minutes;
   }, [inizio_minutes, fine_minutes]);
 
   useEffect(() => {
