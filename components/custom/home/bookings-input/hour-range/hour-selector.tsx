@@ -1,15 +1,15 @@
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn, minutesToHourString } from '@/lib/utils';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import { FocusEventHandler, RefObject } from 'react';
 
 type InputProps = {
   onBlur: FocusEventHandler<HTMLInputElement>;
   inputRef: RefObject<HTMLInputElement>;
-  defaultValue: string;
+  defaultValue: number;
 }
 
-type HourInputProps = {
+type HourSelectorProps = {
   id?: string;
   className?: string;
   onClickMinus: () => void;
@@ -17,7 +17,13 @@ type HourInputProps = {
   inputProps: InputProps;
 }
 
-const HourInput: React.FC<HourInputProps> = ({ className, id, onClickMinus, onClickPlus, inputProps: { onBlur, inputRef, defaultValue } }) => {
+const HourSelector: React.FC<HourSelectorProps> = ({
+  className,
+  id,
+  onClickMinus,
+  onClickPlus,
+  inputProps: { onBlur, inputRef, defaultValue }
+}) => {
   return (
     <div id={id} className={cn("items-center flex", className)}>
       <Button
@@ -35,7 +41,7 @@ const HourInput: React.FC<HourInputProps> = ({ className, id, onClickMinus, onCl
             type="time"
             onBlur={onBlur}
             ref={inputRef}
-            defaultValue={defaultValue}
+            defaultValue={minutesToHourString(defaultValue)}
           />
         </div>
       </div>
@@ -51,4 +57,4 @@ const HourInput: React.FC<HourInputProps> = ({ className, id, onClickMinus, onCl
   )
 }
 
-export default HourInput;
+export default HourSelector;
