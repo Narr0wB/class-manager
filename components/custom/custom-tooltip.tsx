@@ -1,18 +1,25 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 type CustomTooltipProps = {
+  className?: string;
+  content: React.ReactNode;
+  side?: "top" | "right" | "bottom" | "left";
   children: React.ReactNode;
-  content: string;
 }
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ children, content }) => {
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ className, content, side = "right", children }) => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           {children}
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent side={side} className={className}>
           {content}
         </TooltipContent>
       </Tooltip>

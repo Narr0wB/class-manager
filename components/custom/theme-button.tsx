@@ -10,8 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Moon, Sun } from "lucide-react"
-import { Button } from "../ui/button"
 import { cn } from "@/lib/utils"
+import { Button } from "../ui/button"
+import CustomTooltip from "./custom-tooltip"
 
 type ThemeButtonProps = {
   className?: string;
@@ -23,12 +24,14 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({ className, id }) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button id={id} content="Tema" className={cn(className, "bg-secondary text-secondary-foreground")}>
-          <Sun className="w-full h-full block dark:hidden" />
-          <Moon className="w-full h-full hidden dark:block" />
-        </Button>
-      </DropdownMenuTrigger>
+      <CustomTooltip content="Tema">
+        <DropdownMenuTrigger>
+          <Button id={id} className={cn(className, "")}>
+            <Sun className="w-full h-full block dark:hidden" />
+            <Moon className="w-full h-full hidden dark:block" />
+          </Button>
+        </DropdownMenuTrigger>
+      </CustomTooltip>
       <DropdownMenuContent align="center">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           Light

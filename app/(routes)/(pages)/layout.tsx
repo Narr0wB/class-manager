@@ -22,7 +22,7 @@ const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(font.className, "bg-primary")}>
+      <body className={cn(font.className, "")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <SessionProvider session={session}>
             {children}
