@@ -1,6 +1,6 @@
 "use client"
 
-import React, { RefObject } from 'react';
+import React from 'react';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTrigger } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import HourRangeSelector from './hour-range-selector';
@@ -9,11 +9,9 @@ import { cn } from '@/lib/utils';
 type HourRangeDrawerProps = {
   id?: string;
   className?: string;
-  startHourText: RefObject<HTMLParagraphElement>;
-  endHourText: RefObject<HTMLParagraphElement>;
 }
 
-const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ id, className, startHourText, endHourText }) => {
+const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ id, className }) => {
   return (
     <div id={id} className={cn("", className)}>
       <Drawer>
@@ -23,10 +21,7 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ id, className, startH
             <DrawerDescription>Seleziona l'ora della prenotazione</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter className="flex items-center w-max-full w-full">
-            <HourRangeSelector
-              startHourText={startHourText}
-              endHourText={endHourText}
-              className="flex justify-evenly w-max-full w-[90%]"
+            <HourRangeSelector className="flex justify-evenly w-max-full w-[90%]"
             />
             <div className="flex flex-col justify-center w-[80%]">
               <DrawerClose asChild>
