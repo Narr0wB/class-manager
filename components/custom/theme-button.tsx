@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Moon, Sun } from "lucide-react"
 import { Button } from "../ui/button"
+import { cn } from "@/lib/utils"
+import CustomButton from "./custom-button"
 
 type ThemeButtonProps = {
   className?: string;
@@ -23,10 +25,10 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({ className, id }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button id={id} className={className}>
+        <CustomButton id={id} content="Tema" className={cn(className, "bg-secondary text-secondary-foreground")}>
           <Sun className="w-full h-full block dark:hidden" />
           <Moon className="w-full h-full hidden dark:block" />
-        </Button>
+        </CustomButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center">
         <DropdownMenuItem onClick={() => setTheme("light")}>

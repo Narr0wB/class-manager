@@ -22,7 +22,7 @@ const FloorSelect: React.FC<FloorSelectProps> = ({ className, id, items }) => {
           <SelectValue placeholder="Seleziona un piano..." />
         </SelectTrigger>
         <SelectContent>
-          {items.map((item, i) => {
+          {items.map(item => {
             return (
               <SelectItem key={item} value={item}>
                 {item}
