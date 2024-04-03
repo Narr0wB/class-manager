@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import HourSelector from './hour-selector';
-import { useEndMinutes, useStartMinutes } from './hour-provider';
+import { useEndMinutes, useStartMinutes } from '../../hour-provider';
 
 type HourRangeSelectorProps = {
   className?: string;

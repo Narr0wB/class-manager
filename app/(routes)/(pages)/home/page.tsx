@@ -1,13 +1,13 @@
 "use client"
 
-import HourProvider from "@/components/custom/home/bookings-input/hour-range/hour-provider";
-import Home from "./home";
+import HomeProvider from '@/components/custom/home/home-provider';
+import Home from './home';
 
 const Page: React.FC = () => {
   return (
-    <HourProvider>
+    <HomeProvider>
       <Home />
-    </HourProvider>
+    </HomeProvider>
   )
 }
 
