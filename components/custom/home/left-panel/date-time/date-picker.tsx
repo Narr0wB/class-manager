@@ -15,7 +15,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ className, id, timeFrameRef }) 
   const [date, setDate] = useState<Date>()
 
   return (
-    <div id={id} className={cn(className, "flex justify-center rounded-md border bg-[#F7F3E7]")}>
+    <div id={id} className={cn(className, "")}>
       <Calendar
         mode="single"
         selected={date}

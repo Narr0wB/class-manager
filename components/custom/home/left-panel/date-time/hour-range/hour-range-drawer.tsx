@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import HourRangeSelector from './hour-range-selector';
 import { cn } from '@/lib/utils';
 import { Clock10Icon } from 'lucide-react';
+import CustomTooltip from '@/components/custom/custom-tooltip';
 
 type HourRangeDrawerProps = {
   id?: string;
@@ -16,9 +17,13 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ id, className }) => {
   return (
     <div id={id} className={cn("", className)}>
       <Drawer>
-        <DrawerTrigger className="flex items-center text-black row-start-3 col-start-2">
-          <Clock10Icon className="h-10 w-10 text-purple-600 border-[2px] border-black rounded-[10px] hover:text-purple-300 hover:border-purple-300"></Clock10Icon>
-        </DrawerTrigger>
+        <CustomTooltip content="Seleziona l'ora">
+          <DrawerTrigger>
+            <Button className="w-full aspect-square p-2">
+              <Clock10Icon className="h-10 w-10" />
+            </Button>
+          </DrawerTrigger>
+        </CustomTooltip>
         <DrawerContent className="ml-[10%] mr-[10%] flex items-center">
           <DrawerHeader className="max-w-[60%] p-2">
             <DrawerDescription>Seleziona l'ora della prenotazione</DrawerDescription>
@@ -28,10 +33,10 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ id, className }) => {
             />
             <div className="flex flex-col justify-center w-[80%]">
               <DrawerClose asChild>
-                <Button className="bg-purple-600 my-3 hover:bg-purple-800">Salva</Button>
+                <Button>Salva</Button>
               </DrawerClose>
               <DrawerClose asChild>
-                <Button className="bg-purple-400 hover:bg-purple-500">Chiudi</Button>
+                <Button variant="secondary">Chiudi</Button>
               </DrawerClose>
             </div>
           </DrawerFooter>

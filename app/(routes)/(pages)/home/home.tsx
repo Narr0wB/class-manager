@@ -5,16 +5,15 @@ import HourRangeDrawer from '@/components/custom/home/left-panel/date-time/hour-
 import LeftPanel from '@/components/custom/home/left-panel/left-panel';
 import Floor from '@/components/custom/home/right-panel/floors/floor';
 import FloorSelect from '@/components/custom/home/right-panel/user-selection/floor-select';
-import ThemeButton from '@/components/custom/theme-button';
 import { minutesToHourString } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import RigthPanel from '@/components/custom/home/right-panel/right-panel';
 import { FLOORS } from '@/components/custom/home/right-panel/floor-provider';
-import DatePicker from '@/components/custom/home/bookings-input/date-picker/date-picker';
+import DatePicker from '@/components/custom/home/left-panel/date-time/date-picker';
 import { TimeFrame } from '@/lib/backend/database';
-import ProfileDrawer from '@/components/custom/home/nav-bar/profile-drawer';
+import Nav from '@/components/custom/home/nav-bar/nav';
 
 const Home: React.FC = () => {
   const session = useSession();
@@ -75,29 +74,26 @@ const Home: React.FC = () => {
   }, [startMinutes, endMinutes]);
 
   return (
-    <main className="h-[100vh] w-[100vw] max-h-screen max-w-screen overflow-hidden grid grid-rows-[10%_89%] p-2 bg-secondary">
-      <nav className="w-full">
-        <div id="user" className="flex flex-row h-full w-[20%] border-solid border-[1px] border-black">
-          <ProfileDrawer profileName={session.data.user?.name!} image={session.data.user?.image!} />
-          <ThemeButton />
-        </div>
-      </nav>
-      <div id="content" className="grid grid-cols-[1fr_9fr] pt-2 gap-4">
-        <LeftPanel id="left-panel" className="grid grid-rows-[2fr_7fr] border-solid border-[1px] border-black p-4">
-          <section id="bookings" className="w-full border-solid"></section>
-          <section id="date-time" className="w-full ">
-            <div id="hour-range" className="grid justify-between w-full aspect-[3] grid-cols-[5fr_2fr] border-solid border-[0px] border-black">
-              <div id="hour-range-text" className="flex justify-center items-center font-bold text-purple-600 xl:text-6xl md:text-3xl transition-all">
+    <main className="h-[100vh] w-[100vw] max-h-screen max-w-screen overflow-hidden grid grid-rows-[10%_89%] p-2 gap-3">
+      <Nav />
+      <div id="content" className="grid grid-cols-[1fr_9fr] gap-4">
+        <LeftPanel id="left-panel" className="grid grid-rows-[2fr_5fr] gap-4 just rounded-secondary p-4">
+          <section id="bookings" className="w-full rounded-secondary p-4">
+
+          </section>
+          <section id="date-time" className="w-full flex flex-col justify-between">
+            <div id="hour-range" className="flex justify-center aspect-[3] rounded-secondary p-4">
+              <div id="hour-range-text" className="flex justify-center items-center text-4xl transition-all">
                 <p className="pl-1">{minutesToHourString(startMinutes)}</p>
-                <p className="text-black px-2">-</p>
+                <p className="px-2">-</p>
                 <p className="pr-1">{minutesToHourString(endMinutes)}</p>
               </div>
-              <HourRangeDrawer id="hour-range-drawer" className=" border-[1px] border-black" />
+              <HourRangeDrawer id="hour-range-drawer" className="flex items-center ml-2" />
             </div>
-            <DatePicker id="date-picker" timeFrameRef={time_frame} className="w-full" />
+            <DatePicker id="date-picker" timeFrameRef={time_frame} className="flex justify-center rounded-secondary p-4" />
           </section>
         </LeftPanel>
-        <RigthPanel id="right-panel" className="border-solid border-[1px] border-black flex flex-col p-4">
+        <RigthPanel id="right-panel" className="rounded-secondary flex flex-col p-4">
           <section id="user-selection" className="w-[20%]">
             <FloorSelect items={["Piano terra", "Primo piano", "Secondo piano"]} />
           </section>
