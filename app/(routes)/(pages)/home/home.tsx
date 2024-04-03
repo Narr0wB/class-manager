@@ -6,13 +6,12 @@ import LeftPanel from '@/components/custom/home/left-panel/left-panel';
 import Floor from '@/components/custom/home/right-panel/floors/floor';
 import FloorSelect from '@/components/custom/home/right-panel/user-selection/floor-select';
 import ThemeButton from '@/components/custom/theme-button';
-import { Avatar } from '@/components/ui/avatar';
 import { minutesToHourString } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import RigthPanel from '@/components/custom/home/right-panel/right-panel';
-import { FLOORS, useFloor } from '@/components/custom/home/right-panel/floor-provider';
+import { FLOORS } from '@/components/custom/home/right-panel/floor-provider';
 import DatePicker from '@/components/custom/home/bookings-input/date-picker/date-picker';
 import { TimeFrame } from '@/lib/backend/database';
 import ProfileDrawer from '@/components/custom/home/nav-bar/profile-drawer';
@@ -25,8 +24,6 @@ const Home: React.FC = () => {
   const [endMinutes, setEndMinutes] = useEndMinutes();
 
   const time_frame = useRef<TimeFrame>(null);
-
-  const [floor, setFloor] = useFloor();
 
   function inStartBounds(minutes: number) {
     let hours = Math.floor(minutes / 60);
@@ -78,11 +75,11 @@ const Home: React.FC = () => {
   }, [startMinutes, endMinutes]);
 
   return (
-    <main className="h-[100vh] w-[100vw] max-h-screen max-w-screen overflow-hidden grid grid-rows-[10%_89%] p-2">
+    <main className="h-[100vh] w-[100vw] max-h-screen max-w-screen overflow-hidden grid grid-rows-[10%_89%] p-2 bg-secondary">
       <nav className="w-full">
         <div id="user" className="flex flex-row h-full w-[20%] border-solid border-[1px] border-black">
-          <ProfileDrawer profileName={session.data.user?.name!} image={session.data.user?.image!}/>
-          <ThemeButton className='text-black'/>
+          <ProfileDrawer profileName={session.data.user?.name!} image={session.data.user?.image!} />
+          <ThemeButton />
         </div>
       </nav>
       <div id="content" className="grid grid-cols-[1fr_9fr] pt-2 gap-4">
@@ -97,12 +94,12 @@ const Home: React.FC = () => {
               </div>
               <HourRangeDrawer id="hour-range-drawer" className=" border-[1px] border-black" />
             </div>
-            <DatePicker timeFrameRef={time_frame} id="date-picker" className="w-full" />
+            <DatePicker id="date-picker" timeFrameRef={time_frame} className="w-full" />
           </section>
         </LeftPanel>
         <RigthPanel id="right-panel" className="border-solid border-[1px] border-black flex flex-col p-4">
           <section id="user-selection" className="w-[20%]">
-            <FloorSelect items={["Piano terra", "Primo piano", "Secondo piano"]}/>
+            <FloorSelect items={["Piano terra", "Primo piano", "Secondo piano"]} />
           </section>
           <section id="floors" className="w-full h-full">
             <Floor num={FLOORS.FLOOR_0} className="bg-red-500" />
