@@ -20,7 +20,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ className, id, timeFrameRef }) 
   const [date, setDate] = useState<Date>()
 
   return (
-    <div id={id} className={className}>
+    <div id={id} className={cn(className, "flex justify-center")}>
       <div className="rounded-md border bg-[#F7F3E7]">
         <Calendar className="text-black" mode="single" selected={date} onSelect={(date) => {if (timeFrameRef.current) {timeFrameRef.current.data = date!;} setDate(date)}} />
       </div>  

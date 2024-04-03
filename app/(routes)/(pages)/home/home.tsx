@@ -1,6 +1,5 @@
 "use client"
 
-import DatePicker from '@/components/custom/date-picker';
 import { useEndMinutes, useStartMinutes } from '@/components/custom/home/left-panel/hour-provider';
 import HourRangeDrawer from '@/components/custom/home/left-panel/date-time/hour-range/hour-range-drawer';
 import LeftPanel from '@/components/custom/home/left-panel/left-panel';
@@ -11,9 +10,12 @@ import { Avatar } from '@/components/ui/avatar';
 import { minutesToHourString } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import RigthPanel from '@/components/custom/home/right-panel/right-panel';
 import { FLOORS, useFloor } from '@/components/custom/home/right-panel/floor-provider';
+import DatePicker from '@/components/custom/home/bookings-input/date-picker/date-picker';
+import { TimeFrame } from '@/lib/backend/database';
+import ProfileDrawer from '@/components/custom/home/nav-bar/profile-drawer';
 
 const Home: React.FC = () => {
   const session = useSession();
@@ -21,6 +23,8 @@ const Home: React.FC = () => {
 
   const [startMinutes, setStartMinutes] = useStartMinutes();
   const [endMinutes, setEndMinutes] = useEndMinutes();
+
+  const time_frame = useRef<TimeFrame>(null);
 
   const [floor, setFloor] = useFloor();
 
@@ -77,10 +81,8 @@ const Home: React.FC = () => {
     <main className="h-[100vh] w-[100vw] max-h-screen max-w-screen overflow-hidden grid grid-rows-[10%_89%] p-2">
       <nav className="w-full">
         <div id="user" className="flex flex-row h-full w-[20%] border-solid border-[1px] border-black">
-          <ThemeButton />
-          <Avatar>
-            Profilo
-          </Avatar>
+          <ProfileDrawer profileName={session.data.user?.name!} image={session.data.user?.image!}/>
+          <ThemeButton className='text-black'/>
         </div>
       </nav>
       <div id="content" className="grid grid-cols-[1fr_9fr] pt-2 gap-4">
@@ -95,12 +97,12 @@ const Home: React.FC = () => {
               </div>
               <HourRangeDrawer id="hour-range-drawer" className=" border-[1px] border-black" />
             </div>
-            <DatePicker id="date-picker" className="w-full" />
+            <DatePicker timeFrameRef={time_frame} id="date-picker" className="w-full" />
           </section>
         </LeftPanel>
         <RigthPanel id="right-panel" className="border-solid border-[1px] border-black flex flex-col p-4">
           <section id="user-selection" className="w-[20%]">
-            <FloorSelect items={["Piano terra", "Primo piano", "Secondo piano"]} />
+            <FloorSelect items={["Piano terra", "Primo piano", "Secondo piano"]}/>
           </section>
           <section id="floors" className="w-full h-full">
             <Floor num={FLOORS.FLOOR_0} className="bg-red-500" />

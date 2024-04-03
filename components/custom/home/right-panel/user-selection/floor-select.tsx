@@ -18,7 +18,7 @@ const FloorSelect: React.FC<FloorSelectProps> = ({ className, id, items }) => {
   return (
     <div id={id} className={cn("", className)}>
       <Select onValueChange={(value) => setFloor(map.get(value) || 0)}>
-        <SelectTrigger className="w-[180px] text-secondary">
+        <SelectTrigger className="w-[180px] text-primary">
           <SelectValue placeholder="Seleziona un piano..." />
         </SelectTrigger>
         <SelectContent>
