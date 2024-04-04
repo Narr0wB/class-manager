@@ -74,15 +74,15 @@ const Home: React.FC = () => {
   }, [startMinutes, endMinutes]);
 
   return (
-    <main className="h-[100vh] w-[100vw] max-h-screen max-w-screen overflow-hidden grid grid-rows-[10%_89%] p-2 gap-3">
+    <main className="h-[100vh] w-[100vw] max-h-screen max-w-screen overflow-hidden grid grid-rows-[10%_88%] p-4 gap-[2%]">
       <Nav />
-      <div id="content" className="grid grid-cols-[1fr_9fr] gap-4">
-        <LeftPanel id="left-panel" className="grid grid-rows-[2fr_5fr] gap-4 just rounded-secondary p-4">
-          <section id="bookings" className="w-full rounded-secondary p-4">
+      <div id="content" className="grid grid-cols-[29%_69%] gap-[2%]">
+        <LeftPanel className="w-full h-full grid grid-rows-[35%_63%] gap-[2%]">
+          <section id="bookings" className="w-full h-full rounded-secondary p-2">
 
           </section>
-          <section id="date-time" className="w-full flex flex-col justify-between">
-            <div id="hour-range" className="flex justify-center aspect-[3] rounded-secondary p-4">
+          <section id="date-time" className="w-full h-full grid grid-rows-[10%_90%] rounded-secondary p-2">
+            <div id="hour-range" className="w-full h-full flex justify-center">
               <div id="hour-range-text" className="flex justify-center items-center text-4xl transition-all">
                 <p className="pl-1">{minutesToHourString(startMinutes)}</p>
                 <p className="px-2">-</p>
@@ -90,10 +90,10 @@ const Home: React.FC = () => {
               </div>
               <HourRangeDrawer id="hour-range-drawer" className="flex items-center ml-2" />
             </div>
-            <DatePicker id="date-picker" timeFrameRef={time_frame} className="flex justify-center rounded-secondary p-4" />
+            <DatePicker timeFrameRef={time_frame} className="w-full h-full flex justify-center" />
           </section>
         </LeftPanel>
-        <RigthPanel id="right-panel" className="rounded-secondary flex flex-col p-4">
+        <RigthPanel className="w-full h-full rounded-secondary flex flex-col p-4">
           <section id="user-selection" className="w-[20%]">
             <FloorSelect items={["Piano terra", "Primo piano", "Secondo piano"]} />
           </section>

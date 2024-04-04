@@ -10,23 +10,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Moon, Sun } from "lucide-react"
+import CustomTooltip from "./custom-tooltip"
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
-import CustomTooltip from "./custom-tooltip"
 
 type ThemeButtonProps = {
   className?: string;
-  id?: string;
 }
 
-const ThemeButton: React.FC<ThemeButtonProps> = ({ className, id }) => {
+const ThemeButton: React.FC<ThemeButtonProps> = ({ className }) => {
   const { setTheme } = useTheme()
 
   return (
     <DropdownMenu>
       <CustomTooltip content="Tema">
-        <DropdownMenuTrigger>
-          <Button id={id} className={cn(className, "")}>
+        <DropdownMenuTrigger asChild>
+          <Button id="theme-button" variant="ghost" className={cn(className, "")}>
             <Sun className="w-full h-full block dark:hidden" />
             <Moon className="w-full h-full hidden dark:block" />
           </Button>
@@ -43,7 +42,7 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({ className, id }) => {
           System
         </DropdownMenuItem>
       </DropdownMenuContent>
-    </DropdownMenu>
+    </DropdownMenu >
   )
 }
 

@@ -7,15 +7,14 @@ import { Calendar } from '@/components/ui/calendar';
 
 type DatePickerProps = {
   className?: string;
-  id?: string;
   timeFrameRef: RefObject<TimeFrame>
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({ className, id, timeFrameRef }) => {
+const DatePicker: React.FC<DatePickerProps> = ({ className, timeFrameRef }) => {
   const [date, setDate] = useState<Date>()
 
   return (
-    <div id={id} className={cn(className, "")}>
+    <div id="date-picker" className={cn(className, "")}>
       <Calendar
         mode="single"
         selected={date}
@@ -24,7 +23,8 @@ const DatePicker: React.FC<DatePickerProps> = ({ className, id, timeFrameRef }) 
             timeFrameRef.current.data = date!;
           }
           setDate(date);
-        }} />
+        }}
+      />
     </div>
   )
 }
