@@ -2,13 +2,12 @@ import { cn } from '@/lib/utils';
 
 type RigthPanelProps = {
   className?: string;
-  id?: string;
   children?: React.ReactNode;
 }
 
-const RigthPanel: React.FC<RigthPanelProps> = ({ className, id, children }) => {
+const RigthPanel: React.FC<RigthPanelProps> = ({ className, children }) => {
   return (
-    <div id={id} className={cn('', className)}>
+    <div id="rigth-panel" className={cn('', className)}>
       {children}
     </div>
   )
