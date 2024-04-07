@@ -11,7 +11,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -24,27 +23,17 @@ const Login: React.FC = () => {
   if (session.data) { router.replace("/home"); router.refresh(); };
 
   return (
-
-    <div className="center bg-[#f5f2eb]">
-      <Card className="w-[350px]">
+    <main className="absolute w-screen h-screen flex justify-center items-center">
+      <Card className="w-max">
         <CardHeader>
           <CardTitle>Log in</CardTitle>
           <CardDescription>Entra con il tuo account Google dell'Istituto</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-
-              </div>
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex justify-between align-center">
           <Button className="bg-purple-500" onClick={() => { signIn("google") }}>Login con Google</Button>
-        </CardFooter>
+        </CardContent>
       </Card>
-    </div>
+    </main>
   )
 }
 
