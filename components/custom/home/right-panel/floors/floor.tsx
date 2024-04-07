@@ -13,7 +13,7 @@ const Floor: React.FC<FloorProps> = ({ className, id, num }) => {
   return (
     <div id={id} className={cn(
       floor === num ? "block" : "hidden",
-      "w-[95%] h-[95%]",
+      "w-full h-full",
       className
     )}>
     </div>

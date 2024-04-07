@@ -22,7 +22,7 @@ const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(font.className, "")}>
+      <body className={cn(font.className, "lg:overflow-hidden lg:xl:2xl")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SessionProvider session={session}>
             {children}
