@@ -23,7 +23,7 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({ className }) => {
 
   return (
     <DropdownMenu>
-      <CustomTooltip content="Tema">
+      <CustomTooltip content="Tema" side="bottom">
         <DropdownMenuTrigger asChild>
           <Button id="theme-button" variant="ghost" className={cn(className, "")}>
             <Sun className="w-full h-full block dark:hidden" />
