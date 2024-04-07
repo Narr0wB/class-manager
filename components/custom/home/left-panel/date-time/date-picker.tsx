@@ -24,6 +24,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ className, timeFrameRef }) => {
           }
           setDate(date);
         }}
+        className="w-fit h-fit"
       />
     </div>
   )

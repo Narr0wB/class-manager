@@ -74,30 +74,38 @@ const Home: React.FC = () => {
   }, [startMinutes, endMinutes]);
 
   return (
-    <main className="h-[100vh] w-[100vw] max-h-screen max-w-screen overflow-hidden grid grid-rows-[10%_88%] p-4 gap-[2%]">
-      <Nav />
-      <div id="content" className="grid grid-cols-[29%_69%] gap-[2%]">
-        <LeftPanel className="w-full h-full grid grid-rows-[35%_63%] gap-[2%]">
-          <section id="bookings" className="w-full h-full rounded-secondary p-2">
-
+    <main className="w-[100vw] h-[150rem] lg:h-[100dvh] max-w-screen p-4 grid grid-rows-[5rem_75rem] lg:grid-rows-[10%_88%] lg:xl:2xl">
+      <Nav className="h-16" />
+      <div
+        id="content" className="grid grid-cols-1 grid-rows-[25rem_30rem] gap-[2%] lg:grid-cols-[29%_69%] lg:grid-rows-1 lg:xl:2xl">
+        <LeftPanel className="w-full h-full grid grid-cols-[auto_1fr] gap-4 lg:grid-rows-[auto_1fr] lg:grid-cols-1 lg:xl:2xl">
+          <section id="bookings" className="rounded-secondary p-4">
+            <ul>
+              <li>Prenotazione 1</li>
+              <li>Prenotazione 2</li>
+              <li>Prenotazione 3</li>
+              <li>Prenotazione 4</li>
+              <li>Prenotazione 5</li>
+              <li>Prenotazione 6</li>
+            </ul>
           </section>
-          <section id="date-time" className="w-full h-full grid grid-rows-[10%_90%] rounded-secondary p-2">
-            <div id="hour-range" className="w-full h-full flex justify-center">
-              <div id="hour-range-text" className="flex justify-center items-center text-4xl transition-all">
+          <section id="date-time" className="rounded-secondary flex flex-col justify-evenly gap-4 p-2">
+            <div id="hour-range" className="flex justify-center items-center">
+              <div id="hour-range-text" className="flex justify-center items-center text-4xl">
                 <p className="pl-1">{minutesToHourString(startMinutes)}</p>
                 <p className="px-2">-</p>
                 <p className="pr-1">{minutesToHourString(endMinutes)}</p>
               </div>
-              <HourRangeDrawer id="hour-range-drawer" className="flex items-center ml-2" />
+              <HourRangeDrawer id="hour-range-drawer" className="ml-4" />
             </div>
-            <DatePicker timeFrameRef={time_frame} className="w-full h-full flex justify-center" />
+            <DatePicker timeFrameRef={time_frame} className="flex justify-center items-center" />
           </section>
         </LeftPanel>
-        <RigthPanel className="w-full h-full rounded-secondary flex flex-col p-4">
+        <RigthPanel className="w-full h-fit lg:h-full rounded-secondary flex flex-col p-4 lg:xl:2xl">
           <section id="user-selection" className="w-[20%]">
             <FloorSelect items={["Piano terra", "Primo piano", "Secondo piano"]} />
           </section>
-          <section id="floors" className="w-full h-full">
+          <section id="floors" className="w-full aspect-[3/2] lg:h-full lg:xl:2xl">
             <Floor num={FLOORS.FLOOR_0} className="bg-red-500" />
             <Floor num={FLOORS.FLOOR_1} className="bg-green-500" />
             <Floor num={FLOORS.FLOOR_2} className="bg-blue-500" />
