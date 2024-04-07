@@ -37,7 +37,7 @@ const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, set
         <MinusIcon className="h-4 w-4" />
         <span className="sr-only">Diminuisci</span>
       </Button>
-      <div className="flex-1 text-center sm:text-5xl md:text-7xl tracking-tighter px-2 transition-all">
+      <div className="flex-1 text-center sm:text-5xl md:text-7xl tracking-tighter px-2">
         <input
           className="rounded-sm"
           type="time"

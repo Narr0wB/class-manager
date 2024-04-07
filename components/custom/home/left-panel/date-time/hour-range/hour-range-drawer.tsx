@@ -31,7 +31,7 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ id, className }) => {
           <DrawerFooter className="flex items-center w-max-full w-full">
             <HourRangeSelector className="flex justify-evenly w-max-full w-[90%]"
             />
-            <div className="flex flex-col justify-center w-[80%]">
+            <div className="flex flex-col justify-center w-[80%] gap-2 mt-2">
               <DrawerClose asChild>
                 <Button>Salva</Button>
               </DrawerClose>
