@@ -14,7 +14,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ className, timeFrameRef }) => {
   const [date, setDate] = useState<Date>()
 
   return (
-    <div id="date-picker" className={cn(className, "")}>
+    <div id="date-picker" className={cn(className, "overflow-auto")}>
       <Calendar
         mode="single"
         selected={date}
