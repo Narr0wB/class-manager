@@ -73,7 +73,7 @@ const Home: React.FC = () => {
   }, [startMinutes, endMinutes]);
 
   return (
-    <main className="w-full h-[150rem] lg:h-full lg:xl:2xl p-4">
+    <main className="w-full h-[150rem] lg:h-screen lg:xl:2xl p-4">
       <div id="content" className="w-full h-full grid grid-rows-[27rem_30rem] gap-8 lg:grid-cols-[29%_69%] lg:grid-rows-1 lg:gap-4 lg:xl:2xl">
         <LeftPanel className="w-full h-full lg:h-full grid grid-cols-[38%_60%] gap-[2%] lg:grid-rows-[30%_68%] lg:grid-cols-1 lg:xl:2xl">
           <section id="bookings" className="rounded-secondary p-4 overflow-y-auto text-sm md:text-xl lg:text-lg xl:text-xl">
@@ -93,7 +93,7 @@ const Home: React.FC = () => {
                 <p className="px-2">-</p>
                 <p className="pr-1">{minutesToHourString(endMinutes)}</p>
               </div>
-              <HourRangeDrawer id="hour-range-drawer" className="ml-4" />
+              <HourRangeDrawer className="ml-4" />
             </div>
             <DatePicker timeFrameRef={time_frame} className="flex justify-center items-center" />
           </section>

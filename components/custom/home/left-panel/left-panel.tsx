@@ -1,5 +1,3 @@
-import { cn } from '@/lib/utils';
-
 type LeftPanelProps = {
   className?: string;
   children?: React.ReactNode;
@@ -7,7 +5,7 @@ type LeftPanelProps = {
 
 const LeftPanel: React.FC<LeftPanelProps> = ({ className, children }) => {
   return (
-    <div id="left-panel" className={cn('', className)}>
+    <div id="left-panel" className={className}>
       {children}
     </div>
   )

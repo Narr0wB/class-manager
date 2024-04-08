@@ -1,14 +1,12 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
 import { useFloor } from '../floor-provider';
 
 type FloorSelectProps = {
   className?: string;
-  id?: string;
   items: string[];
 }
 
-const FloorSelect: React.FC<FloorSelectProps> = ({ className, id, items }) => {
+const FloorSelect: React.FC<FloorSelectProps> = ({ className, items }) => {
   const [floor, setFloor] = useFloor();
 
   // piano x => x
@@ -16,7 +14,7 @@ const FloorSelect: React.FC<FloorSelectProps> = ({ className, id, items }) => {
   items.forEach((item, i) => map.set(item, i));
 
   return (
-    <div id={id} className={cn("", className)}>
+    <div className={className}>
       <Select onValueChange={(value) => setFloor(map.get(value) || 0)}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Seleziona un piano..." />
