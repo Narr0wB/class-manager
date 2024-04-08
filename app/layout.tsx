@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/custom/theme/theme-provider";
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/components/custom/auth/session-provider";
-import Nav from "@/components/custom/home/nav-bar/nav";
 import HeaderBar from "@/components/custom/layout/header-bar";
 
 const font = Inter({ subsets: ["latin"] });

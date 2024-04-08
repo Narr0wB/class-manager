@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils';
 import HourSelector from './hour-selector';
 import { useEndMinutes, useStartMinutes } from '../../hour-provider';
 
@@ -11,7 +10,7 @@ const HourRangeSelector: React.FC<HourRangeSelectorProps> = ({ className }) => {
   const [endMinutes, setEndMinutes] = useEndMinutes();
 
   return (
-    <div className={cn('', className)}>
+    <div id="hour-range-selector" className={className}>
       <HourSelector
         id="start-selector"
         minutes={startMinutes}

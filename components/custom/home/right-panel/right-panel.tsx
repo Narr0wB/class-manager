@@ -1,5 +1,3 @@
-import { cn } from '@/lib/utils';
-
 type RigthPanelProps = {
   className?: string;
   children?: React.ReactNode;
@@ -7,7 +5,7 @@ type RigthPanelProps = {
 
 const RigthPanel: React.FC<RigthPanelProps> = ({ className, children }) => {
   return (
-    <div id="rigth-panel" className={cn('', className)}>
+    <div id="rigth-panel" className={className}>
       {children}
     </div>
   )
