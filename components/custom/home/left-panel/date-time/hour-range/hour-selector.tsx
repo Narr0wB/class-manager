@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { cn, minutesToHourString } from '@/lib/utils';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import { useEffect, useRef } from 'react';
@@ -28,27 +29,25 @@ const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, set
   }, [minutes]);
 
   return (
-    <div id={id} className={cn("items-center flex", className)}>
+    <div id={id} className={cn("flex items-center", className)}>
       <Button
         size="icon"
-        className="h-8 w-8 shrink-0 rounded-full bg-purple-600"
+        className="h-8 w-8 shrink-0 rounded-full"
         onClick={() => setMinutes(prev => prev - 10)}
       >
         <MinusIcon className="h-4 w-4" />
         <span className="sr-only">Diminuisci</span>
       </Button>
-      <div className="flex-1 text-center sm:text-5xl md:text-7xl tracking-tighter px-2">
-        <input
-          className="rounded-sm"
-          type="time"
-          onBlur={handleBlur}
-          defaultValue={minutesToHourString(minutes)}
-          ref={input}
-        />
-      </div>
+      <Input
+        className=""
+        type="time"
+        onBlur={handleBlur}
+        defaultValue={minutesToHourString(minutes)}
+        ref={input}
+      />
       <Button
         size="icon"
-        className="h-8 w-8 shrink-0 rounded-full bg-purple-600"
+        className="h-8 w-8 shrink-0 rounded-full"
         onClick={() => setMinutes(prev => prev + 10)}
       >
         <PlusIcon className="h-4 w-4" />
