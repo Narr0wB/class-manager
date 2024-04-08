@@ -14,66 +14,73 @@ import { CalendarIcon, LogInIcon, LogOutIcon } from "lucide-react"
 import { signOut, useSession } from "next-auth/react"
 import CustomTooltip from "../../custom-tooltip"
 import { redirect } from "next/navigation"
+import { Skeleton } from "@/components/ui/skeleton"
 
-type ProfileButton = {
+type ProfileButtonProps = {
   className?: string,
 }
 
-const ProfileButton: React.FC<ProfileButton> = ({ className }) => {
-  const session = useSession();
+const ProfileButton: React.FC<ProfileButtonProps> = ({ className }) => {
+  const { status, data } = useSession();
 
-  type User = {
-    name: string,
-    image?: string | undefined
+  const avatar = () => {
+    switch (status) {
+      case "loading":
+        return <Skeleton className="w-10 h-10 rounded-full" />
+      case "unauthenticated":
+        return (
+          <Avatar>
+            <AvatarFallback className="bg-purple-600">P</AvatarFallback>
+          </Avatar>
+        )
+      case "authenticated":
+        return (
+          <Avatar>
+            <AvatarImage src={data.user?.image!} />
+            <AvatarFallback className="bg-purple-600">{data.user?.name ? data.user.name[0] : "P"}</AvatarFallback>
+          </Avatar>
+        )
+    }
   }
 
-  let user = null;
-
-  if (session.status === "authenticated") {
-    user = {
-      name: session.data.user?.name!,
-      image: session.data.user?.image!
-    } satisfies User;
-  }
-  if (session.status === "unauthenticated") {
-    user = {
-      name: "P",
-      image: undefined
-    } satisfies User;
+  const content = () => {
+    switch (status) {
+      case "loading":
+        return <Skeleton className="w-10 h-10 rounded-full" />
+      case "unauthenticated":
+        return (
+          <DropdownMenuItem onClick={() => redirect("/login")}>
+            <LogInIcon className="w-5 h-5"></LogInIcon>
+            <span className="ml-2">Accedi</span>
+          </DropdownMenuItem>
+        )
+      case "authenticated":
+        return (
+          <>
+            <DropdownMenuItem>
+              <CalendarIcon className="w-5 h-5"></CalendarIcon>
+              <span className="ml-2">Le mie prenotazioni</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut()}>
+              <LogOutIcon className="w-5 h-5"></LogOutIcon>
+              <span className="ml-2">Esci</span>
+            </DropdownMenuItem>
+          </>
+        )
+    }
   }
 
   return (
     <DropdownMenu>
       <CustomTooltip content="Profilo" side="bottom">
         <DropdownMenuTrigger id="profile-button" className={cn(className, "")}>
-          <Avatar>
-            <AvatarImage src={user?.image} />
-            <AvatarFallback className="bg-purple-600">{user?.name}</AvatarFallback>
-          </Avatar>
+          {avatar()}
         </DropdownMenuTrigger>
       </CustomTooltip>
       <DropdownMenuContent>
         <DropdownMenuLabel>Profilo</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {
-          session.status === "authenticated" ? (
-            <>
-              <DropdownMenuItem>
-                <CalendarIcon className="w-5 h-5"></CalendarIcon>
-                <span className="ml-2">Le mie prenotazioni</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => signOut()}>
-                <LogOutIcon className="w-5 h-5"></LogOutIcon>
-                <span className="ml-2">Log out</span>
-              </DropdownMenuItem>
-            </>
-          ) : (
-            <DropdownMenuItem onClick={() => redirect("/login")}>
-              <LogInIcon className="w-5 h-5"></LogInIcon>
-              <span className="ml-2">Log in</span>
-            </DropdownMenuItem>
-          )
-        }
+        {content()}
       </DropdownMenuContent>
     </DropdownMenu>
   );
