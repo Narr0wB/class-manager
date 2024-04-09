@@ -9,10 +9,13 @@ import { minutesToHourString } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import RigthPanel from '@/components/custom/home/right-panel/right-panel';
+import RightPanel from '@/components/custom/home/right-panel/right-panel';
 import { FLOORS } from '@/components/custom/home/right-panel/floor-provider';
 import DatePicker from '@/components/custom/home/left-panel/date-time/date-picker';
 import { TimeFrame } from '@/lib/backend/database';
+
+import PrimoPianoMap from '@/public/pianoprimo.svg'
+import FloorButton from '@/components/custom/home/right-panel/floors/floor-button';
 
 const Home: React.FC = () => {
   const session = useSession();
@@ -98,16 +101,18 @@ const Home: React.FC = () => {
             <DatePicker timeFrameRef={time_frame} className="flex justify-center items-center" />
           </section>
         </LeftPanel>
-        <RigthPanel className="w-full h-full lg:h-full rounded-secondary flex flex-col p-4 gap-4 lg:xl:2xl">
+        <RightPanel className="w-full h-full lg:h-full rounded-secondary flex flex-col p-4 gap-4 lg:xl:2xl">
           <section id="user-selection" className="w-[20%]">
             <FloorSelect items={["Piano terra", "Primo piano", "Secondo piano"]} />
           </section>
           <section id="floors" className="w-full aspect-[2] rounded-full lg:h-full lg:xl:2xl">
-            <Floor num={FLOORS.FLOOR_0} className="bg-red-500" />
-            <Floor num={FLOORS.FLOOR_1} className="bg-green-500" />
-            <Floor num={FLOORS.FLOOR_2} className="bg-blue-500" />
+            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_0} className="">
+              <FloorButton numero_aula={2} className="position: relative top-[16.5vh] left-[20.2vw]"></FloorButton>
+            </Floor>
+            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_1} className=""/>
+            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_2} className=""/>
           </section>
-        </RigthPanel>
+        </RightPanel>
       </div>
     </main>
   );
