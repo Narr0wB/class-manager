@@ -1,14 +1,14 @@
-type RigthPanelProps = {
+type RightPanelProps = {
   className?: string;
   children?: React.ReactNode;
 }
 
-const RigthPanel: React.FC<RigthPanelProps> = ({ className, children }) => {
+const RightPanel: React.FC<RightPanelProps> = ({ className, children }) => {
   return (
-    <div id="rigth-panel" className={className}>
+    <div id="right-panel" className={className}>
       {children}
     </div>
   )
 }
 
-export default RigthPanel;
+export default RightPanel;
