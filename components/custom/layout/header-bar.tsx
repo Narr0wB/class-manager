@@ -1,14 +1,9 @@
-import { cn } from '@/lib/utils';
 import Nav from '../home/nav-bar/nav';
 
-type HeaderBarProps = {
-  className?: string;
-}
-
-const HeaderBar: React.FC<HeaderBarProps> = ({ className }) => {
+const HeaderBar: React.FC = () => {
   return (
-    <header className={cn(className, "")}>
-      <Nav className="w-full h-16" />
+    <header className="sticky top-0 w-full h-full flex items-center p-2 box-border z-10 bg-secondary shadow-md">
+      <Nav />
     </header>
   )
 }

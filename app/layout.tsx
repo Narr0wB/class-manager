@@ -23,10 +23,10 @@ const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(font.className, "w-screen h-screen flex flex-col lg:overflow-hidden lg:xl:2xl")}>
+      <body className={cn(font.className, "w-screen h-screen grid grid-rows-[5rem_150rem] md:grid-rows-[12%_88%] lg:overflow-hidden lg:xl:2xl")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SessionProvider session={session}>
-            <HeaderBar className="p-4 z-10" />
+            <HeaderBar />
             {children}
           </SessionProvider>
         </ThemeProvider>
