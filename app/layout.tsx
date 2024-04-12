@@ -23,7 +23,7 @@ const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(font.className, "w-screen h-screen grid grid-rows-[5rem_150rem] md:grid-rows-[12%_88%] lg:overflow-hidden lg:xl:2xl")}>
+      <body className={cn(font.className, "absolute w-screen h-screen overflow-x-hidden lg:overflow-y-hidden lg:xl:2xl")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SessionProvider session={session}>
             <HeaderBar />
@@ -32,7 +32,7 @@ const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
 
 export default RootLayout;
