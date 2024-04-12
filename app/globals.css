@@ -60,4 +60,8 @@
   .rounded-secondary {
     @apply rounded-md border-solid border-[1.2px] border-secondary
   }
+
+   .main-height {
+    height: calc(100vh - 5rem);
+   }
 }
