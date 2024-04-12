@@ -76,9 +76,10 @@ const Home: React.FC = () => {
   }, [startMinutes, endMinutes]);
 
   return (
-    <main className="w-full h-full box-border p-2">
-      <div id="content" className="w-full h-full grid grid-rows-[27rem_30rem] gap-8 lg:grid-cols-[30%_69%] lg:grid-rows-1 lg:gap-[1%] lg:xl:2xl">
-        <LeftPanel className="w-full h-full box-border lg:h-full grid grid-cols-[38%_60%] gap-[2%] lg:grid-rows-[30%_68%] lg:grid-cols-1 lg:xl:2xl">
+    // main-height custom class defined in globals.css
+    <main className="w-screen h-fit lg:main-height box-border p-2 lg:xl:2xl">
+      <div id="content" className="w-full h-full box-border grid grid-rows-[27rem_30rem] gap-4 lg:grid-cols-[30%_69%] lg:grid-rows-1 lg:gap-[1%] lg:xl:2xl">
+        <LeftPanel className="w-full h-full lg:h-full grid grid-cols-[38%_60%] gap-[2%] lg:grid-rows-[30%_68%] lg:grid-cols-1 lg:xl:2xl">
           <section id="bookings" className="rounded-secondary p-4 overflow-y-auto text-sm md:text-xl lg:text-lg xl:text-xl">
             <ul>
               <li>Prenotazione 1</li>
@@ -107,7 +108,7 @@ const Home: React.FC = () => {
           </section>
           <section id="floors" className="w-full aspect-[2] rounded-full md:h-full md:lg:xl:2xl">
             <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_0} className="">
-              <FloorButton numero_aula={2} className="position: relative top-[16.5vh] left-[20.2vw]"></FloorButton>
+              <FloorButton numero_aula={2} className="relative top-[16.5vh] left-[20.2vw]"></FloorButton>
             </Floor>
             <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_1} className="" />
             <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_2} className="" />
