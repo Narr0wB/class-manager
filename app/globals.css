@@ -58,10 +58,6 @@
   }
 
   .rounded-secondary {
-    @apply rounded-md border-solid border-[1.2px] border-secondary
+    @apply rounded-md border-solid border-[1.2px] border-secondary shadow-md
   }
-
-   .main-height {
-    height: calc(100vh - 5rem);
-   }
 }
