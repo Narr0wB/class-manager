@@ -39,7 +39,6 @@ const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, set
         <span className="sr-only">Diminuisci</span>
       </Button>
       <Input
-        className=""
         type="time"
         onBlur={handleBlur}
         defaultValue={minutesToHourString(minutes)}

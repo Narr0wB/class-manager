@@ -16,6 +16,8 @@ import { TimeFrame } from '@/lib/backend/database';
 
 import PrimoPianoMap from '@/public/pianoprimo.svg'
 import FloorButton from '@/components/custom/home/right-panel/floors/floor-button';
+import Bookings from '@/components/custom/home/nav-bar/profile/bookings';
+import { Button } from '@/components/ui/button';
 
 const Home: React.FC = () => {
   const session = useSession();
@@ -79,20 +81,10 @@ const Home: React.FC = () => {
     // main-height custom class defined in globals.css
     <main className="w-screen h-fit lg:main-height box-border p-2 lg:xl:2xl">
       <div id="content" className="w-full h-full box-border grid grid-rows-[27rem_30rem] gap-4 lg:grid-cols-[30%_69%] lg:grid-rows-1 lg:gap-[1%] lg:xl:2xl">
-        <LeftPanel className="w-full h-full lg:h-full grid grid-cols-[38%_60%] gap-[2%] lg:grid-rows-[30%_68%] lg:grid-cols-1 lg:xl:2xl">
-          <section id="bookings" className="rounded-secondary p-4 overflow-y-auto text-sm md:text-xl lg:text-lg xl:text-xl">
-            <ul>
-              <li>Prenotazione 1</li>
-              <li>Prenotazione 2</li>
-              <li>Prenotazione 3</li>
-              <li>Prenotazione 4</li>
-              <li>Prenotazione 5</li>
-              <li>Prenotazione 6</li>
-            </ul>
-          </section>
-          <section id="date-time" className="rounded-secondary flex flex-col justify-evenly gap-4 pt-2">
+        <LeftPanel className="w-full h-full">
+          <section id="date-time" className="w-full h-full rounded-secondary flex flex-col justify-evenly gap-4 pt-2">
             <div id="hour-range" className="flex justify-center items-center">
-              <div id="hour-range-text" className="flex justify-center items-center text-xl md:text-3xl lg:text-4xl lg:xl:2xl">
+              <div id="hour-range-text" className="flex justify-center items-center text-3xl lg:text-4xl lg:xl:2xl">
                 <p className="pl-1">{minutesToHourString(startMinutes)}</p>
                 <p className="px-2">-</p>
                 <p className="pr-1">{minutesToHourString(endMinutes)}</p>
