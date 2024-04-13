@@ -58,16 +58,16 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ className }) => {
       case "authenticated":
         return (
           <>
-            <DropdownMenuItem onClick={e => e.stopPropagation()} asChild>
+            <DropdownMenuItem>
               <Bookings>
-                <div className="flex flex-row items-center justify-start p-1">
+                <div className="flex flex-row items-center justify-start">
                   <CalendarIcon className="w-5 h-5" />
                   <span className="ml-2">Le mie prenotazioni</span>
                 </div>
               </Bookings>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => signOut()} asChild>
-              <div className="flex flex-row items-center justify-start p-1 px-1">
+            <DropdownMenuItem onClick={() => signOut()}>
+              <div className="flex flex-row items-center justify-start">
                 <LogOutIcon className="w-5 h-5"></LogOutIcon>
                 <span className="ml-2">Esci</span>
               </div>
