@@ -1,23 +1,19 @@
 "use client"
 
-import { useEndMinutes, useStartMinutes } from '@/components/custom/home/left-panel/hour-provider';
-import HourRangeDrawer from '@/components/custom/home/left-panel/date-time/hour-range/hour-range-drawer';
-import LeftPanel from '@/components/custom/home/left-panel/left-panel';
-import Floor from '@/components/custom/home/right-panel/floors/floor';
-import FloorSelect from '@/components/custom/home/right-panel/user-selection/floor-select';
+import { useEndMinutes, useStartMinutes } from '@/components/custom/home/input-section/hour-provider';
+import HourRangeDrawer from '@/components/custom/home/input-section/hour-range/hour-range-drawer';
+import Floor from '@/components/custom/home/map-section/floors/floor';
+import FloorSelect from '@/components/custom/home/map-section/user-selection/floor-select';
 import { minutesToHourString } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import RightPanel from '@/components/custom/home/right-panel/right-panel';
-import { FLOORS } from '@/components/custom/home/right-panel/floor-provider';
-import DatePicker from '@/components/custom/home/left-panel/date-time/date-picker';
+import { FLOORS } from '@/components/custom/home/map-section/floor-provider';
+import DatePicker from '@/components/custom/home/input-section/date-picker';
 import { TimeFrame } from '@/lib/backend/database';
 
 import PrimoPianoMap from '@/public/pianoprimo.svg'
-import FloorButton from '@/components/custom/home/right-panel/floors/floor-button';
-import Bookings from '@/components/custom/home/nav-bar/profile/bookings';
-import { Button } from '@/components/ui/button';
+import FloorButton from '@/components/custom/home/map-section/floors/floor-button';
 
 const Home: React.FC = () => {
   const session = useSession();
@@ -78,34 +74,29 @@ const Home: React.FC = () => {
   }, [startMinutes, endMinutes]);
 
   return (
-    // main-height custom class defined in globals.css
-    <main className="w-screen h-fit lg:main-height box-border p-2 lg:xl:2xl">
+    <main className="w-screen h-fit lg:h-[calc(100vh-5rem)] box-border p-2 lg:xl:2xl">
       <div id="content" className="w-full h-full box-border grid grid-rows-[27rem_30rem] gap-4 lg:grid-cols-[30%_69%] lg:grid-rows-1 lg:gap-[1%] lg:xl:2xl">
-        <LeftPanel className="w-full h-full">
-          <section id="date-time" className="w-full h-full rounded-secondary flex flex-col justify-evenly gap-4 pt-2">
-            <div id="hour-range" className="flex justify-center items-center">
-              <div id="hour-range-text" className="flex justify-center items-center text-3xl lg:text-4xl lg:xl:2xl">
-                <p className="pl-1">{minutesToHourString(startMinutes)}</p>
-                <p className="px-2">-</p>
-                <p className="pr-1">{minutesToHourString(endMinutes)}</p>
-              </div>
-              <HourRangeDrawer className="ml-4" />
+        <section id="input-section" className="w-full h-full rounded-secondary flex flex-col justify-evenly gap-4">
+          <div id="hour-range" className="flex justify-center items-center">
+            <div id="hour-range-text" className="flex justify-center items-center text-3xl lg:text-4xl lg:xl:2xl">
+              <p className="pl-1">{minutesToHourString(startMinutes)}</p>
+              <p className="px-2">-</p>
+              <p className="pr-1">{minutesToHourString(endMinutes)}</p>
             </div>
-            <DatePicker timeFrameRef={time_frame} className="flex justify-center items-center" />
-          </section>
-        </LeftPanel>
-        <RightPanel className="w-full h-full box-border lg:h-full rounded-secondary flex flex-col p-2 gap-4 lg:xl:2xl">
-          <section id="user-selection" className="w-[20%]">
-            <FloorSelect items={["Piano terra", "Primo piano", "Secondo piano"]} />
-          </section>
-          <section id="floors" className="w-full aspect-[2] rounded-full md:h-full md:lg:xl:2xl">
-            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_0} className="">
+            <HourRangeDrawer className="ml-4" />
+          </div>
+          <DatePicker timeFrameRef={time_frame} className="flex justify-center items-center" />
+        </section>
+        <section id="map-section" className="w-full h-full box-border lg:h-full rounded-secondary flex flex-col p-2 gap-4 lg:xl:2xl">
+          <FloorSelect className="w-[20%]" items={["Piano terra", "Primo piano", "Secondo piano"]} />
+          <div id="floors" className="w-full aspect-[2] rounded-full md:h-full md:lg:xl:2xl">
+            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_0}>
               <FloorButton numero_aula={2} className="relative top-[16.5vh] left-[20.2vw]"></FloorButton>
             </Floor>
-            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_1} className="" />
-            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_2} className="" />
-          </section>
-        </RightPanel>
+            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_1} />
+            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_2} />
+          </div>
+        </section>
       </div>
     </main>
   );
