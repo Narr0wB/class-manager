@@ -2,7 +2,7 @@
 
 import ThemeButton from './theme-button';
 import RepoButton from './repo-button';
-import ProfileButton from './profile-button';
+import ProfileButton from './profile/profile-button';
 
 const Nav: React.FC = () => {
   return (

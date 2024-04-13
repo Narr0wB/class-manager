@@ -12,9 +12,10 @@ import {
 import { cn } from "@/lib/utils"
 import { CalendarIcon, LogInIcon, LogOutIcon } from "lucide-react"
 import { signOut, useSession } from "next-auth/react"
-import CustomTooltip from "../../custom-tooltip"
+import CustomTooltip from "../../../custom-tooltip"
 import { redirect } from "next/navigation"
 import { Skeleton } from "@/components/ui/skeleton"
+import Bookings from "./bookings"
 
 type ProfileButtonProps = {
   className?: string,
@@ -50,20 +51,26 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ className }) => {
       case "unauthenticated":
         return (
           <DropdownMenuItem onClick={() => redirect("/login")}>
-            <LogInIcon className="w-5 h-5"></LogInIcon>
+            <LogInIcon className="w-5 h-5" />
             <span className="ml-2">Accedi</span>
           </DropdownMenuItem>
         )
       case "authenticated":
         return (
           <>
-            <DropdownMenuItem>
-              <CalendarIcon className="w-5 h-5"></CalendarIcon>
-              <span className="ml-2">Le mie prenotazioni</span>
+            <DropdownMenuItem onClick={e => e.stopPropagation()} asChild>
+              <Bookings>
+                <div className="flex flex-row items-center justify-start p-1">
+                  <CalendarIcon className="w-5 h-5" />
+                  <span className="ml-2">Le mie prenotazioni</span>
+                </div>
+              </Bookings>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => signOut()}>
-              <LogOutIcon className="w-5 h-5"></LogOutIcon>
-              <span className="ml-2">Esci</span>
+            <DropdownMenuItem onClick={() => signOut()} asChild>
+              <div className="flex flex-row items-center justify-start p-1 px-1">
+                <LogOutIcon className="w-5 h-5"></LogOutIcon>
+                <span className="ml-2">Esci</span>
+              </div>
             </DropdownMenuItem>
           </>
         )

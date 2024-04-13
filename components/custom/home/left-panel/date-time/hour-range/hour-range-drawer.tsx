@@ -26,7 +26,7 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
           <DrawerHeader id="drawer-header">
             <DrawerDescription>Seleziona l'ora della prenotazione</DrawerDescription>
           </DrawerHeader>
-          <HourRangeSelector className="w-min wmd:w-[75%] flex flex-col justify-evenly space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:lg:xl:2xl" />
+          <HourRangeSelector className="w-min md:w-[75%] flex flex-col justify-evenly space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:lg:xl:2xl" />
           <DrawerFooter id="drawer-footer" className="flex items-center w-full h-full">
             <div className="w-[75%] flex flex-col gap-2 justify-center">
               <DrawerClose asChild>
