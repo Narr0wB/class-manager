@@ -1,21 +1,19 @@
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { forwardRef } from 'react';
 
 type BookingsProps = {
   children: React.ReactNode;
-  className?: string;
 }
 
-const Bookings = forwardRef<HTMLButtonElement, BookingsProps>(({ children, className }, ref) => {
+const Bookings = forwardRef<HTMLButtonElement, BookingsProps>(({ children }, ref) => {
   return (
     <Sheet>
-      <SheetTrigger ref={ref}>
+      <SheetTrigger ref={ref} onClick={e => e.stopPropagation()}>
         {children}
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Le mie prenotazioni</SheetTitle>
+          <SheetTitle className="mb-4">Le mie prenotazioni</SheetTitle>
         </SheetHeader>
         <div>
           <ul>

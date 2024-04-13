@@ -1,5 +1,5 @@
-import HourProvider from './left-panel/hour-provider';
-import FloorProvider from './right-panel/floor-provider';
+import HourProvider from './input-section/hour-provider';
+import FloorProvider from './map-section/floor-provider';
 
 type HomeProviderProps = {
   children?: React.ReactNode;
