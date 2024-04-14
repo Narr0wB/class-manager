@@ -1,30 +1,48 @@
 import { cn } from '@/lib/utils';
-import { useFloor } from '../floor-provider';
-import Image from 'next/image';
-import { StaticImport } from 'next/dist/shared/lib/get-img-props';
+import SVG from 'react-inlinesvg';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useTheme } from 'next-themes';
+import { useState } from 'react';
 
 
 type FloorProps = {
   className?: string;
   id?: string;
+  src: string;
   num: number;
-  image: StaticImport;
   children?: React.ReactNode;
 }
 
-const Floor: React.FC<FloorProps> = ({ className, id, num, image, children }) => {
-  const [floor, setFloor] = useFloor();
+const Floor: React.FC<FloorProps> = ({ className, id, src, num, children }) => {
+  const { theme } = useTheme();
+  const [loading, isLoading] = useState(true);
 
   return (
-    <div id={id} className={cn(
-      "flex justify-center items-center",
-      floor === num ? "block" : "hidden",
-      "w-full h-full",
-      className
-    )}>
-      {children}
-      <Image src={image} width={700} height={500} alt="Icon" style={{ pointerEvents: 'none' }}></Image>
-    </div>
+    <>
+      <SVG
+        // Use the theme as key to trigger a re-render when the theme changes
+        key={theme}
+        id={id}
+        src={src}
+        title={`Floor ${num}`}
+        description={`The floor ${num} SVG.`}
+        loader={
+          <div className="flex items-center space-x-4">
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-[250px]" />
+              <Skeleton className="h-4 w-[200px]" />
+            </div>
+          </div>
+        }
+        onLoad={(src, isCached) => isLoading(false)}
+        onError={err => console.log(err.message)}
+        preProcessor={code => code.replace(/stroke:\s*([^;]+)/g, `stroke: ${theme === "dark" ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)"}`)}
+        className={cn("w-full h-full", className)} />
+      <>
+        {loading ? <></> : children}
+      </>
+    </>
   )
 }
 
