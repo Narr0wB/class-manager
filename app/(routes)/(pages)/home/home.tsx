@@ -12,8 +12,8 @@ import { FLOORS } from '@/components/custom/home/map-section/floor-provider';
 import DatePicker from '@/components/custom/home/input-section/date-picker';
 import { TimeFrame } from '@/lib/backend/database';
 
-import PrimoPianoMap from '@/public/pianoprimo.svg'
 import FloorButton from '@/components/custom/home/map-section/floors/floor-button';
+import FloorsContainer from '@/components/custom/home/map-section/floors/floors-container';
 
 const Home: React.FC = () => {
   const session = useSession();
@@ -87,15 +87,15 @@ const Home: React.FC = () => {
           </div>
           <DatePicker timeFrameRef={time_frame} className="flex justify-center items-center" />
         </section>
-        <section id="map-section" className="w-full h-full box-border lg:h-full rounded-secondary flex flex-col p-2 gap-4 lg:xl:2xl">
-          <FloorSelect className="w-[20%]" items={["Piano terra", "Primo piano", "Secondo piano"]} />
-          <div id="floors" className="w-full aspect-[2] rounded-full md:h-full md:lg:xl:2xl">
-            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_0}>
-              <FloorButton numero_aula={2} className="relative top-[16.5vh] left-[20.2vw]"></FloorButton>
+        <section id="map-section" className="w-full h-full box-border flex flex-col p-2 gap-4 rounded-secondary">
+          <FloorSelect className="w-fit h-10" items={["Piano terra", "Primo piano", "Secondo piano"]} />
+          <FloorsContainer className="w-full h-[calc(100%-1rem-2.5rem)]">
+            <Floor src="pianoprimo.svg" num={FLOORS.FLOOR_0}>
+              <FloorButton classRoomNumber={1} />
             </Floor>
-            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_1} />
-            <Floor image={PrimoPianoMap} num={FLOORS.FLOOR_2} />
-          </div>
+            <Floor src="pianoprimo.svg" num={FLOORS.FLOOR_1} />
+            <Floor src="pianoprimo.svg" num={FLOORS.FLOOR_2} />
+          </FloorsContainer>
         </section>
       </div>
     </main>
