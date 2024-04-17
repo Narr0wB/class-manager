@@ -6,6 +6,7 @@ import { DayPicker, DayPickerProvider } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
+import { FormatLong, Locale, Localize } from "date-fns"
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -15,12 +16,12 @@ const months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'L
 const locale = {
   localize: {
     day: (n: number) => daysOfWeek[n],
-    month: (n: number) => months[n]
+    month: (n: number) => months[n],
   },
   formatLong: {
-    date: () => 'mm/dd/yyyy'
+    date: () => 'mm/dd/yyyy',
   }
-}
+} as unknown as Locale;
 
 // Dopo le 13 non si può più prenotare per quel giorno
 function getTodayValid() {
@@ -48,6 +49,7 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       disabled={disabledDays}
+      locale={locale}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",

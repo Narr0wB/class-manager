@@ -17,12 +17,14 @@ const pool = mysql.createPool({
   database: process.env.DB_DATABASE
 }).promise()
 
-export async function query(query: string, values: any[] = []) {
+export async function query<T>(query: string, values: any[] = []): Promise<T[] | undefined> {
   try {
     const res = await pool.query(query, values);
-    return res[0];
+    return res[0] as T[];
   }
   catch (error: any) {
     console.error(error);
   }
+
+  return undefined;
 }
