@@ -5,9 +5,8 @@ import { Prenotazione } from "@/lib/backend/database";
 
 const Database: React.FC = () => {
   const prenotazione: Prenotazione = {
-    id: 0,
-    id_utente: 0,
-    id_aula: 0,
+    id_utente: 1,
+    id_aula: 2,
     data: new Date(Date.now()),
     approvata: false
   }
@@ -27,8 +26,16 @@ const Database: React.FC = () => {
       }}>
         INSERT PRENOTAZIONE
       </Button>
-      <Button>
-        SELECT
+      <Button onClick={async () => {
+        const res = await fetch("/api/database/utente/SELECT?email=eddu@liceocuneo.it", {
+          method: "GET"
+        });
+
+        const data = await res.json();
+
+        console.log(data);
+      }}>
+        SELECT UTENTE
       </Button>
       <Button>
         UPDATE
