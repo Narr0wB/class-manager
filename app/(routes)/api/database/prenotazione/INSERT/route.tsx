@@ -1,10 +1,10 @@
-import { Prenotazione, insertPrenotazione } from "@/lib/backend/database";
+import { INSERT_Prenotazione, Prenotazione } from "@/lib/backend/database";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const prenotazione = await req.json() as Prenotazione;
 
-  const res = await insertPrenotazione(prenotazione) as any;
+  const res = await INSERT_Prenotazione(prenotazione) as any;
 
-  return NextResponse.json({id: res.insertId});
+  return NextResponse.json({ id: res.insertId });
 }

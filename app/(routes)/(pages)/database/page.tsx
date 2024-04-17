@@ -37,8 +37,16 @@ const Database: React.FC = () => {
       }}>
         SELECT UTENTE
       </Button>
-      <Button>
-        UPDATE
+      <Button onClick={async () => {
+        const res = await fetch("/api/database/prenotazione/SELECT?email=eddu@liceocuneo.it", {
+          method: "GET"
+        });
+
+        const data = await res.json();
+
+        console.log(data);
+      }}>
+        SELECT PRENOTAZIONI
       </Button>
     </main>
   )
