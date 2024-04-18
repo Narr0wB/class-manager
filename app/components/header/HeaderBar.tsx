@@ -1,4 +1,4 @@
-import Nav from '../home/nav-bar/nav';
+import Nav from "./Nav";
 
 const HeaderBar: React.FC = () => {
   return (

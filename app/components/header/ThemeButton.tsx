@@ -10,9 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Moon, Sun } from "lucide-react"
-import CustomTooltip from "../../custom-tooltip"
 import { cn } from "@/lib/utils"
-import { Button } from "../../../ui/button"
+import CustomTooltip from "@/components/custom/CustomTooltip"
+import { Button } from "@/components/ui/button"
 
 type ThemeButtonProps = {
   className?: string;

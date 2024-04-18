@@ -12,16 +12,18 @@ import {
 import { cn } from "@/lib/utils"
 import { CalendarIcon, LogInIcon, LogOutIcon } from "lucide-react"
 import { signOut, useSession } from "next-auth/react"
-import CustomTooltip from "../../../custom-tooltip"
 import { redirect } from "next/navigation"
 import { Skeleton } from "@/components/ui/skeleton"
-import Bookings from "./bookings"
+import React from "react"
+import Bookings from "./Bookings"
+import CustomTooltip from "@/components/custom/CustomTooltip"
 
 type ProfileButtonProps = {
   className?: string,
+  prenotazioni: React.ReactNode
 }
 
-const ProfileButton: React.FC<ProfileButtonProps> = ({ className }) => {
+const ProfileButton: React.FC<ProfileButtonProps> = ({ className, prenotazioni }) => {
   const { status, data } = useSession();
 
   const avatar = () => {
@@ -59,7 +61,7 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ className }) => {
         return (
           <>
             <DropdownMenuItem>
-              <Bookings>
+              <Bookings prenotazioni={prenotazioni}>
                 <div className="flex flex-row items-center justify-start">
                   <CalendarIcon className="w-5 h-5" />
                   <span className="ml-2">Le mie prenotazioni</span>
