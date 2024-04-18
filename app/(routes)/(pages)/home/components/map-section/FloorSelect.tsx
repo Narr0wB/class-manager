@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useFloor } from '../floor-provider';
+import { useFloor } from './FloorProvider';
 
 type FloorSelectProps = {
   className?: string;
