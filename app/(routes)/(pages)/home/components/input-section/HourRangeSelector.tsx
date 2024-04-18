@@ -1,5 +1,5 @@
-import HourSelector from './hour-selector';
-import { useEndMinutes, useStartMinutes } from '../hour-provider';
+import HourSelector from './HourSelector';
+import { useEndMinutes, useStartMinutes } from './HourProvider';
 
 type HourRangeSelectorProps = {
   className?: string;

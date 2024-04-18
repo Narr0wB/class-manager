@@ -3,9 +3,10 @@ import { forwardRef } from 'react';
 
 type BookingsProps = {
   children: React.ReactNode;
+  prenotazioni: React.ReactNode;
 }
 
-const Bookings = forwardRef<HTMLButtonElement, BookingsProps>(({ children }, ref) => {
+const Bookings = forwardRef<HTMLButtonElement, BookingsProps>(({ children, prenotazioni }, ref) => {
   return (
     <Sheet>
       <SheetTrigger ref={ref} onClick={e => e.stopPropagation()}>
@@ -15,16 +16,7 @@ const Bookings = forwardRef<HTMLButtonElement, BookingsProps>(({ children }, ref
         <SheetHeader>
           <SheetTitle className="mb-4">Le mie prenotazioni</SheetTitle>
         </SheetHeader>
-        <div>
-          <ul>
-            <li>Prenotazione 1</li>
-            <li>Prenotazione 2</li>
-            <li>Prenotazione 3</li>
-            <li>Prenotazione 4</li>
-            <li>Prenotazione 5</li>
-            <li>Prenotazione 6</li>
-          </ul>
-        </div>
+        {prenotazioni}
       </SheetContent>
     </Sheet>
   );

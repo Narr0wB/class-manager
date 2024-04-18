@@ -1,14 +1,15 @@
 "use client"
 
-import HomeProvider from '@/components/custom/home/home-provider';
-import Home from './home';
+import HomeClient from './components/HomeClient';
+import HomeProvider from './components/HomeProvider';
 
-const Page: React.FC = () => {
+
+const Home: React.FC = () => {
   return (
     <HomeProvider>
-      <Home />
+      <HomeClient />
     </HomeProvider>
   )
 }
 
-export default Page;
+export default Home;

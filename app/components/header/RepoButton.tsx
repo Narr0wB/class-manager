@@ -3,10 +3,10 @@
 import * as React from "react"
 
 import { Code2 } from "lucide-react"
-import CustomTooltip from "../../custom-tooltip"
 import { cn } from "@/lib/utils"
-import { Button } from "../../../ui/button"
 import Link from "next/link"
+import CustomTooltip from "@/components/custom/CustomTooltip"
+import { Button } from "@/components/ui/button"
 
 type RepoButtonProps = {
   className?: string;

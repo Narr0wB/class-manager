@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/components/custom/theme/theme-provider";
+import { ThemeProvider } from "@/app/components/ThemeProvider";
 import { getServerSession } from "next-auth";
-import SessionProvider from "@/components/custom/auth/session-provider";
-import HeaderBar from "@/components/custom/layout/header-bar";
+import HeaderBar from "@/app/components/header/HeaderBar";
+import SessionProvider from "./components/SessionProvider";
 
 const font = Inter({ subsets: ["latin"] });
 

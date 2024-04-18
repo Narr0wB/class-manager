@@ -1,8 +1,7 @@
 "use client"
 
-import GoogleButton from "react-google-button";
 import { signIn, useSession } from 'next-auth/react';
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import * as React from "react"
 
@@ -17,20 +16,18 @@ import {
 
 const Login: React.FC = () => {
   const session = useSession();
-  const router = useRouter();
 
-  // Use router navigation instead of redirect for caching issues
-  if (session.data) { router.replace("/home"); router.refresh(); };
+  if (session.data) redirect("home");
 
   return (
     <main className="absolute w-screen h-screen flex justify-center items-center">
       <Card className="w-max">
         <CardHeader>
-          <CardTitle>Log in</CardTitle>
-          <CardDescription>Entra con il tuo account Google dell'Istituto</CardDescription>
+          <CardTitle>Accedi</CardTitle>
+          <CardDescription>Utilizza l'account Google dell'Istituto</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button className="bg-purple-500" onClick={() => { signIn("google") }}>Login con Google</Button>
+          <Button onClick={() => { signIn("google") }}>Accedi</Button>
         </CardContent>
       </Card>
     </main>

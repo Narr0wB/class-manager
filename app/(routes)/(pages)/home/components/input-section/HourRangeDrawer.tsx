@@ -3,9 +3,9 @@
 import React from 'react';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTrigger } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import HourRangeSelector from './hour-range-selector';
+import HourRangeSelector from './HourRangeSelector';
 import { Clock10Icon } from 'lucide-react';
-import CustomTooltip from '@/components/custom/custom-tooltip';
+import CustomTooltip from '@/components/custom/CustomTooltip';
 
 type HourRangeDrawerProps = {
   className?: string;
