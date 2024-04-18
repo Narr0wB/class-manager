@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-import { useFloor } from "../floor-provider";
 import React from "react";
+import { useFloor } from "./FloorProvider";
 
 type FloorsContainerProps = {
   children?: React.ReactNode;

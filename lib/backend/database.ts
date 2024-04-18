@@ -1,13 +1,12 @@
 import { query } from "./mysql";
-import { Types } from "mysql2";
 
-const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(id_utente, id_aula, data_ora_pre) VALUES (?, ?, ?)";
+const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(id_utente, id_aula, data) VALUES (?, ?, ?)";
 const QUERY_SELECT_PRE_ID_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
-const QUERY_SELECT_PRE_DATARANGE = "SELECT * FROM AM_Prenotazioni WHERE data_ora_pre BETWEEN ? and ?";
-const QUERY_SELECT_PRE_ID_UTENTE_DATASTART = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data_ora_pre > ?";
-const QUERY_DELETE_PRE_ID = "DELETE FROM AM_Prenotazioni WHERE id_prenotazione = ?"
-const QUERY_UPDATE_PRE = "UPDATE AM_Prenotazioni SET id_aula = ?, data_ora_pre = ? WHERE id_prenotazione = ?"
-const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email_utente = ?";
+const QUERY_SELECT_PRE_DATARANGE = "SELECT * FROM AM_Prenotazioni WHERE data BETWEEN ? and ?";
+const QUERY_SELECT_PRE_ID_UTENTE_DATASTART = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
+const QUERY_DELETE_PRE_ID = "DELETE FROM AM_Prenotazioni WHERE id = ?"
+const QUERY_UPDATE_PRE = "UPDATE AM_Prenotazioni SET id_aula = ?, data = ? WHERE id = ?"
+const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
 const QUERY_SELECT_AULA = "SELECT * FROM AM_Aule";
 
 export type TimeFrame = {
@@ -48,7 +47,8 @@ export async function IDfromEmail(email: string) {
     [email]
   );
 
-  if (ret) {
+
+  if (ret && ret[0]) {
     return ret[0].id;
   }
 
@@ -92,7 +92,7 @@ export async function SELECT_PrenotazioniData(date_start: Date, date_end: Date, 
   return ret;
 }
 
-export async function SELECT_PrenotazioniUtente(email_utente: string, data: Date | null) {
+export async function SELECT_PrenotazioniEmail(email_utente: string, data: Date | null) {
   const id_utente = await IDfromEmail(email_utente);
 
   if (data) {

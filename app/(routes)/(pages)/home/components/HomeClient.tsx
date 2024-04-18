@@ -1,21 +1,20 @@
 "use client"
 
-import { useEndMinutes, useStartMinutes } from '@/components/custom/home/input-section/hour-provider';
-import HourRangeDrawer from '@/components/custom/home/input-section/hour-range/hour-range-drawer';
-import Floor from '@/components/custom/home/map-section/floors/floor';
-import FloorSelect from '@/components/custom/home/map-section/user-selection/floor-select';
 import { minutesToHourString } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import { FLOORS } from '@/components/custom/home/map-section/floor-provider';
-import DatePicker from '@/components/custom/home/input-section/date-picker';
 import { TimeFrame } from '@/lib/backend/database';
+import { useEndMinutes, useStartMinutes } from './input-section/HourProvider';
+import HourRangeDrawer from './input-section/HourRangeDrawer';
+import DatePicker from './input-section/DatePicker';
+import { FLOORS } from './map-section/FloorProvider';
+import FloorSelect from './map-section/FloorSelect';
+import FloorsContainer from './map-section/FloorsContainer';
+import FloorButton from './map-section/FloorButton';
+import Floor from './map-section/Floor';
 
-import FloorButton from '@/components/custom/home/map-section/floors/floor-button';
-import FloorsContainer from '@/components/custom/home/map-section/floors/floors-container';
-
-const Home: React.FC = () => {
+const HomeClient: React.FC = () => {
   const session = useSession();
   if (!session.data) redirect("/login");
 
@@ -99,7 +98,9 @@ const Home: React.FC = () => {
         </section>
       </div>
     </main>
-  );
+  )
 }
 
-export default Home;
+HomeClient.displayName = "HomeClient";
+
+export default HomeClient;
