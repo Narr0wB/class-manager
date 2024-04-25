@@ -90,7 +90,6 @@ const HomeClient: React.FC = () => {
           <FloorSelect className="w-fit h-10" items={["Piano terra", "Primo piano", "Secondo piano"]} />
           <FloorsContainer className="w-full h-[calc(100%-1rem-2.5rem)]">
             <Floor src="pianoprimo.svg" num={FLOORS.FLOOR_0}>
-              <FloorButton classRoomNumber={1} />
             </Floor>
             <Floor src="pianoprimo.svg" num={FLOORS.FLOOR_1} />
             <Floor src="pianoprimo.svg" num={FLOORS.FLOOR_2} />

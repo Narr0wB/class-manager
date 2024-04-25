@@ -15,7 +15,7 @@ import { signOut, useSession } from "next-auth/react"
 import { redirect } from "next/navigation"
 import { Skeleton } from "@/components/ui/skeleton"
 import React from "react"
-import Bookings from "./Bookings"
+import Bookings from "./bookings"
 import CustomTooltip from "@/components/custom/CustomTooltip"
 
 type ProfileButtonProps = {
