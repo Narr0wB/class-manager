@@ -18,15 +18,10 @@ const Floor: React.FC<FloorProps> = ({ className, id, src, num, children }) => {
   const { theme } = useTheme();
   const [loading, isLoading] = useState(true);
 
-  // const g_array = spliceSVG("@/public/pianoprimo.svg");
-  // const res = await fetch("/api/map", {
-  //   method: "POST",
-  //   body: JSON.stringify({ message: '' }),
-  // });
 
   return (
     <>
-      <SVG
+      {/* <SVG
         // Use the theme as key to trigger a re-render when the theme changes
         key={theme}
         id={id}
@@ -45,7 +40,7 @@ const Floor: React.FC<FloorProps> = ({ className, id, src, num, children }) => {
         onLoad={(src, isCached) => isLoading(false)}
         onError={err => console.log(err.message)}
         preProcessor={code => code.replace("/stroke:\s*([^;]+)/g", `stroke: ${theme === "dark" ? "rgb(255, 255, 255)" : "rgb(200, 200, 200)"}`)}
-        className={cn("w-full h-full", className)} />
+        className={cn("w-full h-full", className)} /> */}
       <>
         {loading ? <></> : children}
       </>
