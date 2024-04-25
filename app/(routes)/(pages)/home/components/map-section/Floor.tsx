@@ -3,8 +3,7 @@ import SVG from 'react-inlinesvg';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { spliceSVG } from '@/lib/backend/map';
-
+import Mapp from "@/app/(routes)/(pages)/home/components/map-section/Map"
 
 type FloorProps = {
   className?: string;
@@ -21,6 +20,7 @@ const Floor: React.FC<FloorProps> = ({ className, id, src, num, children }) => {
 
   return (
     <>
+    <Mapp></Mapp>
       {/* <SVG
         // Use the theme as key to trigger a re-render when the theme changes
         key={theme}
