@@ -3,10 +3,7 @@ import { spliceSVG } from "@/lib/backend/map";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const prenotazione = await req.json() as Prenotazione;
+  const array = spliceSVG("/home/narrow/class-manager/public/pianoprimo.svg");
 
-  const res = await INSERT_Prenotazione(prenotazione) as any;
-
-
-  return NextResponse.json({ id: res.insertId });
+  return NextResponse.json({ data: array });
 }
