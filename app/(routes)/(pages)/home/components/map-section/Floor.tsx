@@ -3,6 +3,7 @@ import SVG from 'react-inlinesvg';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
+import { spliceSVG } from '@/lib/backend/map';
 
 
 type FloorProps = {
@@ -16,6 +17,8 @@ type FloorProps = {
 const Floor: React.FC<FloorProps> = ({ className, id, src, num, children }) => {
   const { theme } = useTheme();
   const [loading, isLoading] = useState(true);
+
+  // const g_array = spliceSVG("@/public/pianoprimo.svg");
 
   return (
     <>
@@ -37,7 +40,7 @@ const Floor: React.FC<FloorProps> = ({ className, id, src, num, children }) => {
         }
         onLoad={(src, isCached) => isLoading(false)}
         onError={err => console.log(err.message)}
-        preProcessor={code => code.replace(/stroke:\s*([^;]+)/g, `stroke: ${theme === "dark" ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)"}`)}
+        preProcessor={code => code.replace("/stroke:\s*([^;]+)/g", `stroke: ${theme === "dark" ? "rgb(255, 255, 255)" : "rgb(200, 200, 200)"}`)}
         className={cn("w-full h-full", className)} />
       <>
         {loading ? <></> : children}

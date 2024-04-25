@@ -1,17 +1,17 @@
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils";
+import React from "react";
 
 type FloorButtonProps = {
   className?: string;
-  classRoomNumber: number;
+  content: React.ReactNode;
 }
 
-const FloorButton: React.FC<FloorButtonProps> = ({ className, classRoomNumber }) => {
+const FloorButton: React.FC<FloorButtonProps> = ({ className, content }) => {
   return (
-    <Button
-      key={classRoomNumber} id={`btn_floor_${classRoomNumber}`} className={cn(className, `absolute bg-gray-300 text-black`)}>
-      Aula {classRoomNumber}
-    </Button>
+    <g className={className}>
+      {content}
+    </g>
   );
 }
 
