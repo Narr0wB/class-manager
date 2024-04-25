@@ -6,11 +6,11 @@ type Button = {
     content: string;
 }
 
-export function spliceSVG(path: string) {
+export function spliceSVG(path: string) { 
     const data = fs.readFileSync(path, "utf-8");
     let array: Button[] = [];
 
-    const matches = data.match(/<g[^>]*>([\\s\\S]*?)<\/g>/g)
+    const matches = data.match(/<g[^>]*>([\s\S]*?)<\/g>/g)
 
-    console.log(matches)
+    return (matches);
 }

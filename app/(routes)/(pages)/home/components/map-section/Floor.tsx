@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import SVG from 'react-inlinesvg';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTheme } from 'next-themes';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { spliceSVG } from '@/lib/backend/map';
 
 
@@ -19,6 +19,10 @@ const Floor: React.FC<FloorProps> = ({ className, id, src, num, children }) => {
   const [loading, isLoading] = useState(true);
 
   // const g_array = spliceSVG("@/public/pianoprimo.svg");
+  // const res = await fetch("/api/map", {
+  //   method: "POST",
+  //   body: JSON.stringify({ message: '' }),
+  // });
 
   return (
     <>
