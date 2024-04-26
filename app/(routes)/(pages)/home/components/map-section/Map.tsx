@@ -3,16 +3,16 @@ import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 
 type MapProps = {
-  src: string
+  floor: number
 } & React.SVGProps<SVGSVGElement>
 
 const Map: React.FC<MapProps> = (props) => {
-  const { src, ...others } = props;
+  const { floor, ...others } = props;
   const { theme } = useTheme();
   const [svgInnerHtml, setSvgInnerHtml] = useState("");
 
   const fetchData = useCallback(async () => {
-    const res = await fetch(`/api/map?src=${src}&theme=${theme}`, { method: "GET", });
+    const res = await fetch(`/api/map?src=${floor}&theme=${theme}`, { method: "GET", });
     const svgInnerHtml = await res.json();
     return svgInnerHtml;
   }, [theme]);

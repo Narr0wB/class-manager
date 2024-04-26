@@ -89,9 +89,9 @@ const HomeClient: React.FC = () => {
         <section id="map-section" className="w-full h-full box-border flex flex-col p-2 gap-4 rounded-secondary">
           <FloorSelect className="w-fit h-10" items={["Piano terra", "Primo piano", "Secondo piano"]} />
           <FloorsContainer className="w-full h-[calc(100%-1rem-2.5rem)]">
-            <Floor src="./public/pianoprimo.svg" num={FLOORS.FLOOR_0} />
-            <Floor src="./public/pianoprimo.svg" num={FLOORS.FLOOR_1} />
-            <Floor src="./public/pianoprimo.svg" num={FLOORS.FLOOR_2} />
+            <Floor id={FLOORS.FLOOR_0} />
+            <Floor id={FLOORS.FLOOR_1} />
+            <Floor id={FLOORS.FLOOR_2} />
           </FloorsContainer>
         </section>
       </div>
