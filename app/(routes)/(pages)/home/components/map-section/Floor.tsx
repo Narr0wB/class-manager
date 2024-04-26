@@ -3,11 +3,10 @@ import Map from "@/app/(routes)/(pages)/home/components/map-section/Map";
 
 type FloorProps = {
   className?: string;
-  src: string;
-  num: number;
+  id: number;
 }
 
-const Floor: React.FC<FloorProps> = ({ src, num }) => {
+const Floor: React.FC<FloorProps> = ({ id }) => {
   function handleClick(e: React.MouseEvent) {
     const target = e.target as HTMLElement;
     if (target.tagName == "rect") {
@@ -63,8 +62,8 @@ const Floor: React.FC<FloorProps> = ({ src, num }) => {
 
   return (
     <Map
-      src={src}
-      id={`floor-${num}`}
+      floor={id}
+      id={`floor-${id}`}
       viewBox="300 0 800 1300"
       onClick={handleClick}
       onMouseDown={handleMouseDown}
