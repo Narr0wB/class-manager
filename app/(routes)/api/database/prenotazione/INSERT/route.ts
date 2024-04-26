@@ -1,5 +1,5 @@
 import { INSERT_Prenotazione, Prenotazione } from "@/lib/backend/database";
-import { spliceSVG } from "@/lib/backend/map";
+import { spliceSVG } from "@/lib/backend/files";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

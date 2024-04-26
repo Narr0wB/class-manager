@@ -1,44 +1,45 @@
-import { spliceSVG } from '@/lib/backend/map';
-import { Database } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Skeleton } from "@/components/ui/skeleton";
+import { useTheme } from "next-themes";
+import { useCallback, useEffect, useState } from "react";
 
+type MapProps = {
+  src: string
+} & React.SVGProps<SVGSVGElement>
 
-const Mapp: React.FC = () => {
+const Map: React.FC<MapProps> = (props) => {
+  const { src, ...others } = props;
+  const { theme } = useTheme();
+  const [svgInnerHtml, setSvgInnerHtml] = useState("");
 
-  //const g_array: string[] = spliceSVG("@/public/pianoprimo.svg")!;
-
-  const [data, setData] = useState<string[]>([]);
+  const fetchData = useCallback(async () => {
+    const res = await fetch(`/api/map?src=${src}&theme=${theme}`, { method: "GET", });
+    const svgInnerHtml = await res.json();
+    return svgInnerHtml;
+  }, [theme]);
 
   useEffect(() => {
-      const fetchData = async () => {
-      const res = await fetch("/api/map", {
-         method: "GET",
-      });
+    fetchData().then(svgInnerHtml => setSvgInnerHtml(svgInnerHtml))
+  });
 
-      const eddu = await res.json();
-
-      return eddu;
-      };
-
-      fetchData().then(res => {
-         setData(res.data);
-      })
-  }, [])
-
-  
   return (
-      <svg>
-         {
-         data ? data.map((string, idx) => {
-            return (
-               <g key={idx}>
-               {string}
-               </g>
-            )
-         }) : <g></g>
-      } 
-      </svg>
+    svgInnerHtml ?
+      <svg
+        {...others}
+        key={theme}
+        dangerouslySetInnerHTML={{ __html: svgInnerHtml }}
+        className="w-full h-full"
+      /> : (
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+      )
   )
 }
 
-export default Mapp;
+Map.displayName = "Map";
+
+export default Map;
