@@ -11,8 +11,8 @@ import DatePicker from './input-section/DatePicker';
 import { FLOORS } from './map-section/FloorProvider';
 import FloorSelect from './map-section/FloorSelect';
 import FloorsContainer from './map-section/FloorsContainer';
-import FloorButton from './map-section/FloorButton';
 import Floor from './map-section/Floor';
+import { useTimeframe } from './HomeProvider';
 
 const HomeClient: React.FC = () => {
   const session = useSession();
@@ -20,8 +20,6 @@ const HomeClient: React.FC = () => {
 
   const [startMinutes, setStartMinutes] = useStartMinutes();
   const [endMinutes, setEndMinutes] = useEndMinutes();
-
-  const time_frame = useRef<TimeFrame>(null);
 
   function inStartBounds(minutes: number) {
     let hours = Math.floor(minutes / 60);
@@ -84,7 +82,7 @@ const HomeClient: React.FC = () => {
             </div>
             <HourRangeDrawer className="ml-4" />
           </div>
-          <DatePicker timeFrameRef={time_frame} className="flex justify-center items-center" />
+          <DatePicker className="flex justify-center items-center" />
         </section>
         <section id="map-section" className="w-full h-full box-border flex flex-col p-2 gap-4 rounded-secondary">
           <FloorSelect className="w-fit h-10" items={["Piano terra", "Primo piano", "Secondo piano"]} />

@@ -1,17 +1,18 @@
 "use client"
 
 import { cn } from '@/lib/utils';
-import { RefObject, useState } from 'react';
+import { RefObject, useEffect, useState } from 'react';
 import { TimeFrame } from '@/lib/backend/database';
 import { Calendar } from '@/components/ui/calendar';
+import { useTimeframe } from '../HomeProvider';
 
 type DatePickerProps = {
   className?: string;
-  timeFrameRef: RefObject<TimeFrame>
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({ className, timeFrameRef }) => {
+const DatePicker: React.FC<DatePickerProps> = ({ className }) => {
   const [date, setDate] = useState<Date>()
+  const [timeframe, setTimeframe] = useTimeframe();
 
   return (
     <div id="date-picker" className={cn(className, "overflow-auto")}>
@@ -19,9 +20,10 @@ const DatePicker: React.FC<DatePickerProps> = ({ className, timeFrameRef }) => {
         mode="single"
         selected={date}
         onSelect={(date) => {
-          if (timeFrameRef.current) {
-            timeFrameRef.current.data = date!;
-          }
+          setTimeframe((prevState) => {
+            prevState.data = date!
+            return prevState;
+          })
           setDate(date);
         }}
         className="w-fit h-fit"

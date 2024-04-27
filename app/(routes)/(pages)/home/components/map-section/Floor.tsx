@@ -32,6 +32,9 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
   function handleTouchStartCapture(e: React.TouchEvent) {
     e.preventDefault(); //prevent double clicks
     const target = e.target as HTMLElement;
+    if (target.id == "rect3" || target.id == "rect31") {
+      
+    }
     if (target.tagName == "rect") {
       target.style.filter = "brightness(0.6)";
     }

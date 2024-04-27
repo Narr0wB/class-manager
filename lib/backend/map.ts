@@ -2,20 +2,20 @@ import { JSDOM } from "jsdom";
 import { TimeFrame } from "./database";
 import fs  from "fs";
 
-export const [FREE, BOOKED, PENDING, APPROVED] = ["#808080", "#FF0000", "#FFFF00", "#008000"];
+export const [FREE, BOOKED, PENDING, APPROVED] = ["#808080", "#E90000", "#E9E900", "#008000"];
 const [LIGHT, DARK] = ["#FFFFFF", "#000000"];
 
 export type Map = {
   svg: string;
-  config?: JSON;
+  config: JSON;
 }
 
 export function loadMap(map_path: string) {
   const config_path = map_path.replace(".svg", ".json");
 
   const result: Map = {
-    svg: fs.readFileSync(map_path, "utf-8")
-    // TODO: add the svg's config file!!!
+    svg: fs.readFileSync(map_path, "utf-8"),
+    config: JSON.parse(fs.readFileSync(config_path, "utf-8"))
   }
 
   return result;
@@ -30,10 +30,15 @@ export function createSVGElement(map: Map, timeframe: TimeFrame, lightTheme: boo
   meta.setAttribute("bordercolor", lightTheme ? LIGHT : DARK);
 
   svgElement.querySelectorAll("g").forEach(g => {
-    const rect = g.querySelector("rect");
-    if (rect) {
-      rect.style.fill = FREE;
-      rect.style.transition = "filter 0.1s ease";
+    const rect = g.querySelectorAll("rect");
+    if (rect.length < 2) {
+      rect[0].style.fill = FREE;
+      rect[0].style.transition = "filter 0.1s ease";
+    } else {
+      rect.forEach(rct => {
+        rct.style.fill = FREE;
+        rct.style.transition = "filter 0.1s ease";
+      })
     }
 
     // Redundancy to reduce conditional checks
