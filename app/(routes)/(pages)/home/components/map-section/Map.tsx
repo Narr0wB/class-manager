@@ -1,6 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
+import { useTimeframe } from "../HomeProvider";
 
 type MapProps = {
   floor: number
@@ -10,16 +11,19 @@ const Map: React.FC<MapProps> = (props) => {
   const { floor, ...others } = props;
   const { theme } = useTheme();
   const [svgInnerHtml, setSvgInnerHtml] = useState("");
+  const [timeframe, setTimeframe] = useTimeframe();
 
+  useEffect(() => {
+    console.log(timeframe)
+    fetchData().then(svgInnerHtml => setSvgInnerHtml(svgInnerHtml))
+  }, [timeframe.data, timeframe.inizio, timeframe.fine]);
+  
   const fetchData = useCallback(async () => {
-    const res = await fetch(`/api/map?src=${floor}&theme=${theme}`, { method: "GET", });
+    const res = await fetch(`/api/map?src=${floor}&theme=${theme}&timeframe=${JSON.stringify(timeframe)}`, { method: "GET", });
     const svgInnerHtml = await res.json();
     return svgInnerHtml;
   }, [theme]);
 
-  useEffect(() => {
-    fetchData().then(svgInnerHtml => setSvgInnerHtml(svgInnerHtml))
-  });
 
   return (
     svgInnerHtml ?
