@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
   timeframe.data = new Date(timeframe.data);
   //console.log(timeframe, user_email);
 
-  const svgElement = createSVGElement(selected_floor, timeframe, user_email, theme == "light");
+  const svgElement = await createSVGElement(selected_floor, timeframe, user_email, theme == "light");
 
-  return NextResponse.json(svgElement.innerHTML);
+  return NextResponse.json(svgElement!.innerHTML);
 }
