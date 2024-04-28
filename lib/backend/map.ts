@@ -1,8 +1,8 @@
 import { JSDOM } from "jsdom";
-import { TimeFrame } from "./database";
+import { selectPrenotazioneRange, TimeFrame } from "./database";
 import fs  from "fs";
 
-export const [FREE, BOOKED, PENDING, APPROVED] = ["#808080", "#E90000", "#E9E900", "#008000"];
+export const [FREE, BOOKED, PENDING, APPROVED] = ["#b8b8b8", "#E90000", "#E9E900", "#008000"];
 const [LIGHT, DARK] = ["#FFFFFF", "#000000"];
 
 export type Map = {
@@ -21,7 +21,7 @@ export function loadMap(map_path: string) {
   return result;
 }
 
-export function createSVGElement(map: Map, timeframe: TimeFrame, lightTheme: boolean): SVGSVGElement {
+export function createSVGElement(map: Map, timeframe: TimeFrame, user_email: string, lightTheme: boolean): SVGSVGElement {
   const dom = new JSDOM(map.svg);
   const svgElement = dom.window.document.querySelector("svg") as SVGSVGElement;
 
@@ -29,16 +29,34 @@ export function createSVGElement(map: Map, timeframe: TimeFrame, lightTheme: boo
   meta.setAttribute("pagecolor", lightTheme ? LIGHT : DARK);
   meta.setAttribute("bordercolor", lightTheme ? LIGHT : DARK);
 
-  svgElement.querySelectorAll("g").forEach(g => {
-    const rect = g.querySelectorAll("rect");
-    if (rect.length < 2) {
-      rect[0].style.fill = FREE;
-      rect[0].style.transition = "filter 0.1s ease";
-    } else {
-      rect.forEach(rct => {
-        rct.style.fill = FREE;
-        rct.style.transition = "filter 0.1s ease";
-      })
+  // For each button
+  svgElement.querySelectorAll("g").forEach(async (g) => {
+    const rect = g.querySelector("rect");
+    if (!rect) return;
+    if (rect.id.includes("background")) {
+      rect.style.fill = LIGHT // TODO: Put the primary color of the site
+      return;
+    }
+
+    const button_key = rect.id.substring(4);
+    const button_color = FREE;
+
+    // Render only the rects that are in the json
+    if (button_key in map.config) {
+      const aula = (map.config as any)[button_key];
+
+      // Fetch all the prenotazioni for that specifi aula that are in the same day and which start time is inbetween the time range that is 
+      // specified in the timeframe
+
+      const prenotazioni = await selectPrenotazioneRange(timeframe.data, timeframe.inizio, timeframe.fine, aula);
+      console.log(prenotazioni)
+
+      // if (prenotazioni.)
+      
+
+      rect.style.fill = button_color;
+      rect.style.transition = "filter 0.1s ease";
+      rect.id = "V" + rect.id;
     }
 
     // Redundancy to reduce conditional checks
