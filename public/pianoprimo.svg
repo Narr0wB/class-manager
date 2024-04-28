@@ -23,15 +23,15 @@
      inkscape:pagecheckerboard="false"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="px"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="153.79572"
-     inkscape:cy="142.48202"
+     inkscape:zoom="2.8284272"
+     inkscape:cx="346.30554"
+     inkscape:cy="89.625782"
      inkscape:window-width="2560"
      inkscape:window-height="1417"
      inkscape:window-x="1072"
      inkscape:window-y="224"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer10"
+     inkscape:current-layer="layer4"
      showborder="false"
      labelstyle="default" />
   <defs
@@ -915,21 +915,21 @@
      id="layer4"
      inkscape:label="button3">
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:round"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:round"
        id="rect3"
-       width="118.22273"
-       height="147.16379"
+       width="142.69148"
+       height="164.94504"
        x="358.38672"
-       y="20.246094"
+       y="2.464844"
        inkscape:label="rect3" />
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:round"
-       id="rect31"
-       width="30.588274"
-       height="164.64854"
-       x="470.09918"
-       y="2.8232234"
-       inkscape:label="rect31" />
+       style="opacity:1;fill:#ffffff;stroke:#000000;stroke-width:0;stroke-linecap:round"
+       id="background0"
+       width="119.51823"
+       height="17.574619"
+       x="349.85172"
+       y="0.20342709"
+       inkscape:label="background0" />
     <path
        style="opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-dasharray:none;stroke-opacity:1"
        d="m 469.0342,1.5414636 h 32.06694"
@@ -940,7 +940,7 @@
        id="path20" />
     <path
        style="opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-dasharray:none;stroke-opacity:1"
-       d="M 470.5044,0.33919355 V 20.251634"
+       d="M 470.50441,0.33919356 V 20.384217"
        id="path3-6" />
     <path
        style="opacity:1;fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.992537"

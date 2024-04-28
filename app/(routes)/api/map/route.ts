@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
   const floor = searchParams.get("floor") as string;
   const theme = searchParams.get("theme") as string;
   const timeframe_string = searchParams.get("timeframe") as string;
+  const user_email = searchParams.get("user") as string;
 
   // if (!floor) return NextResponse.error();
   // if (!theme) return NextResponse.error();
@@ -50,9 +51,10 @@ export async function GET(req: NextRequest) {
 
   // TODO: convert timeframe from string to a TimeFrame object
   const timeframe = JSON.parse(timeframe_string);
-  console.log(timeframe)
+  timeframe.data = new Date(timeframe.data);
+  //console.log(timeframe, user_email);
 
-  const svgElement = createSVGElement(selected_floor, timeframe, theme == "light");
+  const svgElement = createSVGElement(selected_floor, timeframe, user_email, theme == "light");
 
   return NextResponse.json(svgElement.innerHTML);
 }

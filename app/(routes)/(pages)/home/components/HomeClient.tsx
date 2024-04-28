@@ -21,6 +21,8 @@ const HomeClient: React.FC = () => {
   const [startMinutes, setStartMinutes] = useStartMinutes();
   const [endMinutes, setEndMinutes] = useEndMinutes();
 
+  const [timeframe, setTimeframe] = useTimeframe();
+
   function inStartBounds(minutes: number) {
     let hours = Math.floor(minutes / 60);
     let min = minutes % 60;
@@ -61,13 +63,22 @@ const HomeClient: React.FC = () => {
 
   useEffect(() => {
     let b = inStartBounds(startMinutes);
+
     if (b != 0) {
       setStartMinutes(b);
     }
+
     b = inEndBounds(endMinutes);
+
     if (b != 0) {
       setEndMinutes(b);
     }
+
+    setTimeframe(prevState => {
+      prevState.fine = endMinutes;
+      prevState.inizio = startMinutes;
+      return prevState;
+    })
   }, [startMinutes, endMinutes]);
 
   return (
