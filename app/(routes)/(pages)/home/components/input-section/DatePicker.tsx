@@ -24,8 +24,12 @@ const DatePicker: React.FC<DatePickerProps> = ({ className }) => {
           
           date = new Date(date.getTime() + Math.abs(date?.getTimezoneOffset() * 60000))
           setTimeframe((prevState) => {
-            prevState.data = date!
-            return prevState;
+            const t: TimeFrame = {
+              inizio: prevState.inizio,
+              fine: prevState.fine,
+              data: date
+            };
+            return t;
           })
           setDate(date);
         }}
