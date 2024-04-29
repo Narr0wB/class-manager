@@ -3,6 +3,7 @@ import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 import { useTimeframe } from "../HomeProvider";
 import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 
 type MapProps = {
   floor: number
@@ -25,18 +26,28 @@ const Map: React.FC<MapProps> = (props) => {
   }, [theme]);
 
   useEffect(() => {
-    fetchData().then(svgInnerHtml => setSvgInnerHtml(svgInnerHtml))
-  }, [timeframe.data, timeframe.inizio, timeframe.fine]);
+    // We put nothing in order to avoid, when a rerender is triggerd due to a change in the theme of the site, that the old map is shown while the new one is requested.
+    // What we should do is: 
+    //  - receive the command to re-render
+    //  - delete the current html in the svg element so to show nothing
+    //  - wait for the new html from the server
+    //  - animate the fade in of the new map 
+    setSvgInnerHtml("");
+
+    fetchData().then(svgInnerHtml => setSvgInnerHtml(svgInnerHtml));
+  }, [timeframe.data, timeframe.inizio, timeframe.fine, theme]);
 
 
   return (
     svgInnerHtml ?
+    <>   
       <svg
         {...others}
         key={theme}
         dangerouslySetInnerHTML={{ __html: svgInnerHtml }}
-        className="w-full h-full"
-      /> : (
+        className="w-full h-full fade-in-1s"
+      />
+      </> : (
         <div className="flex items-center space-x-4">
           <Skeleton className="h-12 w-12 rounded-full" />
           <div className="space-y-2">

@@ -1,17 +1,75 @@
 "use client"
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTrigger } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import HourRangeSelector from './HourRangeSelector';
 import { Clock10Icon } from 'lucide-react';
 import CustomTooltip from '@/components/custom/CustomTooltip';
+import { useTimeframe } from '../HomeProvider';
+import { useEndMinutes, useStartMinutes } from './HourProvider';
 
 type HourRangeDrawerProps = {
   className?: string;
 }
 
 const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
+  const [timeframe, setTimeframe] = useTimeframe();
+  const [startMinutes, setStartMinutes] = useStartMinutes();
+  const [endMinutes, setEndMinutes] = useEndMinutes();
+
+  function inStartBounds(minutes: number) {
+    let hours = Math.floor(minutes / 60);
+    let min = minutes % 60;
+
+    if (hours < 13) {
+      return 13 * 60;
+    }
+    if (hours >= 17) {
+      return 17 * 60;
+    }
+    if ((min % 10) != 0) {
+      min -= min % 10;
+      return hours * 60 + min;
+    }
+
+    return 0;
+  }
+
+  function inEndBounds(minutes: number) {
+    let hours = Math.floor(minutes / 60);
+    let min = minutes % 60;
+
+    if ((min % 10) != 0) {
+      min -= min % 10;
+      return hours * 60 + min;
+    }
+    if ((minutes - startMinutes) < 60) {
+      hours = Math.floor(startMinutes / 60) + 1;
+      min = startMinutes % 60;
+
+      return hours * 60 + min;
+    } else if (hours >= 18) {
+      return 18 * 60;
+    }
+
+    return 0;
+  }
+
+  useEffect(() => {
+    let b = inStartBounds(startMinutes);
+
+    if (b != 0) {
+      setStartMinutes(b);
+    }
+
+    b = inEndBounds(endMinutes);
+
+    if (b != 0) {
+      setEndMinutes(b);
+    }
+  }, [startMinutes, endMinutes]);
+  
   return (
     <div id="hour-range-drawer" className={className}>
       <Drawer>
@@ -30,7 +88,13 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
           <DrawerFooter id="drawer-footer" className="flex items-center w-full h-full">
             <div className="w-[75%] flex flex-col gap-2 justify-center">
               <DrawerClose asChild>
-                <Button>Salva</Button>
+                <Button onClick={() => {
+                  setTimeframe(prevState => {
+                    prevState.fine = endMinutes;
+                    prevState.inizio = startMinutes;
+                    return prevState;
+                  });
+                }}>Salva</Button>
               </DrawerClose>
               <DrawerClose asChild>
                 <Button variant="secondary">Chiudi</Button>
