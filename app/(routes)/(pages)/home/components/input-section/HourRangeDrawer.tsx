@@ -80,14 +80,14 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
             </Button>
           </DrawerTrigger>
         </CustomTooltip>
-        <DrawerContent id="drawer-content" className="fixed bottom-0 mx-[10%] md:mx-[20%] lg:mx-[30%] flex items-center lg:xl:2xl">
+        <DrawerContent id="drawer-content" className="fixed bottom-0 mx-[10%] md:mx-[15%] lg:mx-[20%] flex items-center lg:xl:2xl">
           <DrawerHeader id="drawer-header">
             <DrawerDescription>Seleziona l'ora della prenotazione</DrawerDescription>
           </DrawerHeader>
           <HourRangeSelector
             start={[startMinutes, setStartMinutes]}
             end={[endMinutes, setEndMinutes]}
-            className="w-min md:w-[75%] flex flex-col justify-evenly space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:lg:xl:2xl"
+            className="w-fit md:w-[75%] h-max flex flex-col justify-center space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:lg:xl:2xl"
           />
           <DrawerFooter id="drawer-footer" className="flex items-center w-full h-full">
             <div className="w-[75%] flex flex-col gap-2 justify-center">

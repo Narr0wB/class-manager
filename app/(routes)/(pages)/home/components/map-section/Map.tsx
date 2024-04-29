@@ -3,7 +3,6 @@ import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 import { useTimeframe } from "../HomeProvider";
 import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
 
 type MapProps = {
   floor: number
@@ -12,7 +11,7 @@ type MapProps = {
 const Map: React.FC<MapProps> = (props) => {
   const { floor, ...others } = props;
   const { theme } = useTheme();
-  const [svgInnerHtml, setSvgInnerHtml] = useState("");
+  const [svgInnerHtml, setSvgInnerHtml] = useState<null | string>(null);
   const [timeframe, setTimeframe] = useTimeframe();
   const session = useSession();
 
@@ -23,7 +22,7 @@ const Map: React.FC<MapProps> = (props) => {
     );
     const svgInnerHtml = await res.json();
     return svgInnerHtml;
-  }, [theme]);
+  }, [floor, theme, timeframe.data, timeframe.fine, timeframe.inizio, session.data?.user?.email]);
 
   useEffect(() => {
     // We put nothing in order to avoid, when a rerender is triggerd due to a change in the theme of the site,
@@ -33,10 +32,10 @@ const Map: React.FC<MapProps> = (props) => {
     //  - delete the current html in the svg element so to show nothing
     //  - wait for the new html from the server
     //  - animate the fade in of the new map
-    setSvgInnerHtml("");
+    setSvgInnerHtml(null);
 
     fetchData().then(svgInnerHtml => setSvgInnerHtml(svgInnerHtml));
-  }, [timeframe.data, timeframe.inizio, timeframe.fine, theme]);
+  }, [theme, timeframe.data, timeframe.inizio, timeframe.fine]);
 
 
   return (
