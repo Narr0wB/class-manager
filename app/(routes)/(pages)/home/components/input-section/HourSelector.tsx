@@ -21,6 +21,7 @@ const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, set
     }
   }
 
+  // We use this ref to update the value of the input displayed
   const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, set
   }, [minutes]);
 
   return (
-    <div id={id} className={cn("flex items-center", className)}>
+    <div id={id} className={cn("h-max flex items-center space-x-2", className)}>
       <Button
         size="icon"
         className="h-8 w-8 shrink-0 rounded-full"
@@ -43,6 +44,7 @@ const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, set
         onBlur={handleBlur}
         defaultValue={minutesToHourString(minutes)}
         ref={input}
+        className="h-max text-center text-2xl md:text-3xl lg:text-4xl 2xl:text-6xl"
       />
       <Button
         size="icon"

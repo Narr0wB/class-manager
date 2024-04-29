@@ -106,32 +106,26 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
     const rect = groups[i].querySelector("rect");
     if (!rect) return;
 
-    groups[i].style.display = "flex";
-    groups[i].style.justifyContent = "center";
-    groups[i].style.flex = "0";
-    groups[i].style.flexGrow = "0";
     const txt = dom.window.document.createElement("text");
     txt.textContent = "eddu";
     groups[i].appendChild(txt);
 
-    // This is needed to be able to change the colour of "background 1" rect, which is in the button3 g
+    // This is needed to be able to change the colour of "background0" rect, which is in the button3 g
     if (rect.id == "rect3") {
-      const tmp = groups[i].querySelectorAll("rect");
+      const rects = groups[i].querySelectorAll("rect");
 
-      tmp.forEach(e => {
-        if (e.id == (EMPTY_RECT_ID)) {
-          e.style.fill = theme_background 
+      rects.forEach(rect => {
+        if (rect.id == (EMPTY_RECT_ID)) {
+          rect.style.fill = theme_background
           return;
         }
       })
     }
-    
 
     // Remove "rect" and leave only the numerical id (i.e. 12, 13, 9, 1)
     rect.id = rect.id.substring(4);
 
     const btn = Button.free(rect.id);
-    // console.log(btn);
 
     // Render only the rects that are in the json
     if (btn.id in map.config) {
@@ -140,9 +134,9 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
       // Fetch all the prenotazioni for that specific aula that are in the same day
       // and which start time is in between the time range specified in the timeframe
       const prenotazioni = await selectPrenotazioneRange(timeframe.data, timeframe.inizio, timeframe.fine, aula);
-      
+
       // Check if there are any prenotazioni in the specified timeframe and if so act accordingly
-      if (prenotazioni && prenotazioni?.length != 0) {
+      if (prenotazioni && prenotazioni.length != 0) {
         if (prenotazioni.at(0)?.id == await IDfromEmail(userEmail)) {
           if (prenotazioni.at(0)?.approvata) {
             btn.color = COLORS.APPROVED;
@@ -158,12 +152,12 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
           btn.code = CODES.BOOKED
         }
       }
-      
+
       rect.style.fill = btn.color;
       rect.style.transition = "filter 0.1s ease";
       rect.id = btn.code + rect.id;
     }
-    
+
     // If the button is not in the config file, then is it deactivated. Still, its color has to be updated on any theme changes
     // as to not render the rects inside those buttons with a different color than the background
     else {
