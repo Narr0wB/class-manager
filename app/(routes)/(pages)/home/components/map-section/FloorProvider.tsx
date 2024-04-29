@@ -1,3 +1,5 @@
+"use client"
+
 import React, { SetStateAction, createContext, useContext, useState } from 'react';
 
 export const FLOORS = {

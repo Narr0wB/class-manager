@@ -1,96 +1,159 @@
 import { JSDOM } from "jsdom";
 import { IDfromEmail, selectPrenotazioneRange, TimeFrame } from "./database";
-import fs  from "fs";
+import fs from "fs";
 
-export const [FREE, BOOKED, PENDING, APPROVED] = ["#b8b8b8", "#E90000", "#E9E900", "#008000"];
-const [LIGHT, DARK] = ["#FFFFFF", "#000000"];
+export const COLORS = {
+  FREE: "#b8b8b8",
+  BOOKED: "#E90000",
+  PENDING: "#E9E900",
+  APPROVED: "#008000"
+};
+
+export const CODES = {
+  FREE: "F",
+  BOOKED: "B",
+  PENDING: "P",
+  APPROVED: "A"
+};
+
+export const THEMES = {
+  LIGHT: "#FFFFFF",
+  DARK: "#000000"
+};
+
+const EMPTY_RECT_ID = "background";
 
 export type Map = {
   svg: string;
   config: JSON;
 }
 
-export function loadMap(map_path: string) {
-  const config_path = map_path.replace(".svg", ".json");
+class Button {
+  id: string;
+  color: string;
+  code: string;
 
-  const result: Map = {
-    svg: fs.readFileSync(map_path, "utf-8"),
-    config: JSON.parse(fs.readFileSync(config_path, "utf-8"))
+  constructor(id: string, color: string, code: string) {
+    this.id = id,
+      this.color = color,
+      this.code = code
   }
 
-  return result;
+  static fromRect(rect: SVGRectElement) {
+    const code = rect.id[0];
+    const id = rect.id.substring(1);
+
+    let color;
+    switch (code) {
+      case CODES.FREE: {
+        color = COLORS.FREE;
+        break;
+      }
+      case CODES.BOOKED: {
+        color = COLORS.BOOKED;
+        break;
+      }
+      case CODES.PENDING: {
+        color = COLORS.PENDING;
+        break;
+      }
+      case CODES.APPROVED: {
+        color = COLORS.APPROVED;
+        break;
+      }
+      default: {
+        color = COLORS.FREE;
+        break;
+      }
+    }
+    return new Button(id, color, code);
+  }
+
+  static free(id: string) {
+    return new Button(id, COLORS.FREE, CODES.FREE);
+  }
 }
 
-export async function createSVGElement(map: Map, timeframe: TimeFrame, user_email: string, lightTheme: boolean) {
-  const dom = new JSDOM(map.svg);
-  const svgElement = dom.window.document.querySelector("svg") as SVGSVGElement;
+export function loadMap(mapPath: string): Map {
+  const configPath = mapPath.replace(".svg", ".json");
+
+  const map = {
+    svg: fs.readFileSync(mapPath, "utf-8"),
+    config: JSON.parse(fs.readFileSync(configPath, "utf-8"))
+  } satisfies Map;
+
+  return map;
+}
+
+function createSVGElement(svg: string) {
+  const dom = new JSDOM(svg);
+  return dom.window.document.querySelector("svg") as SVGSVGElement;
+}
+
+export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string, lightTheme: boolean) {
+  const svgElement = createSVGElement(map.svg);
 
   const meta = svgElement.getElementsByTagName("sodipodi:namedview")[0];
-  meta.setAttribute("pagecolor", lightTheme ? LIGHT : DARK);
-  meta.setAttribute("bordercolor", lightTheme ? LIGHT : DARK);
+  meta.setAttribute("pagecolor", lightTheme ? THEMES.LIGHT : THEMES.DARK);
+  meta.setAttribute("bordercolor", lightTheme ? THEMES.LIGHT : THEMES.DARK);
 
-  const elements = svgElement.querySelectorAll("g");
+  const groups = svgElement.querySelectorAll("g");
 
-  for (let i = 0; i < elements.length; i++) {
-    const rect = elements[i].querySelector("rect");
+  groups.forEach(async group => {
+    const rect = group.querySelector("rect");
     if (!rect) return;
-    if (rect.id.includes("background")) {
-      rect.style.fill = LIGHT // TODO: Put the primary color of the site
+    if (rect.id.includes(EMPTY_RECT_ID)) {
+      rect.style.fill = THEMES.LIGHT // TODO: Put the primary color of the website
       return;
     }
 
-    const button_key = rect.id.substring(4);
-    let button_color = FREE;
-    // This variable is needed to send specific information about a specific button to the client, i.e. if the button_client_code is "V" then the button is valid and signifies
-    // a free classroom
-    let button_client_code = "V";
+    // Remove "rect" and leave only the numerical id
+    rect.id = rect.id.substring(3);
+
+    const btn = Button.free(rect.id);
+    console.log(btn);
 
     // Render only the rects that are in the json
-    if (button_key in map.config) {
-      const aula = (map.config as any)[button_key];
+    if (btn.id in map.config) {
+      const aula = (map.config as any)[btn.id];
 
-      // Fetch all the prenotazioni for that specifi aula that are in the same day and which start time is inbetween the time range that is 
-      // specified in the timeframe
-
+      // Fetch all the prenotazioni for that specific aula that are in the same day
+      // and which start time is in between the time range specified in the timeframe
       const prenotazioni = await selectPrenotazioneRange(timeframe.data, timeframe.inizio, timeframe.fine, aula);
-      
-      if (prenotazioni?.length == 0) {
-        button_color = FREE;
-      }
-      else if (prenotazioni?.at(0)?.id == await IDfromEmail(user_email)) {
-        if (prenotazioni?.at(0)?.approvata) {
-          button_color = APPROVED;
-          button_client_code = "A";
+      if (!prenotazioni) return null;
+      else if (prenotazioni.at(0)?.id == await IDfromEmail(userEmail)) {
+        if (prenotazioni.at(0)?.approvata) {
+          btn.color = COLORS.APPROVED;
+          btn.code = CODES.APPROVED
         }
         else {
-          button_color = PENDING;
-          button_client_code = "P";
+          btn.color = COLORS.PENDING;
+          btn.code = CODES.PENDING
         }
       }
       else {
-        button_color = BOOKED;
-        button_client_code = "B"
+        btn.color = COLORS.BOOKED;
+        btn.code = CODES.BOOKED
       }
-      
 
-      rect.style.fill = button_color;
+      rect.style.fill = btn.color;
       rect.style.transition = "filter 0.1s ease";
-      rect.id = "V" + rect.id; // TODO: Put the button client code and parse it correctly in the client side code
+      rect.id = btn.code + rect.id;
     }
 
     // Redundancy to reduce conditional checks
     if (lightTheme) {
-      elements[i].querySelectorAll("path").forEach(path => {
-        path.style.stroke = DARK;
-        path.style.fill = DARK;
+      group.querySelectorAll("path").forEach(path => {
+        path.style.stroke = THEMES.DARK;
+        path.style.fill = THEMES.DARK;
       });
     } else {
-      elements[i].querySelectorAll("path").forEach(path => {
-        path.style.stroke = LIGHT;
-        path.style.fill = LIGHT;
+      group.querySelectorAll("path").forEach(path => {
+        path.style.stroke = THEMES.LIGHT;
+        path.style.fill = THEMES.LIGHT;
       });
     }
-  }
+  });
 
   return svgElement;
 }

@@ -59,7 +59,7 @@ export async function IDfromEmail(email: string) {
   return undefined;
 }
 
-export async function prenotazioneInsert(prenotazione: Prenotazione) {
+export async function insertPrenotazione(prenotazione: Prenotazione) {
   const formattedDate = new Date(prenotazione.data).toISOString().slice(0, 19).replace('T', ' ');
 
   const res = await query(
@@ -88,7 +88,7 @@ export async function selectPrenotazioneRange(date: Date, time_start: number, ti
   const date_string = date.toISOString().slice(0, 10);
   const time_start_string = timeToString(time_start);
   const time_end_string = timeToString(time_end);
-  
+
   //console.log(date_string, time_start_string, time_end_string, aula);
 
   const ret = await query<Prenotazione>(

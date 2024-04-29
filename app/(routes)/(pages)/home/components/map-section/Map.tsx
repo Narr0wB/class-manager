@@ -2,7 +2,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 import { useTimeframe } from "../HomeProvider";
-import { time } from "console";
 import { useSession } from "next-auth/react";
 
 type MapProps = {
@@ -16,15 +15,18 @@ const Map: React.FC<MapProps> = (props) => {
   const [timeframe, setTimeframe] = useTimeframe();
   const session = useSession();
 
-  useEffect(() => {
-    fetchData().then(svgInnerHtml => setSvgInnerHtml(svgInnerHtml))
-  }, [timeframe.data, timeframe.inizio, timeframe.fine]);
-
   const fetchData = useCallback(async () => {
-    const res = await fetch(`/api/map?src=${floor}&theme=${theme}&timeframe=${JSON.stringify(timeframe)}&user=${session.data?.user?.email}`);
+    const res = await fetch(
+      `/api/map?floor=${floor}&theme=${theme}&timeframe=${JSON.stringify(timeframe)}&userEmail=${session.data?.user?.email}`,
+      { method: "GET" }
+    );
     const svgInnerHtml = await res.json();
     return svgInnerHtml;
   }, [theme]);
+
+  useEffect(() => {
+    fetchData().then(svgInnerHtml => setSvgInnerHtml(svgInnerHtml))
+  }, [timeframe.data, timeframe.inizio, timeframe.fine]);
 
 
   return (

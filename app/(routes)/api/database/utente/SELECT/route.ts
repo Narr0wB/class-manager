@@ -1,4 +1,4 @@
-import { SELECT_UtenteEmail } from "@/lib/backend/database";
+import { selectUtenteEmail } from "@/lib/backend/database";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
 
   if (!emailParam) NextResponse.error();
 
-  const res = await SELECT_UtenteEmail(emailParam) as any;
+  const res = await selectUtenteEmail(emailParam) as any;
 
   return NextResponse.json(res);
 }

@@ -4,7 +4,6 @@ import { minutesToHourString } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import { TimeFrame } from '@/lib/backend/database';
 import { useEndMinutes, useStartMinutes } from './input-section/HourProvider';
 import HourRangeDrawer from './input-section/HourRangeDrawer';
 import DatePicker from './input-section/DatePicker';
