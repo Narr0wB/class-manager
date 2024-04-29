@@ -91,13 +91,9 @@ export function loadMap(mapPath: string): Map {
   return map;
 }
 
-function createSVGElement(svg: string) {
-  const dom = new JSDOM(svg);
-  return dom.window.document.querySelector("svg") as SVGSVGElement;
-}
-
 export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string, lightTheme: boolean) {
-  const svgElement = createSVGElement(map.svg);
+  const dom = new JSDOM(map.svg);
+  const svgElement = dom.window.document.querySelector("svg") as SVGSVGElement;
 
   const meta = svgElement.getElementsByTagName("sodipodi:namedview")[0];
   meta.setAttribute("pagecolor", lightTheme ? THEMES.LIGHT : THEMES.DARK);
@@ -109,6 +105,14 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
   for (let i = 0; i < groups.length; i++) {
     const rect = groups[i].querySelector("rect");
     if (!rect) return;
+
+    groups[i].style.display = "flex";
+    groups[i].style.justifyContent = "center";
+    groups[i].style.flex = "0";
+    groups[i].style.flexGrow = "0";
+    const txt = dom.window.document.createElement("text");
+    txt.textContent = "eddu";
+    groups[i].appendChild(txt);
 
     // This is needed to be able to change the colour of "background 1" rect, which is in the button3 g
     if (rect.id == "rect3") {
