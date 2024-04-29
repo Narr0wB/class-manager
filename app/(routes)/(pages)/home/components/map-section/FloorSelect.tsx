@@ -1,14 +1,13 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useFloor } from './FloorProvider';
+import { SetStateAction } from 'react';
 
 type FloorSelectProps = {
   className?: string;
   items: string[];
+  setFloor: React.Dispatch<SetStateAction<number>>;
 }
 
-const FloorSelect: React.FC<FloorSelectProps> = ({ className, items }) => {
-  const [floor, setFloor] = useFloor();
-
+const FloorSelect: React.FC<FloorSelectProps> = ({ className, items, setFloor }) => {
   // piano x => x
   const map = new Map<string, number>();
   items.forEach((item, i) => map.set(item, i));
