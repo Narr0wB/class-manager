@@ -1,15 +1,13 @@
 import { cn } from "@/lib/utils";
 import React from "react";
-import { useFloor } from "./FloorProvider";
 
 type FloorsContainerProps = {
   children?: React.ReactNode;
+  floor: number
   className?: string;
 }
 
-const FloorsContainer: React.FC<FloorsContainerProps> = ({ children, className }) => {
-  const [floor, setFloor] = useFloor();
-
+const FloorsContainer: React.FC<FloorsContainerProps> = ({ children, className, floor }) => {
   return (
     <div id="floors-container" className={cn("relative flex items-center justify-center", className)}>
       {

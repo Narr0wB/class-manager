@@ -7,7 +7,7 @@ import HourRangeSelector from './HourRangeSelector';
 import { Clock10Icon } from 'lucide-react';
 import CustomTooltip from '@/components/custom/CustomTooltip';
 import { useTimeframe } from '../HomeProvider';
-import { useEndMinutes, useStartMinutes } from './HourProvider';
+import { TimeFrame } from '@/lib/backend/database';
 
 type HourRangeDrawerProps = {
   className?: string;
@@ -15,8 +15,8 @@ type HourRangeDrawerProps = {
 
 const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
   const [timeframe, setTimeframe] = useTimeframe();
-  const [startMinutes, setStartMinutes] = useStartMinutes();
-  const [endMinutes, setEndMinutes] = useEndMinutes();
+  const [startMinutes, setStartMinutes] = useState(13 * 60 + 30);
+  const [endMinutes, setEndMinutes] = useState(14 * 60 + 30);
 
   function inStartBounds(minutes: number) {
     let hours = Math.floor(minutes / 60);
@@ -69,7 +69,7 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
       setEndMinutes(b);
     }
   }, [startMinutes, endMinutes]);
-  
+
   return (
     <div id="hour-range-drawer" className={className}>
       <Drawer>
@@ -84,17 +84,28 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
           <DrawerHeader id="drawer-header">
             <DrawerDescription>Seleziona l'ora della prenotazione</DrawerDescription>
           </DrawerHeader>
-          <HourRangeSelector className="w-min md:w-[75%] flex flex-col justify-evenly space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:lg:xl:2xl" />
+          <HourRangeSelector
+            start={[startMinutes, setStartMinutes]}
+            end={[endMinutes, setEndMinutes]}
+            className="w-min md:w-[75%] flex flex-col justify-evenly space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:lg:xl:2xl"
+          />
           <DrawerFooter id="drawer-footer" className="flex items-center w-full h-full">
             <div className="w-[75%] flex flex-col gap-2 justify-center">
               <DrawerClose asChild>
-                <Button onClick={() => {
-                  setTimeframe(prevState => {
-                    prevState.fine = endMinutes;
-                    prevState.inizio = startMinutes;
-                    return prevState;
-                  });
-                }}>Salva</Button>
+                <Button
+                  onClick={() => {
+                    setTimeframe(prev => {
+                      const t: TimeFrame = {
+                        inizio: startMinutes,
+                        fine: endMinutes,
+                        data: prev.data
+                      };
+                      return t;
+                    });
+                  }}
+                >
+                  Salva
+                </Button>
               </DrawerClose>
               <DrawerClose asChild>
                 <Button variant="secondary">Chiudi</Button>

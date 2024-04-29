@@ -15,11 +15,6 @@ export type TimeFrame = {
   fine: number,
 }
 
-var TimeFrame: {
-  new(): TimeFrame;
-  prototype: TimeFrame;
-}
-
 export type Aula = {
   id: number;
   type: string;
