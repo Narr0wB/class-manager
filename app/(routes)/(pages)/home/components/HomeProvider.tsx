@@ -8,8 +8,8 @@ type HomeContextValue = {
   setTimeframe: React.Dispatch<SetStateAction<TimeFrame>>
 }
 
-const HomeContext = createContext<HomeContextValue>({
-  timeframe: {data: new Date, inizio: 0, fine: 0},
+export const HomeContext = createContext<HomeContextValue>({
+  timeframe: {data: new Date, inizio: 13 * 60 + 30, fine: 14 * 60 + 30},
   setTimeframe: () => {}
 })
 
@@ -23,15 +23,16 @@ type HomeProviderProps = {
 }
 
 const HomeProvider: React.FC<HomeProviderProps> = ({ children }) => {
-  const [timeframe, setTimeframe] = useState({data: new Date, inizio: 0, fine: 0});
+  const [timeframe, setTimeframe] = useState<TimeFrame>({data: new Date, inizio: 13 * 60 + 30, fine: 14 * 60 + 30});
+
+  const value = {
+    timeframe: timeframe,
+    setTimeframe: setTimeframe
+  } satisfies HomeContextValue;
 
   return (
-    <HomeContext.Provider value={{ timeframe, setTimeframe }}>
-      <HourProvider>
-        <FloorProvider>
-          {children}
-        </FloorProvider>
-      </HourProvider>
+    <HomeContext.Provider value={ value }>
+      {children}
     </HomeContext.Provider>
   )
 }

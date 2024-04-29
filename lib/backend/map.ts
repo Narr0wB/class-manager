@@ -21,7 +21,13 @@ export const THEMES = {
   DARK: "#000000"
 };
 
-const EMPTY_RECT_ID = "background";
+export const BACKGROUND = {
+  LIGHT: "#F9FAFB",
+  DARK: "#030712"
+}
+
+// DO NOT CHANGE (its background0!!!)
+const EMPTY_RECT_ID = "background0";
 
 export type Map = {
   svg: string;
@@ -97,21 +103,31 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
   meta.setAttribute("pagecolor", lightTheme ? THEMES.LIGHT : THEMES.DARK);
   meta.setAttribute("bordercolor", lightTheme ? THEMES.LIGHT : THEMES.DARK);
 
+  const theme_background = lightTheme ? BACKGROUND.LIGHT : BACKGROUND.DARK;
   const groups = svgElement.querySelectorAll("g");
 
-  groups.forEach(async group => {
-    const rect = group.querySelector("rect");
+  for (let i = 0; i < groups.length; i++) {
+    const rect = groups[i].querySelector("rect");
     if (!rect) return;
-    if (rect.id.includes(EMPTY_RECT_ID)) {
-      rect.style.fill = THEMES.LIGHT // TODO: Put the primary color of the website
-      return;
-    }
 
-    // Remove "rect" and leave only the numerical id
-    rect.id = rect.id.substring(3);
+    // This is needed to be able to change the colour of "background 1" rect, which is in the button3 g
+    if (rect.id == "rect3") {
+      const tmp = groups[i].querySelectorAll("rect");
+
+      tmp.forEach(e => {
+        if (e.id == (EMPTY_RECT_ID)) {
+          e.style.fill = theme_background 
+          return;
+        }
+      })
+    }
+    
+
+    // Remove "rect" and leave only the numerical id (i.e. 12, 13, 9, 1)
+    rect.id = rect.id.substring(4);
 
     const btn = Button.free(rect.id);
-    console.log(btn);
+    // console.log(btn);
 
     // Render only the rects that are in the json
     if (btn.id in map.config) {
@@ -120,40 +136,50 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
       // Fetch all the prenotazioni for that specific aula that are in the same day
       // and which start time is in between the time range specified in the timeframe
       const prenotazioni = await selectPrenotazioneRange(timeframe.data, timeframe.inizio, timeframe.fine, aula);
-      if (!prenotazioni) return null;
-      else if (prenotazioni.at(0)?.id == await IDfromEmail(userEmail)) {
-        if (prenotazioni.at(0)?.approvata) {
-          btn.color = COLORS.APPROVED;
-          btn.code = CODES.APPROVED
+      
+      // Check if there are any prenotazioni in the specified timeframe and if so act accordingly
+      if (prenotazioni && prenotazioni?.length != 0) {
+        if (prenotazioni.at(0)?.id == await IDfromEmail(userEmail)) {
+          if (prenotazioni.at(0)?.approvata) {
+            btn.color = COLORS.APPROVED;
+            btn.code = CODES.APPROVED
+          }
+          else {
+            btn.color = COLORS.PENDING;
+            btn.code = CODES.PENDING
+          }
         }
         else {
-          btn.color = COLORS.PENDING;
-          btn.code = CODES.PENDING
+          btn.color = COLORS.BOOKED;
+          btn.code = CODES.BOOKED
         }
       }
-      else {
-        btn.color = COLORS.BOOKED;
-        btn.code = CODES.BOOKED
-      }
-
+      
       rect.style.fill = btn.color;
       rect.style.transition = "filter 0.1s ease";
       rect.id = btn.code + rect.id;
     }
+    
+    // If the button is not in the config file, then is it deactivated. Still, its color has to be updated on any theme changes
+    // as to not render the rects inside those buttons with a different color than the background
+    else {
+      rect.style.fill = theme_background;
+      rect.style.transition = "filter 0.1s ease";
+    }
 
     // Redundancy to reduce conditional checks
     if (lightTheme) {
-      group.querySelectorAll("path").forEach(path => {
+      groups[i].querySelectorAll("path").forEach(path => {
         path.style.stroke = THEMES.DARK;
         path.style.fill = THEMES.DARK;
       });
     } else {
-      group.querySelectorAll("path").forEach(path => {
+      groups[i].querySelectorAll("path").forEach(path => {
         path.style.stroke = THEMES.LIGHT;
         path.style.fill = THEMES.LIGHT;
       });
     }
-  });
+  };
 
   return svgElement;
 }

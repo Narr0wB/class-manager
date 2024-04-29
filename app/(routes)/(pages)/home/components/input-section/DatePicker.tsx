@@ -20,6 +20,9 @@ const DatePicker: React.FC<DatePickerProps> = ({ className }) => {
         mode="single"
         selected={date}
         onSelect={(date) => {
+          if (!date) return;
+          
+          date = new Date(date.getTime() + Math.abs(date?.getTimezoneOffset() * 60000))
           setTimeframe((prevState) => {
             prevState.data = date!
             return prevState;
