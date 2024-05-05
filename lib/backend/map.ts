@@ -102,17 +102,15 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
   const theme_background = lightTheme ? BACKGROUND.LIGHT : BACKGROUND.DARK;
   const groups = svgElement.querySelectorAll("g");
 
-  
-
   for (let i = 0; i < groups.length; i++) {
     // Change the color of the structural paths (NOTE: The first g of the map is always the structural layer)
-    // groups[i].querySelectorAll("path").forEach(path => {
-    //   path.style.stroke = lightTheme ? THEMES.DARK : THEMES.LIGHT;
-    //   path.style.fill = lightTheme ? THEMES.DARK : THEMES.LIGHT;
-    // });
+    groups[i].querySelectorAll("path").forEach(path => {
+      path.style.stroke = lightTheme ? THEMES.DARK : THEMES.LIGHT;
+      path.style.fill = lightTheme ? THEMES.DARK : THEMES.LIGHT;
+    });
 
     const rect = groups[i].querySelector("rect");
-    if (!rect) return;
+    if (!rect) continue;
 
     // This is needed to be able to change the colour of "background0" rect, which is in the button3 g
     const rects = groups[i].querySelectorAll("rect");
@@ -120,7 +118,6 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
     rects.forEach(rect => {
       if (rect.id.includes(BACKGROUND_IDENTIFIER)) {
         rect.style.fill = theme_background
-        return;
       }
     });
 
@@ -128,7 +125,8 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
     // Change the color of the paths that are between two buttons
     // const path = groups[i].querySelector("path");
     // if (path && path?.id.includes("separator") && (path?.id.substring(9)) in map.config) {
-    //   path.style.fill = lightTheme ? THEMES.DARK : THEMES.DARK; 
+    //   if (path) { console.log(path!.id, path?.id.includes("separator"), (path?.id.substring(9)) in map.config); }
+    //   //path.style.stroke = lightTheme ? THEMES.DARK : THEMES.DARK; 
     // }
 
     // Remove "rect" and leave only the numerical id (i.e. 12, 13, 9, 1)
@@ -172,19 +170,6 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
     else {
       rect.style.fill = theme_background;
       rect.style.transition = "filter 0.1s ease";
-    }
-
-    // Redundancy to reduce conditional checks
-    if (lightTheme) {
-      groups[i].querySelectorAll("path").forEach(path => {
-        path.style.stroke = THEMES.DARK;
-        path.style.fill = THEMES.DARK;
-      });
-    } else {
-      groups[i].querySelectorAll("path").forEach(path => {
-        path.style.stroke = THEMES.LIGHT;
-        path.style.fill = THEMES.LIGHT;
-      });
     }
   };
 

@@ -25,7 +25,7 @@ const Map: React.FC<MapProps> = (props) => {
   }, [floor, theme, timeframe.data, timeframe.fine, timeframe.inizio, session.data?.user?.email]);
 
   useEffect(() => {
-    // We put nothing in order to avoid, when a rerender is triggerd due to a change in the theme of the site,
+    // We put nothing in order to avoid, when a rerender is triggerd,
     // that the old map is shown while the new one is requested.
     // What we should do is: 
     //  - receive the command to re-render

@@ -53,6 +53,9 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
   // TODO: Fix bug because of which whenever a button is hovered on the map lags
   function handleMouseOver(e: React.MouseEvent) {
     const target = e.target as HTMLElement;
+    if (target.tagName == "path") {
+      target.style.filter = "brightness(0.8)";
+    }
     if (target.tagName == "rect" && target.id[0] == "F") {    
       target.style.filter = "brightness(0.8)";
     }
@@ -60,6 +63,9 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
 
   function handleMouseOut(e: React.MouseEvent) {
     const target = e.target as HTMLElement;
+    if (target.tagName == "path") {
+      target.style.filter = "none";
+    }
     if (target.tagName == "rect" && target.id[0] == "F") {
       target.style.filter = "none";
     }
@@ -70,7 +76,7 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
       <Map
         floor={id}
         id={`floor-${id}`}
-        viewBox="300 0 800 1300"
+        viewBox="300 0 800 1400"
         onClick={handleClick}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
