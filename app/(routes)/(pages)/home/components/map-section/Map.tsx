@@ -37,7 +37,6 @@ const Map: React.FC<MapProps> = (props) => {
     fetchData().then(svgInnerHtml => setSvgInnerHtml(svgInnerHtml));
   }, [theme, timeframe.data, timeframe.inizio, timeframe.fine]);
 
-
   return (
     svgInnerHtml ?
       <svg

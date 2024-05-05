@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Map from "@/app/(routes)/(pages)/home/components/map-section/Map";
+import SaveDialog from '../SaveDialog';
 
 type FloorProps = {
   className?: string;
@@ -7,10 +8,13 @@ type FloorProps = {
 }
 
 const Floor: React.FC<FloorProps> = ({ id }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   function handleClick(e: React.MouseEvent) {
     const target = e.target as HTMLElement;
     if (target.tagName == "rect" && target.id[0] == "F") {
       console.log(`ID: ${target.id}`);
+      setIsDialogOpen(true); // Open the dialog
     }
   }
 
@@ -61,18 +65,21 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
   }
 
   return (
-    <Map
-      floor={id}
-      id={`floor-${id}`}
-      viewBox="300 0 800 1300"
-      onClick={handleClick}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onTouchStartCapture={handleTouchStartCapture}
-      onTouchEndCapture={handleTouchEndCapture}
-      onMouseOver={handleMouseOver}
-      onMouseOut={handleMouseOut}
-    />
+    <>
+      <Map
+        floor={id}
+        id={`floor-${id}`}
+        viewBox="300 0 800 1300"
+        onClick={handleClick}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onTouchStartCapture={handleTouchStartCapture}
+        onTouchEndCapture={handleTouchEndCapture}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+      />
+      <SaveDialog open={[isDialogOpen, setIsDialogOpen]} />
+    </>
   )
 }
 
