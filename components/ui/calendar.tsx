@@ -2,11 +2,11 @@
 
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker, DayPickerProvider } from "react-day-picker"
+import { DayPicker } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
-import { FormatLong, Locale, Localize } from "date-fns"
+import { Locale } from "date-fns"
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -23,7 +23,7 @@ const locale = {
   }
 } as unknown as Locale;
 
-// Dopo le 13 non si può più prenotare per quel giorno
+// After 13.00 it's not possible to book a classroom anymore
 function getTodayValid() {
   if (new Date().getHours() > 13) {
     return new Date(new Date().setDate(new Date().getDate()));
@@ -78,7 +78,7 @@ function Calendar({
         day_today: "text-black",
         day_outside:
           "day-outside text-black aria-selected:text-white aria-selected:opacity-100",
-        //day_disabled: "text-muted-foreground opacity-50",
+        day_disabled: "text-muted-foreground opacity-50",
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
