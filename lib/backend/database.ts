@@ -28,6 +28,9 @@ export type Utente = {
   type: string;
 }
 
+export const ADMIN_USER = "Amministratore";
+export const REGULAR_USER = "Studente";
+
 export type Prenotazione = {
   id?: number;
   id_utente: number;

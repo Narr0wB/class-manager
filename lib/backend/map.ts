@@ -3,8 +3,8 @@ import { IDfromEmail, selectPrenotazioneRange, TimeFrame } from "./database";
 import fs from "fs";
 
 export const COLORS = {
-  FREE: "#b8b8b8",
-  BOOKED: "#E90000",
+  FREE: "#dac3e8",
+  BOOKED: "#2b2d42",
   PENDING: "#E9E900",
   APPROVED: "#008000"
 };
@@ -109,25 +109,18 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
       path.style.fill = lightTheme ? THEMES.DARK : THEMES.LIGHT;
     });
 
-    const rect = groups[i].querySelector("rect");
+    const rects = groups[i].querySelectorAll("rect");
+    const rect = rects[0];
     if (!rect) continue;
 
-    // This is needed to be able to change the colour of "background0" rect, which is in the button3 g
-    const rects = groups[i].querySelectorAll("rect");
-
+    // This is needed to be able to change the colour of "background" rects
     rects.forEach(rect => {
       if (rect.id.includes(BACKGROUND_IDENTIFIER)) {
         rect.style.fill = theme_background
       }
     });
 
-
-    // Change the color of the paths that are between two buttons
-    // const path = groups[i].querySelector("path");
-    // if (path && path?.id.includes("separator") && (path?.id.substring(9)) in map.config) {
-    //   if (path) { console.log(path!.id, path?.id.includes("separator"), (path?.id.substring(9)) in map.config); }
-    //   //path.style.stroke = lightTheme ? THEMES.DARK : THEMES.DARK; 
-    // }
+    const button_text = groups[i].querySelector("text");
 
     // Remove "rect" and leave only the numerical id (i.e. 12, 13, 9, 1)
     rect.id = rect.id.substring(4);
@@ -137,6 +130,17 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
     // Render only the rects that are in the json
     if (btn.id in map.config) {
       const aula = (map.config as any)[btn.id];
+
+      if (button_text) {
+        // TODO add new color for the text in dark mode
+        button_text.style.fill = lightTheme ? THEMES.DARK : THEMES.DARK;
+        button_text.style.fontFamily = "Roboto";
+        button_text.style.pointerEvents = "none";
+        const spans = button_text.querySelectorAll("tspan");
+        spans[1].textContent = aula;
+        spans[1].style.fontFamily = "Roboto";
+        spans[1].style.fill = "#884DEE";
+      }
 
       // Fetch all the prenotazioni for that specific aula that are in the same day
       // and which start time is in between the time range specified in the timeframe
@@ -168,6 +172,7 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
     // If the button is not in the config file, then is it deactivated. Still, its color has to be updated on any theme changes
     // as to not render the rects inside those buttons with a different color than the background
     else {
+      if (button_text) button_text.style.fill = theme_background; 
       rect.style.fill = theme_background;
       rect.style.transition = "filter 0.1s ease";
     }
