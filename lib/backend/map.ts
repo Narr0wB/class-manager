@@ -22,7 +22,7 @@ export const THEMES = {
 };
 
 export const BACKGROUND = {
-  LIGHT: "#F9FAFB",
+  LIGHT: "#FFFFFF",
   DARK: "#030712"
 }
 
