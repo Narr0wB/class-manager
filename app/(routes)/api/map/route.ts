@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
     }
     case "1": {
       if (!FLOOR1) {
-        FLOOR1 = loadMap("./public/pianoprimo.svg");
+        FLOOR1 = loadMap("./public/pianosecondo.svg");
       }
 
       selectedFloor = FLOOR1;

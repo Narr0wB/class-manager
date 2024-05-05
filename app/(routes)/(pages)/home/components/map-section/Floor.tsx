@@ -64,7 +64,7 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
     <Map
       floor={id}
       id={`floor-${id}`}
-      viewBox="300 0 800 1300"
+      viewBox="300 0 800 1400"
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
