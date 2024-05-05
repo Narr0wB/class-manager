@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/app/components/ThemeProvider";
 import { getServerSession } from "next-auth";
 import HeaderBar from "@/app/components/header/HeaderBar";
 import SessionProvider from "./components/SessionProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SessionProvider session={session}>
             <HeaderBar />
+            <Toaster />
             {children}
           </SessionProvider>
         </ThemeProvider>
