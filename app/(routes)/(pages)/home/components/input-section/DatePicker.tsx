@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from '@/lib/utils';
-import { RefObject, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { TimeFrame } from '@/lib/backend/database';
 import { Calendar } from '@/components/ui/calendar';
 import { useTimeframe } from '../HomeProvider';
@@ -11,7 +11,13 @@ type DatePickerProps = {
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({ className }) => {
-  const [date, setDate] = useState<Date>()
+  const [date, setDate] = useState<Date>(() => {
+    const todayDate = new Date();
+    const tomorrowDate = new Date();
+    tomorrowDate.setDate(todayDate.getDate() + 1);
+
+    return todayDate.getHours() > 13 ? tomorrowDate : todayDate;
+  });
   const [timeframe, setTimeframe] = useTimeframe();
 
   return (
@@ -19,19 +25,19 @@ const DatePicker: React.FC<DatePickerProps> = ({ className }) => {
       <Calendar
         mode="single"
         selected={date}
-        onSelect={(date) => {
+        onSelect={date => {
           if (!date) return;
-          
-          date = new Date(date.getTime() + Math.abs(date?.getTimezoneOffset() * 60000))
-          setTimeframe((prevState) => {
+          const formatted = new Date(date.getTime() + Math.abs(date.getTimezoneOffset() * 60000));
+
+          setTimeframe(prev => {
             const t: TimeFrame = {
-              inizio: prevState.inizio,
-              fine: prevState.fine,
-              data: date
+              inizio: prev.inizio,
+              fine: prev.fine,
+              data: formatted
             };
             return t;
-          })
-          setDate(date);
+          });
+          setDate(formatted);
         }}
         className="w-fit h-fit"
       />
