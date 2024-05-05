@@ -26,7 +26,7 @@ export const BACKGROUND = {
   DARK: "#030712"
 }
 
-// DO NOT CHANGE (its background0!!!)
+// DO NOT CHANGE 
 const BACKGROUND_IDENTIFIER = "background";
 
 export type Map = {
