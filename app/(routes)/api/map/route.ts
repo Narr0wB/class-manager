@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
     }
     case "2": {
       if (!FLOOR2) {
-        FLOOR2 = loadMap("./public/pianoprimo.svg");
+        FLOOR2 = loadMap("./public/pianoterzo.svg");
       }
 
       selectedFloor = FLOOR2;
@@ -57,7 +57,6 @@ export async function GET(req: NextRequest) {
 
   const timeframe = JSON.parse(timeframeParam);
   timeframe.data = new Date(timeframe.data);
-
 
   const svgElement = await parseSVG(selectedFloor!, timeframe, userEmailParam, themeParam == "light");
 

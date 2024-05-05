@@ -27,7 +27,7 @@ export const BACKGROUND = {
 }
 
 // DO NOT CHANGE (its background0!!!)
-const EMPTY_RECT_ID = "background0";
+const BACKGROUND_IDENTIFIER = "background";
 
 export type Map = {
   svg: string;
@@ -102,25 +102,34 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
   const theme_background = lightTheme ? BACKGROUND.LIGHT : BACKGROUND.DARK;
   const groups = svgElement.querySelectorAll("g");
 
+  
+
   for (let i = 0; i < groups.length; i++) {
+    // Change the color of the structural paths (NOTE: The first g of the map is always the structural layer)
+    // groups[i].querySelectorAll("path").forEach(path => {
+    //   path.style.stroke = lightTheme ? THEMES.DARK : THEMES.LIGHT;
+    //   path.style.fill = lightTheme ? THEMES.DARK : THEMES.LIGHT;
+    // });
+
     const rect = groups[i].querySelector("rect");
     if (!rect) return;
 
-    const txt = dom.window.document.createElement("text");
-    txt.textContent = "eddu";
-    groups[i].appendChild(txt);
-
     // This is needed to be able to change the colour of "background0" rect, which is in the button3 g
-    if (rect.id == "rect3") {
-      const rects = groups[i].querySelectorAll("rect");
+    const rects = groups[i].querySelectorAll("rect");
 
-      rects.forEach(rect => {
-        if (rect.id == (EMPTY_RECT_ID)) {
-          rect.style.fill = theme_background
-          return;
-        }
-      })
-    }
+    rects.forEach(rect => {
+      if (rect.id.includes(BACKGROUND_IDENTIFIER)) {
+        rect.style.fill = theme_background
+        return;
+      }
+    });
+
+
+    // Change the color of the paths that are between two buttons
+    // const path = groups[i].querySelector("path");
+    // if (path && path?.id.includes("separator") && (path?.id.substring(9)) in map.config) {
+    //   path.style.fill = lightTheme ? THEMES.DARK : THEMES.DARK; 
+    // }
 
     // Remove "rect" and leave only the numerical id (i.e. 12, 13, 9, 1)
     rect.id = rect.id.substring(4);
