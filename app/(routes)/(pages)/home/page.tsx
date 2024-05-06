@@ -10,7 +10,7 @@ const Home: React.FC = async () => {
 
   return (
     <HomeWrapper>
-      {true ? <HomeClientAdmin /> : <HomeClient />}
+      {admin ? <HomeClientAdmin /> : <HomeClient />}
     </HomeWrapper>
   )
 }

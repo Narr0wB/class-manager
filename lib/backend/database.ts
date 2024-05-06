@@ -98,11 +98,11 @@ export async function selectPrenotazioneRange(date: Date, time_start: number, ti
   return ret;
 }
 
-export async function selectPrenotazioniUser(email_utente: string, data: Date | undefined) {
+export async function selectPrenotazioniUser(email_utente: string, data: Date | null) {
   const id_utente = await IDfromEmail(email_utente);
 
   if (data) {
-    const date_start_string = data.toISOString().slice(0, 19).replace("T", " ");
+    const date_start_string = data.toISOString().slice(0, 19).replace('T', ' ');
 
     const ret = await query<Prenotazione>(
       QUERY_SELECT_PRE_UTENTE_AFTER,
