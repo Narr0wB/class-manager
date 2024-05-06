@@ -15,16 +15,16 @@ import { signOut, useSession } from "next-auth/react"
 import { redirect } from "next/navigation"
 import { Skeleton } from "@/components/ui/skeleton"
 import React from "react"
-import Bookings from "./bookings"
 import CustomTooltip from "@/components/custom/CustomTooltip"
+import { useSheet } from "../SheetProvider"
 
 type ProfileButtonProps = {
   className?: string,
-  prenotazioni: React.ReactNode
 }
 
-const ProfileButton: React.FC<ProfileButtonProps> = ({ className, prenotazioni }) => {
+const ProfileButton: React.FC<ProfileButtonProps> = ({ className }) => {
   const { status, data } = useSession();
+  const [sheetOpen, setSheetOpen] = useSheet();
 
   const avatar = () => {
     switch (status) {
@@ -60,13 +60,11 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ className, prenotazioni }
       case "authenticated":
         return (
           <>
-            <DropdownMenuItem>
-              <Bookings prenotazioni={prenotazioni}>
-                <div className="flex flex-row items-center justify-start">
-                  <CalendarIcon className="w-5 h-5" />
-                  <span className="ml-2">Le mie prenotazioni</span>
-                </div>
-              </Bookings>
+            <DropdownMenuItem onClick={() => setSheetOpen(true)}>
+              <div className="flex flex-row items-center justify-start">
+                <CalendarIcon className="w-5 h-5" />
+                <span className="ml-2">Le mie prenotazioni</span>
+              </div>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => signOut()}>
               <div className="flex flex-row items-center justify-start">

@@ -11,51 +11,22 @@ import { useToast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
 import { useTimeframe } from "./HomeProvider";
-import { Prenotazione, Utente } from "@/lib/backend/database";
+import { Prenotazione, TimeFrame, Utente } from "@/lib/backend/database";
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
+import { formatHour } from "@/lib/utils";
+import React from "react";
 
 type SaveDialogProps = {
   open: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
-  aula: number
+  aula: number,
+  setRenderMapFlag: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const SaveDialog: React.FC<SaveDialogProps> = ({ open, aula }) => {
+const SaveDialog: React.FC<SaveDialogProps> = ({ open, aula, setRenderMapFlag }) => {
   const [isOpen, setIsOpen] = open;
   const { toast } = useToast();
   const [timeframe, setTimeframe] = useTimeframe();
   const session = useSession();
-  // const [prenotazioni, setPrenotazioni] = useState<Prenotazione[] | null>(null);
-
-  // const fetchData = useCallback(async () => {
-  //   const res = await fetch(
-  //     `/api/database/prenotazione/SELECT?date=${timeframe.data}&userEmail=${session.data?.user?.email}`,
-  //     { method: "GET" }
-  //   );
-  //   const prenotazioni = await res.json();
-  //   return prenotazioni;
-  // }, [timeframe.data, session.data?.user?.email]);
-
-  // useEffect(() => {
-  //   fetchData().then(prenotazioni => setPrenotazioni(prenotazioni));
-  // }, [timeframe.data]);
-
-  const fetchUser = useCallback(async () => {
-    const res = await fetch(
-      `/api/database/utente/SELECT?userEmail=${session.data?.user?.email}`,
-      { method: "GET" }
-    );
-    const user = await res.json();
-    return user as Utente;
-  }, [session.data?.user?.email]);
-
-  const insertPrenotazione = async (prenotazione: Prenotazione) => {
-    const res = await fetch(
-      "/api/database/prenotazione/INSERT",
-      { method: "POST", body: JSON.stringify(prenotazione) }
-    );
-    const data = await res.json();
-    return data;
-  }
 
   const date = timeframe.data.toLocaleDateString("it", {
     year: "numeric",
@@ -63,12 +34,7 @@ const SaveDialog: React.FC<SaveDialogProps> = ({ open, aula }) => {
     day: "2-digit"
   });
 
-  function formatHour(minutes: number): string {
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return `${h}:${m}`;
-  }
-
+  // Do not change whitespaces
   const prenotazioneInfo = <>
     il giorno
     <span className="text-primary"> {`${date}`} </span>
@@ -83,7 +49,6 @@ const SaveDialog: React.FC<SaveDialogProps> = ({ open, aula }) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Sei sicuro?</AlertDialogTitle>
-          {/* Do not change whitespaces */}
           <AlertDialogDescription>
             Prenotazione per {prenotazioneInfo}
           </AlertDialogDescription>
@@ -91,19 +56,27 @@ const SaveDialog: React.FC<SaveDialogProps> = ({ open, aula }) => {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancella</AlertDialogCancel>
           <AlertDialogAction onClick={async () => {
-            const user = await fetchUser();
-            const data = await insertPrenotazione({
-              id_utente: user.id,
-              id_aula: aula,
-              data: timeframe.data,
-              approvata: false
-            }) as any;
+            // Insert the prenotazione
+            const res = await fetch(
+              "/api/database/prenotazione/INSERT", {
+              method: "POST",
+              body: JSON.stringify({
+                user_email: session.data?.user?.email,
+                id_aula: aula,
+                timeframe: timeframe
+              })
+            });
+            const data = await res.json();
+
+            // IDK if its useful
             const prenotazioneId = data.id;
-            console.log(prenotazioneId);
             toast({
               title: "Aggiunta prenotazione",
               description: prenotazioneInfo,
             });
+
+            // Workaround to trigger a re-render in the Map component
+            setRenderMapFlag(prev => !prev);
           }}>
             Salva
           </AlertDialogAction>

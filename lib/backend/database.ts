@@ -1,6 +1,7 @@
+import { formatHour } from "../utils";
 import { query } from "./mysql";
 
-const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(id_utente, id_aula, data, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?)";
+const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(id_utente, id_aula, data, approvata, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?)";
 const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
 const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? AND ora_inizio BETWEEN ? and ? AND id_aula = ?";
 const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
@@ -37,18 +38,20 @@ export type Prenotazione = {
   id_aula: number;
   data: Date;
   approvata: boolean;
+  ora_inizio: string,
+  ora_fine: string
 }
 
 export function timeToString(time: number) {
   return Math.floor(time / 60).toString().padStart(2, "0") + ":" + (time % 60).toString().padStart(2, "0") + ":" + "00";
 }
 
-export async function insertPrenotazione(prenotazione: Prenotazione) {
-  const formattedDate = new Date(prenotazione.data).toISOString().slice(0, 19).replace('T', ' ');
+export async function insertPrenotazione(pren: Prenotazione) {
+  const formattedDate = new Date(pren.data).toISOString().slice(0, 19).replace('T', ' ');
 
   const res = await query(
     QUERY_INSERT_PRE,
-    [prenotazione.id_utente, prenotazione.id_aula, formattedDate, prenotazione.approvata]
+    [pren.id_utente, pren.id_aula, formattedDate, pren.approvata, pren.ora_inizio, pren.ora_fine]
   );
 
   return res;
@@ -92,8 +95,10 @@ export async function selectPrenotazioneRange(date: Date, time_start: number, ti
   return ret;
 }
 
-export async function selectPrenotazioniUser(email_utente: string, data: Date | null) {
+export async function selectPrenotazioniUser(email_utente: string, data: Date | undefined) {
   const id_utente = await IDfromEmail(email_utente);
+
+  console.log(`DATA_DB: ${data}`);
 
   if (data) {
     const date_start_string = data.toISOString().slice(0, 19).replace("T", " ");
