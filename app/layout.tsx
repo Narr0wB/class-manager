@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth";
 import HeaderBar from "@/app/components/header/HeaderBar";
 import SessionProvider from "./components/SessionProvider";
 import { Toaster } from "@/components/ui/toaster";
+import SheetProvider from "./components/SheetProvider";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -27,9 +28,11 @@ const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
       <body className={cn(font.className, "absolute w-screen h-screen overflow-x-hidden lg:overflow-y-hidden lg:xl:2xl")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SessionProvider session={session}>
-            <HeaderBar />
-            <Toaster />
-            {children}
+            <SheetProvider>
+              <HeaderBar />
+              <Toaster />
+              {children}
+            </SheetProvider>
           </SessionProvider>
         </ThemeProvider>
       </body>

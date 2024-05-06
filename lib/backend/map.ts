@@ -166,13 +166,13 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
 
       rect.style.fill = btn.color;
       rect.style.transition = "filter 0.1s ease";
-      rect.id = btn.code + rect.id;
+      rect.id = btn.code + map.config[rect.id as keyof typeof map.config];
     }
 
     // If the button is not in the config file, then is it deactivated. Still, its color has to be updated on any theme changes
     // as to not render the rects inside those buttons with a different color than the background
     else {
-      if (button_text) button_text.style.fill = theme_background; 
+      if (button_text) button_text.style.fill = theme_background;
       rect.style.fill = theme_background;
       rect.style.transition = "filter 0.1s ease";
     }
