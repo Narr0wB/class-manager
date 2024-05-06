@@ -43,20 +43,6 @@ export function timeToString(time: number) {
   return Math.floor(time / 60).toString().padStart(2, "0") + ":" + (time % 60).toString().padStart(2, "0") + ":" + "00";
 }
 
-export async function IDfromEmail(email: string) {
-  const ret = await query<Utente>(
-    QUERY_SELECT_UTENTE_EMAIL,
-    [email]
-  );
-
-
-  if (ret && ret[0]) {
-    return ret[0].id;
-  }
-
-  return undefined;
-}
-
 export async function insertPrenotazione(prenotazione: Prenotazione) {
   const formattedDate = new Date(prenotazione.data).toISOString().slice(0, 19).replace('T', ' ');
 
@@ -77,6 +63,15 @@ export async function selectUtenteEmail(email: string) {
 
   if (ret) {
     return ret[0];
+  }
+
+  return undefined;
+}
+
+export async function IDfromEmail(email: string) {
+  const user = await selectUtenteEmail(email);
+  if (user) {
+    return user.id;
   }
 
   return undefined;

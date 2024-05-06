@@ -4,7 +4,7 @@ import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker } from "react-day-picker"
 
-import { cn } from "@/lib/utils"
+import { cn, getValidDate } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Locale } from "date-fns"
 
@@ -23,21 +23,6 @@ const locale = {
   }
 } as unknown as Locale;
 
-// After 13.00 it's not possible to book a classroom anymore
-function getTodayValid() {
-  if (new Date().getHours() > 13) {
-    return new Date(new Date().setDate(new Date().getDate()));
-  }
-  else {
-    return new Date(new Date().setDate(new Date().getDate() - 1))
-  }
-}
-
-const disabledDays = [
-  { from: new Date(new Date().setMonth(new Date().getMonth() - 100)), to: getTodayValid() },
-  { from: new Date(new Date().setMonth(new Date().getMonth() + 1)), to: new Date(new Date().setMonth(new Date().getMonth() + 100)) }
-];
-
 function Calendar({
   className,
   classNames,
@@ -48,8 +33,10 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
-      disabled={disabledDays}
       locale={locale}
+      fromDate={getValidDate()}
+      // 9th of june
+      toDate={new Date(new Date().setMonth(5, 10))}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -75,7 +62,6 @@ function Calendar({
         day_range_end: "day-range-end",
         day_selected:
           "bg-purple-600 text-white hover:bg-purple-700 focus:bg-purple-600",
-        day_today: "text-black",
         day_outside:
           "day-outside text-black aria-selected:text-white aria-selected:opacity-100",
         day_disabled: "text-muted-foreground opacity-50",
