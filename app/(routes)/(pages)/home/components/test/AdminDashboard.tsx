@@ -37,10 +37,10 @@ import { MailDisplay } from "./PrenotazioneDisplay"
 import { PrenotazioneList } from "./PrenotazioneList"
 import { Nav } from "./nav"
 import { type Mail } from "./data"
-import { usePrenotazione } from "./use-mail"
+import { usePrenotazione } from "./admin"
 import { useState } from "react"
 import { Prenotazione } from "@/lib/backend/database"
-import { PrenotazioneUI } from "./PrenotazioneCard"
+import { PrenotazioneUI } from "./admin"
 
 interface AdminDashboardProps {
   accounts: {
@@ -64,7 +64,7 @@ export function AdminDashboard({
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed)
   const [prenotazione] = usePrenotazione()
 
-  const prenotazione_list = [{prenotazione: {id: 0, id_utente: 2, id_aula: 2, data: new Date("May 6, 2024, 6:14:30 PM"), approvata: false, ora_inizio: 100, ora_fine: 200}, id: 1, selected: 0, name: "Ilias El Fourati", desc: "eddi", subject: "gaming", read: false, labels: ["Aula 23"]}];
+  const prenotazione_list = [{prenotazione: {id: 0, data_ora_prenotazione: new Date(), id_utente: 2, id_aula: 2, data: new Date("May 6, 2024, 6:14:30 PM"), approvata: false, ora_inizio: 100, ora_fine: 200}, id: 1, selected: 0, name: "Ilias El Fourati", desc: "eddi", subject: "gaming", read: false, labels: ["Aula 23"]}];
 
   return (
     <TooltipProvider delayDuration={0}>

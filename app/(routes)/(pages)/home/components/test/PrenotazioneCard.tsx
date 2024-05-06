@@ -1,5 +1,5 @@
 import { Prenotazione } from "@/lib/backend/database"
-import { usePrenotazione } from "./use-mail";
+import { PrenotazioneUI, usePrenotazione } from "./admin";
 import { cn, formatHour } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ComponentProps } from "react";
@@ -10,14 +10,7 @@ type PrenotazioneCardProps = {
 }
 
 // Still need a better way to name this
-export type PrenotazioneUI = {
-    prenotazione: Prenotazione,
-    name: string,
-    desc: string,
-    subject: string,
-    read: boolean,
-    labels: string[]
-}
+
 
 const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
     const [prenotazione, setPrenotazione] = usePrenotazione();
@@ -56,7 +49,7 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
                       : "text-muted-foreground"
                   )}
                 >
-                  {"sussi barca" /* TODO: create a formatTimeFromNow function} */}
+                  {card.prenotazione.data_ora_prenotazione.toISOString().substring(0, 17) /* TODO: create a formatTimeFromNow function} */}
                 </div>
               </div>
               <div className="text-xs font-medium">{card.subject}</div>
