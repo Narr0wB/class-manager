@@ -10,7 +10,7 @@ import FloorsContainer from './map-section/FloorsContainer';
 import Floor from './map-section/Floor';
 import { useTimeframe } from './HomeProvider';
 import { useState } from 'react';
-import Bookings from '@/app/components/header/Bookings';
+//import Bookings from '@/app/components/header/Bookings';
 
 export const FLOORS = {
   FLOOR_1: 1,
@@ -47,7 +47,6 @@ const HomeClient: React.FC = () => {
             <Floor id={FLOORS.FLOOR_3} />
           </FloorsContainer>
         </section>
-        <Bookings />
       </div>
     </main>
   )

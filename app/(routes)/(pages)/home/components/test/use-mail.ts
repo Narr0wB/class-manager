@@ -2,7 +2,7 @@ import { atom, useAtom } from "jotai"
 import { PrenotazioneUI } from "./PrenotazioneCard"
 
 type Config = {
-  selected: PrenotazioneUI["id"] | null
+  selected: PrenotazioneUI["prenotazione"]["id"] | null
 }
 
 const configAtom = atom<Config>({

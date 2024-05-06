@@ -15,8 +15,8 @@ export async function POST(req: NextRequest) {
     id_aula: obj.id_aula,
     data: timeframe.data,
     approvata: false,
-    ora_inizio: formatHour(timeframe.inizio),
-    ora_fine: formatHour(timeframe.fine)
+    ora_inizio: timeframe.inizio,
+    ora_fine: timeframe.fine
   }
 
   try {

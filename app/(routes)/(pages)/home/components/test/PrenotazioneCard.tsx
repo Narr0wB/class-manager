@@ -1,20 +1,19 @@
 import { Prenotazione } from "@/lib/backend/database"
 import { usePrenotazione } from "./use-mail";
-import { cn } from "@/lib/utils";
+import { cn, formatHour } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ComponentProps } from "react";
 
 
 type PrenotazioneCardProps = {
-    card: PrenotazioneUI;
+  card: PrenotazioneUI;
 }
 
+// Still need a better way to name this
 export type PrenotazioneUI = {
     prenotazione: Prenotazione,
-    id: number,
-    selected: number,
     name: string,
-    text: string,
+    desc: string,
     subject: string,
     read: boolean,
     labels: string[]
@@ -25,16 +24,20 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
 
     return (
         <button
-            key={card.id}
+            key={card.prenotazione.id}
             className={cn(
               "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
-              prenotazione.selected === card.id && "bg-muted"
+              prenotazione.selected === card.prenotazione.id && "bg-muted"
             )}
-            onClick={() =>
+            onClick={() => {
+              card.read = true;
+
               setPrenotazione({
                 ...prenotazione,
-                selected: card.id,
-              })
+                // If already selected another will de-select it
+                selected: prenotazione.selected == card.prenotazione.id ? -1 : card.prenotazione.id,
+              });
+            }
             }
           >
             <div className="flex w-full flex-col gap-1">
@@ -48,20 +51,18 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
                 <div
                   className={cn(
                     "ml-auto text-xs",
-                    prenotazione.selected === card.id
+                    prenotazione.selected === card.prenotazione.id
                       ? "text-foreground"
                       : "text-muted-foreground"
                   )}
                 >
-                  { "eddu"/* {formatDistanceToNow(new Date(card.date), {
-                    addSuffix: true,
-                  })} */}
+                  {"sussi barca" /* TODO: create a formatTimeFromNow function} */}
                 </div>
               </div>
               <div className="text-xs font-medium">{card.subject}</div>
             </div>
             <div className="line-clamp-2 text-xs text-muted-foreground">
-              {card.text.substring(0, 300)}
+              {formatHour(card.prenotazione.ora_inizio) + " - " + formatHour(card.prenotazione.ora_fine)}
             </div>
             {card.labels.length ? (
               <div className="flex items-center gap-2">
@@ -81,13 +82,13 @@ export default PrenotazioneCard;
 function getBadgeVariantFromLabel(
     label: string
   ): ComponentProps<typeof Badge>["variant"] {
-    if (["work"].includes(label.toLowerCase())) {
+    if (label.toLowerCase().includes("aula")) {
       return "default"
     }
   
-    if (["personal"].includes(label.toLowerCase())) {
-      return "outline"
-    }
+    // if (["personal"].includes(label.toLowerCase())) {
+    //   return "outline"
+    // }
   
     return "secondary"
   }
