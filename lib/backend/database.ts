@@ -38,8 +38,8 @@ export type Prenotazione = {
   id_aula: number;
   data: Date;
   approvata: boolean;
-  ora_inizio: string,
-  ora_fine: string
+  ora_inizio: number,
+  ora_fine: number
 }
 
 export function timeToString(time: number) {
@@ -49,9 +49,12 @@ export function timeToString(time: number) {
 export async function insertPrenotazione(pren: Prenotazione) {
   const formattedDate = new Date(pren.data).toISOString().slice(0, 19).replace('T', ' ');
 
+  const ora_inizio_string = formatHour(pren.ora_inizio);
+  const ora_fine_string = formatHour(pren.ora_fine);
+
   const res = await query(
     QUERY_INSERT_PRE,
-    [pren.id_utente, pren.id_aula, formattedDate, pren.approvata, pren.ora_inizio, pren.ora_fine]
+    [pren.id_utente, pren.id_aula, formattedDate, pren.approvata, ora_inizio_string, ora_fine_string]
   );
 
   return res;
@@ -97,8 +100,6 @@ export async function selectPrenotazioneRange(date: Date, time_start: number, ti
 
 export async function selectPrenotazioniUser(email_utente: string, data: Date | undefined) {
   const id_utente = await IDfromEmail(email_utente);
-
-  console.log(`DATA_DB: ${data}`);
 
   if (data) {
     const date_start_string = data.toISOString().slice(0, 19).replace("T", " ");

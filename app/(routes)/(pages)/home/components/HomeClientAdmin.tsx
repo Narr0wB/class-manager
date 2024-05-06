@@ -1,16 +1,16 @@
-import { Mail } from "./test/AdminDashboard"
+import { AdminDashboard } from "./test/AdminDashboard"
 
 const HomeClientAdmin: React.FC = () => {
   return (
     <div>
-      <Mail
+      <AdminDashboard
       accounts={[{label: "eddu", email: "gaming"} ]}
       mails={[]}
       defaultLayout = {undefined}
       defaultCollapsed = {false}
       navCollapsedSize={1000}
       >
-      </Mail>
+      </AdminDashboard>
     </div>
   );
 }

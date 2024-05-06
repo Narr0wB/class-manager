@@ -33,8 +33,8 @@ import {
 } from "@/components/ui/tabs"
 import { TooltipProvider } from "@/components/ui/tooltip"
 // import { AccountSwitcher } from "@/app/(app)/examples/mail/components/account-switcher"
-// import { MailDisplay } from "@/app/(app)/examples/mail/components/mail-display"
-import { MailList, PrenotazioneCard } from "./mail-list"
+import { MailDisplay } from "./PrenotazioneDisplay"
+import { PrenotazioneList } from "./PrenotazioneList"
 import { Nav } from "./nav"
 import { type Mail } from "./data"
 import { usePrenotazione } from "./use-mail"
@@ -42,7 +42,7 @@ import { useState } from "react"
 import { Prenotazione } from "@/lib/backend/database"
 import { PrenotazioneUI } from "./PrenotazioneCard"
 
-interface MailProps {
+interface AdminDashboardProps {
   accounts: {
     label: string
     email: string
@@ -54,15 +54,17 @@ interface MailProps {
   navCollapsedSize: number
 }
 
-export function Mail({
+export function AdminDashboard({
   accounts,
   mails,
   defaultLayout = [265, 440, 655],
   defaultCollapsed = false,
   navCollapsedSize,
-}: MailProps) {
+}: AdminDashboardProps) {
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed)
   const [prenotazione] = usePrenotazione()
+
+  const prenotazione_list = [{prenotazione: {id: 0, id_utente: 2, id_aula: 2, data: new Date("May 6, 2024, 6:14:30 PM"), approvata: false, ora_inizio: 100, ora_fine: 200}, id: 1, selected: 0, name: "Ilias El Fourati", desc: "eddi", subject: "gaming", read: false, labels: ["Aula 23"]}];
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -82,7 +84,6 @@ export function Mail({
           minSize={15}
           maxSize={20}
           onCollapse={() => {
-
             // Temporary workaround, look at it later
             const collapsed = false;
             setIsCollapsed(collapsed);
@@ -125,60 +126,60 @@ export function Mail({
                 icon: CrossIcon,
                 variant: "ghost",
               },
-              {
-                title: "Junk",
-                label: "23",
-                icon: ArchiveX,
-                variant: "ghost",
-              },
-              {
-                title: "Trash",
-                label: "",
-                icon: Trash2,
-                variant: "ghost",
-              },
-              {
-                title: "Archive",
-                label: "",
-                icon: Archive,
-                variant: "ghost",
-              },
+              // {
+              //   title: "Junk",
+              //   label: "23",
+              //   icon: ArchiveX,
+              //   variant: "ghost",
+              // },
+              // {
+              //   title: "Trash",
+              //   label: "",
+              //   icon: Trash2,
+              //   variant: "ghost",
+              // },
+              // {
+              //   title: "Archive",
+              //   label: "",
+              //   icon: Archive,
+              //   variant: "ghost",
+              // },
             ]}
           />
           <Separator />
           <Nav
             isCollapsed={false}
             links={[
-              {
-                title: "Social",
-                label: "972",
-                icon: Users2,
-                variant: "ghost",
-              },
-              {
-                title: "Updates",
-                label: "342",
-                icon: AlertCircle,
-                variant: "ghost",
-              },
-              {
-                title: "Forums",
-                label: "128",
-                icon: MessagesSquare,
-                variant: "ghost",
-              },
-              {
-                title: "Shopping",
-                label: "8",
-                icon: ShoppingCart,
-                variant: "ghost",
-              },
-              {
-                title: "Promotions",
-                label: "21",
-                icon: Archive,
-                variant: "ghost",
-              },
+              // {
+              //   title: "Social",
+              //   label: "972",
+              //   icon: Users2,
+              //   variant: "ghost",
+              // },
+              // {
+              //   title: "Updates",
+              //   label: "342",
+              //   icon: AlertCircle,
+              //   variant: "ghost",
+              // },
+              // {
+              //   title: "Forums",
+              //   label: "128",
+              //   icon: MessagesSquare,
+              //   variant: "ghost",
+              // },
+              // {
+              //   title: "Shopping",
+              //   label: "8",
+              //   icon: ShoppingCart,
+              //   variant: "ghost",
+              // },
+              // {
+              //   title: "Promotions",
+              //   label: "21",
+              //   icon: Archive,
+              //   variant: "ghost",
+              // },
             ]}
           />
         </ResizablePanel>
@@ -212,7 +213,7 @@ export function Mail({
               </form>
             </div>
             <TabsContent value="all" className="m-0">
-              {/* <MailList items={mails} /> */}
+              <PrenotazioneList items={prenotazione_list} />
             </TabsContent>
             <TabsContent value="unread" className="m-0">
               {/* <MailList items={mails.filter((item) => !item.read)} /> */}
@@ -221,9 +222,9 @@ export function Mail({
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]}>
-          {/* <MailDisplay
-            mail={mails.find((item) => item.id === mail.selected) || null}
-          /> */}
+          <MailDisplay
+            mail={prenotazione_list.find((item) => item.prenotazione.id === prenotazione.selected) || null}
+          />
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>
