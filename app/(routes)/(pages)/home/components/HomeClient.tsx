@@ -10,6 +10,7 @@ import FloorsContainer from './map-section/FloorsContainer';
 import Floor from './map-section/Floor';
 import { useTimeframe } from './HomeProvider';
 import { useState } from 'react';
+import Bookings from '@/app/components/header/Bookings';
 
 export const FLOORS = {
   FLOOR_1: 1,
@@ -41,11 +42,12 @@ const HomeClient: React.FC = () => {
         <section id="map-section" className="w-full h-full box-border flex flex-col p-2 gap-4 rounded-secondary">
           <FloorSelect items={["Primo piano", "Secondo piano", "Terzo piano"]} setFloor={setFloor} className="w-fit h-10" />
           <FloorsContainer floor={floor} className="w-full h-[calc(100%-1rem-2.5rem)]">
-            <Floor id={FLOORS.FLOOR_1} configPath="/pianoprimo.json" />
-            <Floor id={FLOORS.FLOOR_2} configPath="/pianosecondo.json" />
-            <Floor id={FLOORS.FLOOR_3} configPath="/pianoterzo.json" />
+            <Floor id={FLOORS.FLOOR_1} />
+            <Floor id={FLOORS.FLOOR_2} />
+            <Floor id={FLOORS.FLOOR_3} />
           </FloorsContainer>
         </section>
+        <Bookings />
       </div>
     </main>
   )

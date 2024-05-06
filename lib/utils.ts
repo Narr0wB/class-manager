@@ -23,3 +23,9 @@ export function getValidDate() {
 
   return todayDate.getHours() > 13 ? tomorrowDate : todayDate;
 }
+
+export function formatHour(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${h}:${m}`;
+}
