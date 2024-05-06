@@ -14,3 +14,12 @@ export function minutesToHourString(minutes: number): string {
 
   return date.getHours() + ":" + minsString;
 }
+
+// After 13.00 it's not possible to book a classroom anymore
+export function getValidDate() {
+  const todayDate = new Date();
+  const tomorrowDate = new Date();
+  tomorrowDate.setDate(todayDate.getDate() + 1);
+
+  return todayDate.getHours() > 13 ? tomorrowDate : todayDate;
+}

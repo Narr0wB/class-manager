@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const emailParam = searchParams.get("email") as string;
+  const emailParam = searchParams.get("userEmail") as string;
 
   if (!emailParam) NextResponse.error();
 

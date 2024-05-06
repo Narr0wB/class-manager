@@ -1,8 +1,8 @@
 
 const HomeClientAdmin: React.FC = () => {
-    return (
-        <div></div>
-    );
+  return (
+    <div></div>
+  );
 }
 
 export default HomeClientAdmin;

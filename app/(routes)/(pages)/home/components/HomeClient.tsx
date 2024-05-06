@@ -12,9 +12,9 @@ import { useTimeframe } from './HomeProvider';
 import { useState } from 'react';
 
 export const FLOORS = {
-  FLOOR_0: 0,
   FLOOR_1: 1,
   FLOOR_2: 2,
+  FLOOR_3: 3,
 }
 
 const HomeClient: React.FC = () => {
@@ -22,7 +22,7 @@ const HomeClient: React.FC = () => {
   if (!session.data) redirect("/login");
 
   const [timeframe, setTimeframe] = useTimeframe();
-  const [floor, setFloor] = useState(FLOORS.FLOOR_0);
+  const [floor, setFloor] = useState(FLOORS.FLOOR_1);
 
   return (
     <main className="w-screen h-fit lg:h-[calc(100vh-5rem)] box-border p-2 lg:xl:2xl">
@@ -39,11 +39,11 @@ const HomeClient: React.FC = () => {
           <DatePicker className="flex justify-center items-center" />
         </section>
         <section id="map-section" className="w-full h-full box-border flex flex-col p-2 gap-4 rounded-secondary">
-          <FloorSelect items={["Piano terra", "Primo piano", "Secondo piano"]} setFloor={setFloor} className="w-fit h-10" />
+          <FloorSelect items={["Primo piano", "Secondo piano", "Terzo piano"]} setFloor={setFloor} className="w-fit h-10" />
           <FloorsContainer floor={floor} className="w-full h-[calc(100%-1rem-2.5rem)]">
-            <Floor id={FLOORS.FLOOR_0} />
-            <Floor id={FLOORS.FLOOR_1} />
-            <Floor id={FLOORS.FLOOR_2} />
+            <Floor id={FLOORS.FLOOR_1} configPath="/pianoprimo.json" />
+            <Floor id={FLOORS.FLOOR_2} configPath="/pianosecondo.json" />
+            <Floor id={FLOORS.FLOOR_3} configPath="/pianoterzo.json" />
           </FloorsContainer>
         </section>
       </div>
