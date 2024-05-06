@@ -40,15 +40,15 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { PrenotazioneUI } from "./PrenotazioneCard"
+import { PrenotazioneInfo } from "./admin"
 import { Badge } from "@/components/ui/badge"
 import { ComponentProps } from "react"
 
 interface MailDisplayProps {
-  mail: PrenotazioneUI | null
+  prenotazione: PrenotazioneInfo | null
 }
 
-export function MailDisplay({ mail }: MailDisplayProps) {
+export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
   const today = new Date()
 
   return (
@@ -57,7 +57,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!prenotazione}>
                 <Check className="h-4 w-4" />
                 <span className="sr-only">Archive</span>
               </Button>
@@ -66,28 +66,28 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!prenotazione}>
                 <X className="h-4 w-4" />
                 <span className="sr-only">Move to junk</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Move to junk</TooltipContent>
+            <TooltipContent>Rifiuta</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!prenotazione}>
                 <Trash2 className="h-4 w-4" />
                 <span className="sr-only">Move to trash</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Move to trash</TooltipContent>
+            <TooltipContent>Elimina</TooltipContent>
           </Tooltip>
           <Separator orientation="vertical" className="mx-1 h-6" />
           <Tooltip>
             {/* {<Popover>
               <PopoverTrigger asChild>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" disabled={!mail}>
+                  <Button variant="ghost" size="icon" disabled={!prenotazione}>
                     <Clock className="h-4 w-4" />
                     <span className="sr-only">Snooze</span>
                   </Button>
@@ -146,16 +146,16 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         <div className="ml-auto flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!prenotazione}>
                 <Reply className="h-4 w-4" />
-                <span className="sr-only">Reply</span>
+                <span className="sr-only">Rispondi</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Reply</TooltipContent>
+            <TooltipContent>Rispondi</TooltipContent>
           </Tooltip>
           {/* {<Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!prenotazione}>
                 <ReplyAll className="h-4 w-4" />
                 <span className="sr-only">Reply all</span>
               </Button>
@@ -164,7 +164,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!prenotazione}>
                 <Forward className="h-4 w-4" />
                 <span className="sr-only">Forward</span>
               </Button>
@@ -175,9 +175,9 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         <Separator orientation="vertical" className="mx-2 h-6" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" disabled={!mail}>
+            <Button variant="ghost" size="icon" disabled={!prenotazione}>
               <MoreVertical className="h-4 w-4" />
-              <span className="sr-only">More</span>
+              <span className="sr-only">Altro</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -186,45 +186,40 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         </DropdownMenu>
       </div>
       <Separator />
-      {mail ? (
+      {prenotazione ? (
         <div className="flex flex-1 flex-col">
           <div className="flex p-4 justify-between">
             <div className="flex items-start gap-4 text-sm">
               <Avatar>
-                <AvatarImage alt={mail.name} />
+                <AvatarImage alt={prenotazione.name} />
                 <AvatarFallback>
-                  {mail.name
+                  {prenotazione.name
                     .split(" ")
                     .map((chunk) => chunk[0])
                     .join("")}
                 </AvatarFallback>
               </Avatar>
               <div className="grid gap-1">
-                <div className="font-semibold">{mail.name}</div>
-                <div className="line-clamp-1 text-xs">{mail.subject}</div>
+                <div className="font-semibold">{prenotazione.name}</div>
+                <div className="line-clamp-1 text-xs">{prenotazione.subject}</div>
                 <div className="line-clamp-1 text-xs">
-                  <span className="font-medium">{"Prenotato per il: " + (mail.prenotazione.data).toISOString().substring(0, 10)}</span>
+                  <span className="font-medium">{"Prenotato per il: " + (prenotazione.data).toISOString().substring(0, 10)}</span>
                 </div>
               </div>
             </div>
             <div className="flex flex-col">
-              {mail.prenotazione.data && (
+              {prenotazione.data && (
                 <div className="ml-auto text-xs text-muted-foreground">
-                  {"TODO add data di prenotazione"}
+                  {prenotazione.data_ora_prenotazione.toISOString().substring(0, 17)}
                 </div>
               )}
               <div className="w-[50%] flex flex-col items-end justify-center">
-                {mail.labels.map((label) => (
-                  <Badge key={label} variant={getBadgeVariantFromLabel(label)}>
-                    {label}
-                  </Badge>
-                ))}
               </div>
             </div>
           </div>
           <Separator />
           <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
-            {mail.desc}
+            {prenotazione.desc}
           </div>
           <Separator className="mt-auto" />
           {/* <div className="p-4">
@@ -232,7 +227,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
               <div className="grid gap-4">
                 <Textarea
                   className="p-4"
-                  placeholder={`Reply ${mail.name}...`}
+                  placeholder={`Reply ${prenotazione.name}...`}
                 />
                 <div className="flex items-center">
                   <Label

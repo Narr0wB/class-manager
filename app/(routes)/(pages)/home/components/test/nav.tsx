@@ -10,6 +10,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useState } from "react"
 
 interface NavProps {
   isCollapsed: boolean
@@ -19,9 +20,13 @@ interface NavProps {
     icon: LucideIcon
     variant: "default" | "ghost"
   }[]
+
+  clickCallback?: (index: number) => void
 }
 
 export function Nav({ links, isCollapsed }: NavProps) {
+  const [selected, setSelected] = useState(0);
+
   return (
     <div
       data-collapsed={isCollapsed}
