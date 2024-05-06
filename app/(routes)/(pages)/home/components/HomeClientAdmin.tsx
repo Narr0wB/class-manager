@@ -4,7 +4,6 @@ const HomeClientAdmin: React.FC = () => {
   return (
     <div>
       <AdminDashboard
-      accounts={[{label: "eddu", email: "gaming"} ]}
       mails={[]}
       defaultLayout = {undefined}
       defaultCollapsed = {false}

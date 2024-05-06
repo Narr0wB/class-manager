@@ -5,6 +5,7 @@ import {
   AlertCircle,
   Archive,
   ArchiveX,
+  Check,
   CrossIcon,
   File,
   Inbox,
@@ -15,6 +16,7 @@ import {
   TicketIcon,
   Trash2,
   Users2,
+  X,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -33,29 +35,23 @@ import {
 } from "@/components/ui/tabs"
 import { TooltipProvider } from "@/components/ui/tooltip"
 // import { AccountSwitcher } from "@/app/(app)/examples/mail/components/account-switcher"
-import { MailDisplay } from "./PrenotazioneDisplay"
+import { PrenotazioneDisplay } from "./PrenotazioneDisplay"
 import { PrenotazioneList } from "./PrenotazioneList"
 import { Nav } from "./nav"
 import { type Mail } from "./data"
-import { usePrenotazione } from "./use-mail"
+import { usePrenotazione } from "./admin"
 import { useState } from "react"
 import { Prenotazione } from "@/lib/backend/database"
-import { PrenotazioneUI } from "./PrenotazioneCard"
+import { PrenotazioneInfo } from "./admin"
 
 interface AdminDashboardProps {
-  accounts: {
-    label: string
-    email: string
-    icon?: React.ReactNode
-  }[]
-  mails: PrenotazioneUI[]
+  mails: PrenotazioneInfo[]
   defaultLayout: number[] | undefined
   defaultCollapsed?: boolean
   navCollapsedSize: number
 }
 
 export function AdminDashboard({
-  accounts,
   mails,
   defaultLayout = [265, 440, 655],
   defaultCollapsed = false,
@@ -64,7 +60,7 @@ export function AdminDashboard({
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed)
   const [prenotazione] = usePrenotazione()
 
-  const prenotazione_list = [{prenotazione: {id: 0, id_utente: 2, id_aula: 2, data: new Date("May 6, 2024, 6:14:30 PM"), approvata: false, ora_inizio: 100, ora_fine: 200}, id: 1, selected: 0, name: "Ilias El Fourati", desc: "eddi", subject: "gaming", read: false, labels: ["Aula 23"]}];
+  const prenotazione_list = [{id: 0, data_ora_prenotazione: new Date(), id_utente: 2, id_aula: 2, data: new Date("May 6, 2024, 6:14:30 PM"), approvata: false, ora_inizio: 100, ora_fine: 200, selected: 0, name: "Ilias El Fourati", desc: "eddi", subject: "gaming", read: false, label: "Aula 23"}];
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -117,13 +113,13 @@ export function AdminDashboard({
               {
                 title: "Approvate",
                 label: "9",
-                icon: TicketIcon,
+                icon: Check,
                 variant: "ghost",
               },
               {
                 title: "Rifiutate",
                 label: "",
-                icon: CrossIcon,
+                icon: X,
                 variant: "ghost",
               },
               // {
@@ -222,8 +218,8 @@ export function AdminDashboard({
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]}>
-          <MailDisplay
-            mail={prenotazione_list.find((item) => item.prenotazione.id === prenotazione.selected) || null}
+          <PrenotazioneDisplay
+            prenotazione={prenotazione_list.find((item) => item.id === prenotazione.selected) || null}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

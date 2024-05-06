@@ -1,33 +1,26 @@
 import { Prenotazione } from "@/lib/backend/database"
-import { usePrenotazione } from "./use-mail";
+import { PrenotazioneInfo, usePrenotazione } from "./admin";
 import { cn, formatHour } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ComponentProps } from "react";
 
 
 type PrenotazioneCardProps = {
-  card: PrenotazioneUI;
+  card: PrenotazioneInfo;
 }
 
 // Still need a better way to name this
-export type PrenotazioneUI = {
-    prenotazione: Prenotazione,
-    name: string,
-    desc: string,
-    subject: string,
-    read: boolean,
-    labels: string[]
-}
+
 
 const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
     const [prenotazione, setPrenotazione] = usePrenotazione();
 
     return (
         <button
-            key={card.prenotazione.id}
+            key={card.id}
             className={cn(
               "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
-              prenotazione.selected === card.prenotazione.id && "bg-muted"
+              prenotazione.selected === card.id && "bg-muted"
             )}
             onClick={() => {
               card.read = true;
@@ -35,7 +28,7 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
               setPrenotazione({
                 ...prenotazione,
                 // If already selected another will de-select it
-                selected: prenotazione.selected == card.prenotazione.id ? -1 : card.prenotazione.id,
+                selected: prenotazione.selected == card.id ? -1 : card.id,
               });
             }
             }
@@ -51,26 +44,24 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
                 <div
                   className={cn(
                     "ml-auto text-xs",
-                    prenotazione.selected === card.prenotazione.id
+                    prenotazione.selected === card.id
                       ? "text-foreground"
                       : "text-muted-foreground"
                   )}
                 >
-                  {"sussi barca" /* TODO: create a formatTimeFromNow function} */}
+                  {card.data_ora_prenotazione.toISOString().substring(0, 10) /* TODO: create a formatTimeFromNow function} */}
                 </div>
               </div>
               <div className="text-xs font-medium">{card.subject}</div>
             </div>
             <div className="line-clamp-2 text-xs text-muted-foreground">
-              {formatHour(card.prenotazione.ora_inizio) + " - " + formatHour(card.prenotazione.ora_fine)}
+              {formatHour(card.ora_inizio) + " - " + formatHour(card.ora_fine)}
             </div>
-            {card.labels.length ? (
+            {true ? (
               <div className="flex items-center gap-2">
-                {card.labels.map((label) => (
-                  <Badge key={label} variant={getBadgeVariantFromLabel(label)}>
-                    {label}
-                  </Badge>
-                ))}
+                <Badge key={card.label} variant={getBadgeVariantFromLabel(card.label)}>
+                  {card.label}
+                </Badge>
               </div>
             ) : null}
           </button>

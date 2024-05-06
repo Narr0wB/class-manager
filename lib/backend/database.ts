@@ -1,7 +1,7 @@
 import { formatHour } from "../utils";
 import { query } from "./mysql";
 
-const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(id_utente, id_aula, data, approvata, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?)";
+const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_utente, id_aula, data, approvata, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?, ?)";
 const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
 const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? AND ora_inizio BETWEEN ? and ? AND id_aula = ?";
 const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
@@ -34,6 +34,7 @@ export const REGULAR_USER = "Studente";
 
 export type Prenotazione = {
   id?: number;
+  data_ora_prenotazione: Date;
   id_utente: number;
   id_aula: number;
   data: Date;
@@ -47,14 +48,16 @@ export function timeToString(time: number) {
 }
 
 export async function insertPrenotazione(pren: Prenotazione) {
-  const formattedDate = new Date(pren.data).toISOString().slice(0, 19).replace('T', ' ');
+  const formattedDate = pren.data.toISOString().slice(0, 19).replace('T', ' ');
+  const formattedDataOra = pren.data_ora_prenotazione.toISOString().slice(0, 19).replace('T', ' ');
+
 
   const ora_inizio_string = formatHour(pren.ora_inizio);
   const ora_fine_string = formatHour(pren.ora_fine);
 
   const res = await query(
     QUERY_INSERT_PRE,
-    [pren.id_utente, pren.id_aula, formattedDate, pren.approvata, ora_inizio_string, ora_fine_string]
+    [formattedDataOra, pren.id_utente, pren.id_aula, formattedDate, pren.approvata, ora_inizio_string, ora_fine_string]
   );
 
   return res;
