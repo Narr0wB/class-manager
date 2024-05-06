@@ -13,7 +13,7 @@ import { useCallback } from "react";
 import { useTimeframe } from "./HomeProvider";
 import { Prenotazione, TimeFrame, Utente } from "@/lib/backend/database";
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
-import { formatHour } from "@/lib/utils";
+import { formatDate, formatHour } from "@/lib/utils";
 import React from "react";
 
 type SaveDialogProps = {
@@ -28,11 +28,7 @@ const SaveDialog: React.FC<SaveDialogProps> = ({ open, aula, setRenderMapFlag })
   const [timeframe, setTimeframe] = useTimeframe();
   const session = useSession();
 
-  const date = timeframe.data.toLocaleDateString("it", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  });
+  const date = formatDate(timeframe.data);
 
   // Do not change whitespaces
   const prenotazioneInfo = <>
