@@ -40,7 +40,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { PrenotazioneUI } from "./PrenotazioneCard"
+import { PrenotazioneUI } from "./admin"
 import { Badge } from "@/components/ui/badge"
 import { ComponentProps } from "react"
 
@@ -210,7 +210,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <div className="flex flex-col">
               {mail.prenotazione.data && (
                 <div className="ml-auto text-xs text-muted-foreground">
-                  {"TODO add data di prenotazione"}
+                  {mail.prenotazione.data_ora_prenotazione.toISOString().substring(0, 17)}
                 </div>
               )}
               <div className="w-[50%] flex flex-col items-end justify-center">

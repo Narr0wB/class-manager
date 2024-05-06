@@ -1,5 +1,14 @@
 import { atom, useAtom } from "jotai"
-import { PrenotazioneUI } from "./PrenotazioneCard"
+import { Prenotazione } from "@/lib/backend/database"
+
+export type PrenotazioneUI = {
+  prenotazione: Prenotazione,
+  name: string,
+  desc: string,
+  subject: string,
+  read: boolean,
+  labels: string[]
+}
 
 type Config = {
   selected: PrenotazioneUI["prenotazione"]["id"] | null
@@ -12,3 +21,4 @@ const configAtom = atom<Config>({
 export function usePrenotazione() {
   return useAtom(configAtom)
 }
+

@@ -1,7 +1,8 @@
 import { ComponentProps } from "react"
 
 import { ScrollArea } from "@/components/ui/scroll-area"
-import PrenotazioneCard, { PrenotazioneUI } from "./PrenotazioneCard"
+import PrenotazioneCard from "./PrenotazioneCard"
+import { PrenotazioneUI } from "./admin"
 
 interface PrenotazioneListProps {
   items: PrenotazioneUI[]

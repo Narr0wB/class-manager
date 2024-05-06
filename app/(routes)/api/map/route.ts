@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
 
   // DO NOT USE Number(floorParam) BECAUSE IT DOES NOT WORK IN REACT!!!
   switch (floorParam) {
-    case "0": {
+    case "1": {
       if (!FLOOR0) {
         FLOOR0 = loadMap("./public/pianoprimo.svg");
       }
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
       selectedFloor = FLOOR0;
       break;
     }
-    case "1": {
+    case "2": {
       if (!FLOOR1) {
         FLOOR1 = loadMap("./public/pianosecondo.svg");
       }
@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
       selectedFloor = FLOOR1;
       break;
     }
-    case "2": {
+    case "3": {
       if (!FLOOR2) {
         FLOOR2 = loadMap("./public/pianoterzo.svg");
       }
