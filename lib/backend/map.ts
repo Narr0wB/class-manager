@@ -1,5 +1,5 @@
 import { JSDOM } from "jsdom";
-import { IDfromEmail, selectPrenotazioneRange, TimeFrame } from "./database";
+import { IDfromEmail, PRENOTAZIONE_APPROVED, selectPrenotazioneRange, TimeFrame } from "./database";
 import fs from "fs";
 
 export const COLORS = {
@@ -149,7 +149,9 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
       // Check if there are any prenotazioni in the specified timeframe and if so act accordingly
       if (prenotazioni && prenotazioni.length != 0) {
         if (prenotazioni.at(0)?.id == await IDfromEmail(userEmail)) {
-          if (prenotazioni.at(0)?.approvata) {
+
+          // TODO put a switch statement to handle the case of PRENOTAZIONE_REJECTED
+          if (prenotazioni.at(0)?.status == PRENOTAZIONE_APPROVED) {
             btn.color = COLORS.APPROVED;
             btn.code = CODES.APPROVED
           }

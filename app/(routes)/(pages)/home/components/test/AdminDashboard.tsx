@@ -39,28 +39,30 @@ import { PrenotazioneDisplay } from "./PrenotazioneDisplay"
 import { PrenotazioneList } from "./PrenotazioneList"
 import { Nav } from "./nav"
 import { type Mail } from "./data"
-import { usePrenotazione } from "./admin"
+import { dash_rules, PRENOTAZIONE_PENDING, usePrenotazione } from "./admin"
 import { useState } from "react"
-import { Prenotazione } from "@/lib/backend/database"
 import { PrenotazioneInfo } from "./admin"
+import { useRuleset } from "../HomeProvider"
+import { previousDay } from "date-fns"
 
 interface AdminDashboardProps {
-  mails: PrenotazioneInfo[]
+  prenotazioni: PrenotazioneInfo[]
   defaultLayout: number[] | undefined
   defaultCollapsed?: boolean
   navCollapsedSize: number
 }
 
 export function AdminDashboard({
-  mails,
+  prenotazioni,
   defaultLayout = [265, 440, 655],
   defaultCollapsed = false,
   navCollapsedSize,
 }: AdminDashboardProps) {
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed)
   const [prenotazione] = usePrenotazione()
+  const [ruleset, setRuleset] = useRuleset();
 
-  const prenotazione_list = [{id: 0, data_ora_prenotazione: new Date(), id_utente: 2, id_aula: 2, data: new Date("May 6, 2024, 6:14:30 PM"), approvata: false, ora_inizio: 100, ora_fine: 200, selected: 0, name: "Ilias El Fourati", desc: "eddi", subject: "gaming", read: false, label: "Aula 23"}];
+  const prenotazione_list = [{id: 0, data_ora_prenotazione: new Date(), id_utente: 2, id_aula: 2, data: new Date("May 6, 2024, 6:14:30 PM"), status: PRENOTAZIONE_PENDING, ora_inizio: 100, ora_fine: 200, selected: 0, name: "Ilias El Fourati", desc: "eddi", subject: "gaming", read: false, label: "Aula 23"}];
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -109,18 +111,21 @@ export function AdminDashboard({
                 label: "128",
                 icon: Inbox,
                 variant: "default",
+                action: () => { setRuleset(prev => ({...prev, dashRule: dash_rules.in_arrivo})); }
               },
               {
                 title: "Approvate",
                 label: "9",
                 icon: Check,
                 variant: "ghost",
+                action: () => { setRuleset(prev => ({...prev, dashRule: dash_rules.approvate})); }
               },
               {
                 title: "Rifiutate",
                 label: "",
                 icon: X,
                 variant: "ghost",
+                action: () => { setRuleset(prev => ({...prev, dashRule: dash_rules.rifiutate})); }
               },
               // {
               //   title: "Junk",
@@ -209,7 +214,7 @@ export function AdminDashboard({
               </form>
             </div>
             <TabsContent value="all" className="m-0">
-              <PrenotazioneList items={prenotazione_list} />
+              <PrenotazioneList items={prenotazioni} />
             </TabsContent>
             <TabsContent value="unread" className="m-0">
               {/* <MailList items={mails.filter((item) => !item.read)} /> */}
@@ -219,7 +224,7 @@ export function AdminDashboard({
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]}>
           <PrenotazioneDisplay
-            prenotazione={prenotazione_list.find((item) => item.id === prenotazione.selected) || null}
+            prenotazione={prenotazioni.find((item) => item.id === prenotazione.selected) || null}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

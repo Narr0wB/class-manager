@@ -1,4 +1,4 @@
-import { IDfromEmail, Prenotazione, TimeFrame, insertPrenotazione } from "@/lib/backend/database";
+import { IDfromEmail, PRENOTAZIONE_PENDING, Prenotazione, TimeFrame, insertPrenotazione } from "@/lib/backend/database";
 import { formatHour } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,8 +13,9 @@ export async function POST(req: NextRequest) {
   const prenotazione: Prenotazione = {
     id_utente: user_id,
     id_aula: obj.id_aula,
-    data: timeframe.data,
-    approvata: false,
+    data_ora_prenotazione: new Date(new Date().getTime() + Math.abs((new Date().getTimezoneOffset() * 60000))),
+    data: new Date(new Date(timeframe.data).getTime() + Math.abs((new Date(timeframe.data).getTimezoneOffset() * 60000))),
+    status: PRENOTAZIONE_PENDING,
     ora_inizio: timeframe.inizio,
     ora_fine: timeframe.fine
   }
