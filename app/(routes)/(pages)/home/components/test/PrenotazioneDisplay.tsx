@@ -40,7 +40,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { PrenotazioneInfo } from "./admin"
+import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED, PrenotazioneInfo } from "./admin"
 import { Badge } from "@/components/ui/badge"
 import { ComponentProps } from "react"
 
@@ -57,7 +57,16 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!prenotazione}>
+              <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {
+              const res = await fetch(
+                "/api/database/prenotazione/admin/CHANGE", {
+                method: "POST",
+                body: JSON.stringify({
+                  id: prenotazione!.id,
+                  status: PRENOTAZIONE_APPROVED,
+                })
+              });
+            }}>
                 <Check className="h-4 w-4" />
                 <span className="sr-only">Archive</span>
               </Button>
@@ -66,9 +75,18 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!prenotazione}>
+              <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {
+              const res = await fetch(
+                "/api/database/prenotazione/admin/CHANGE", {
+                method: "POST",
+                body: JSON.stringify({
+                  id: prenotazione!.id,
+                  status: PRENOTAZIONE_REJECTED,
+                })
+              });
+            }}>
                 <X className="h-4 w-4" />
-                <span className="sr-only">Move to junk</span>
+                <span className="sr-only">Rifiuta</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>Rifiuta</TooltipContent>
@@ -77,7 +95,7 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon" disabled={!prenotazione}>
                 <Trash2 className="h-4 w-4" />
-                <span className="sr-only">Move to trash</span>
+                <span className="sr-only">Elimina</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>Elimina</TooltipContent>
