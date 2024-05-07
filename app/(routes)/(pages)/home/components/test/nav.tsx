@@ -19,6 +19,7 @@ interface NavProps {
     label?: string
     icon: LucideIcon
     variant: "default" | "ghost"
+    action: () => void
   }[]
 
   clickCallback?: (index: number) => void
@@ -34,9 +35,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
     >
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
         {links.map((link, index) =>
-          isCollapsed ? (
+          {link.variant = selected == index ? "default" : "ghost";
+          return isCollapsed ? (
             <Tooltip key={index} delayDuration={0}>
-              <TooltipTrigger asChild>
+              <TooltipTrigger asChild >
                 <Link
                   href="#"
                   className={cn(
@@ -69,6 +71,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                 "justify-start"
               )}
+              onClick={() => {
+                setSelected(index);
+                link.action();
+                }}
             >
               <link.icon className="mr-2 h-4 w-4" />
               {link.title}
@@ -85,7 +91,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
               )}
             </Link>
           )
-        )}
+      })}
       </nav>
     </div>
   )

@@ -55,11 +55,11 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
               <div className="text-xs font-medium">{card.subject}</div>
             </div>
             <div className="line-clamp-2 text-xs text-muted-foreground">
-              {formatHour(card.ora_inizio) + " - " + formatHour(card.ora_fine)}
+              {(card.ora_inizio) + " - " + (card.ora_fine)}
             </div>
             {true ? (
               <div className="flex items-center gap-2">
-                <Badge key={card.label} variant={getBadgeVariantFromLabel(card.label)}>
+                <Badge variant={getBadgeVariantFromLabel(card.label)}>
                   {card.label}
                 </Badge>
               </div>

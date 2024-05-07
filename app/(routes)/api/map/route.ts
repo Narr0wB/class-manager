@@ -1,6 +1,5 @@
 import { parseSVG, Map, loadMap } from "@/lib/backend/map";
 import { NextRequest, NextResponse } from "next/server";
-import { TimeFrame } from "@/lib/backend/database";
 
 let FLOOR0: Map | undefined;
 let FLOOR1: Map | undefined;
