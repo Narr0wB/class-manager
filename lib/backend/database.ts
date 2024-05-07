@@ -7,9 +7,9 @@ const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_
 const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
 const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? AND ora_inizio BETWEEN ? and ? AND id_aula = ?";
 const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
-const QUERY_SELECT_PRE_RULESET = "SELECT * FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
+const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
 const QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id = ?"
-const QUERY_UPDATE_PRE = "UPDATE AM_Prenotazioni SET id_aula = ?, data = ? WHERE id = ?"
+const QUERY_UPDATE_PRE = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?"
 const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
 const QUERY_SELECT_AULA = "SELECT * FROM AM_Aule";
 
@@ -51,6 +51,16 @@ export const PRENOTAZIONE_REJECTED = 2;
 
 export function timeToString(time: number) {
   return Math.floor(time / 60).toString().padStart(2, "0") + ":" + (time % 60).toString().padStart(2, "0") + ":" + "00";
+}
+
+export async function changeStatusPrenotazione(id: number, status: number) {
+
+  const res = await query(
+    QUERY_UPDATE_PRE,
+    [status, id]
+  );
+
+  return res;
 }
 
 export async function insertPrenotazione(pren: Prenotazione) {
@@ -115,6 +125,8 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
   );
 
   var result: PrenotazioneInfo[] = [];
+
+  
 
   ret?.forEach((pren: RowDataPacket) => {
     result.push({
