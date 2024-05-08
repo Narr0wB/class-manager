@@ -1,6 +1,6 @@
-import {addDays} from "date-fns/addDays"
-import {addHours} from "date-fns/addHours"
-import {format} from "date-fns/format"
+import { addDays } from "date-fns/addDays"
+import { addHours } from "date-fns/addHours"
+import { format } from "date-fns/format"
 import { nextSaturday } from "date-fns/nextSaturday"
 import {
   Check,
@@ -40,7 +40,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED, PrenotazioneInfo, dash_rules, usePrenotazione } from "./admin"
+import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED, PrenotazioneInfo, dash_rules, usePrenotazione } from "../../../../../../lib/backend/admin"
 import { Badge } from "@/components/ui/badge"
 import { ComponentProps } from "react"
 import { useRuleset, useTrigger } from "../HomeProvider"
@@ -59,55 +59,55 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
       <div className="flex items-center p-2">
         <div className="flex items-center gap-2">
           <Tooltip>
-            { ruleset.dashRule != dash_rules.approvate &&
+            {ruleset.dashRule != dash_rules.approvate &&
               <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {
-              const res = await fetch(
-                "/api/database/prenotazione/admin/CHANGE", {
-                method: "POST",
-                body: JSON.stringify({
-                  id: prenotazione!.id,
-                  status: PRENOTAZIONE_APPROVED,
-                })
-              });
-              
-              setTrigger(prev => !prev);
-              setPren({
-                ...pren,
-                selected: -1,
-              });
-              
-            }}>
-                <Check className="h-4 w-4" />
-                <span className="sr-only">Approva</span>
-              </Button>
-            </TooltipTrigger>}
+                <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {
+                  const res = await fetch(
+                    "/api/database/prenotazione/admin/CHANGE", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      id: prenotazione!.id,
+                      status: PRENOTAZIONE_APPROVED,
+                    })
+                  });
+
+                  setTrigger(prev => !prev);
+                  setPren({
+                    ...pren,
+                    selected: -1,
+                  });
+
+                }}>
+                  <Check className="h-4 w-4" />
+                  <span className="sr-only">Approva</span>
+                </Button>
+              </TooltipTrigger>}
             <TooltipContent>Approva</TooltipContent>
           </Tooltip>
           <Tooltip>
-            { ruleset.dashRule != dash_rules.rifiutate &&
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {
-              const res = await fetch(
-                "/api/database/prenotazione/admin/CHANGE", {
-                method: "POST",
-                body: JSON.stringify({
-                  id: prenotazione!.id,
-                  status: PRENOTAZIONE_REJECTED,
-                })
-              });
+            {ruleset.dashRule != dash_rules.rifiutate &&
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {
+                  const res = await fetch(
+                    "/api/database/prenotazione/admin/CHANGE", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      id: prenotazione!.id,
+                      status: PRENOTAZIONE_REJECTED,
+                    })
+                  });
 
-              setPren({
-                ...pren,
-                selected: -1,
-              });
+                  setPren({
+                    ...pren,
+                    selected: -1,
+                  });
 
-              setTrigger(prev => !prev);
-            }}>
-                <X className="h-4 w-4" />
-                <span className="sr-only">Rifiuta</span>
-              </Button>
-            </TooltipTrigger> }
+                  setTrigger(prev => !prev);
+                }}>
+                  <X className="h-4 w-4" />
+                  <span className="sr-only">Rifiuta</span>
+                </Button>
+              </TooltipTrigger>}
             <TooltipContent>Rifiuta</TooltipContent>
           </Tooltip>
           <Tooltip>
@@ -247,7 +247,7 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
             <div className="flex flex-col">
               {prenotazione.data && (
                 <div className="ml-auto text-xs text-muted-foreground">
-                  {prenotazione.data_ora_prenotazione.toLocaleString("it-it", {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}
+                  {prenotazione.data_ora_prenotazione.toLocaleString("it-it", { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
                 </div>
               )}
               <div className="w-[50%] flex flex-col items-end justify-center">
