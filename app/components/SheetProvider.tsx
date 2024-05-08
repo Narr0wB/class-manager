@@ -21,7 +21,7 @@ type SheetProviderProps = {
   children?: React.ReactNode;
 }
 
-const HomeProvider: React.FC<SheetProviderProps> = ({ children }) => {
+const SheetProvider: React.FC<SheetProviderProps> = ({ children }) => {
   const [open, setOpen] = useState(false);
 
   const value = {
@@ -36,4 +36,4 @@ const HomeProvider: React.FC<SheetProviderProps> = ({ children }) => {
   )
 }
 
-export default HomeProvider;
+export default SheetProvider;

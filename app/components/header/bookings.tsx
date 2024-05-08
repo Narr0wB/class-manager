@@ -6,9 +6,10 @@ import { Prenotazione } from '@/lib/backend/database';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
 import { useSheet } from '../SheetProvider';
-import { formatDate, formatHour } from '@/lib/utils';
+import { formatDate, } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { DeleteIcon, Edit2Icon, Edit3Icon, EditIcon, TrashIcon } from 'lucide-react';
+import { Edit3Icon, TrashIcon } from 'lucide-react';
+import Booking from './Booking';
 
 type BookingsProps = {
 }
@@ -36,29 +37,17 @@ const Bookings: React.FC<BookingsProps> = () => {
 
   return (
     <Sheet key={Number(sheetOpen)} open={sheetOpen} onOpenChange={() => setSheetOpen(prev => !prev)}>
-      <SheetContent>
+      <SheetContent className="sm:max-w-fit overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="mb-4">Le mie prenotazioni</SheetTitle>
         </SheetHeader>
         {prenotazioni &&
-          <ul>
+          <ul className="w-fit flex flex-col gap-3">
             {
               prenotazioni.map((prenotazione, i) => {
-                // Do not remove this
-                const data = new Date(prenotazione.data);
                 return (
-                  // TODO Make sheet wider
-                  <li key={i} className="rounded-secondary p-2 flex flex-row w-max">
-                    <div>
-                      <span>Data: {formatDate(data)}</span><br />
-                      <span> Dalle ore {prenotazione.ora_inizio} Alle ore: {prenotazione.ora_fine}</span>
-                    </div>
-                    <Button>
-                      <TrashIcon />
-                    </Button>
-                    <Button>
-                      <Edit3Icon />
-                    </Button>
+                  <li key={i} className="flex flex-row w-max">
+                    <Booking prenotazione={prenotazione} n={i} />
                   </li>
                 )
               })
