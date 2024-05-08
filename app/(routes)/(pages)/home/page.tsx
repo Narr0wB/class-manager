@@ -6,11 +6,11 @@ import HomeWrapper from './components/HomeWrapper';
 
 const Home: React.FC = async () => {
   const session = await getServerSession();
-  //const admin = await checkIfAdmin(session?.user?.email!);
+  const admin = await checkIfAdmin(session?.user?.email!);
 
   return (
     <HomeWrapper>
-      {true ? <HomeClientAdmin /> : <HomeClient />}
+      {admin ? <HomeClientAdmin /> : <HomeClient />}
     </HomeWrapper>
   )
 }
