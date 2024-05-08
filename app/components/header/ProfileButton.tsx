@@ -65,7 +65,7 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ className }) => {
                 <CalendarIcon className="w-5 h-5" />
                 <span className="ml-2">Le mie prenotazioni</span>
               </div>
-            </DropdownMenuItem>
+            </DropdownMenuItem >
             <DropdownMenuItem onClick={() => signOut()}>
               <div className="flex flex-row items-center justify-start">
                 <LogOutIcon className="w-5 h-5"></LogOutIcon>
