@@ -26,15 +26,15 @@ export type DashboardRule = {
   sqlRule: string;
 }
 
-export type FilterRule = DashboardRule
+export type FilterRule = DashboardRule & {
+  rule_id: number;
+}
 
 export type Ruleset = {
   dashRule: DashboardRule,
-  filterSearch: FilterRule,
-  filterDateFrom: FilterRule,
-  filterDateTo: FilterRule,
-  filterHourFrom: FilterRule,
-  filterHourTo: FilterRule
+  filterSearch?: FilterRule,
+  filterDateHourFrom?: FilterRule,
+  filterDateHourTo?: FilterRule
 }
 
 export const PRENOTAZIONE_PENDING = 0;
@@ -56,26 +56,25 @@ export const dash_rules = {
   }
 };
 
+export const FROM_DATE_HOUR_RULE = 1;
+export const TO_DATE_HOUR_RULE = 2;
+export const USER_RULE = 3;
+
 export var filter_rules = {
-  da_data: {
-    values: [new Date()],
-    sqlRule: "data >= ?",
-  } satisfies FilterRule,
-  a_data: {
-    values: [new Date()],
-    sqlRule: "data <= ?"
-  },
-  da_ora: {
+  da_data_ora: {
     values: ["13:30"],
-    sqlRule: "ora_inizio >= ?"
+    sqlRule: "(CONCAT(data, \" \", ora_inizio) > ?)",
+    rule_id: FROM_DATE_HOUR_RULE
   },
-  a_ora: {
+  a_data_ora: {
     values: ["14:30"],
-    sqlRule: "ora_inizio <= ?"
+    sqlRule: "(CONCAT(data, \" \", ora_inizio) < ?)",
+    rule_id: TO_DATE_HOUR_RULE
   },
   da_utente: {
     values: ["nome", "email"],
-    sqlRule: "nome LIKE '%?%' OR email LIKE '%?%'"
+    sqlRule: "(nome LIKE '%' + ? + '%' OR email LIKE '%' + ? + '%')",
+    rule_id: USER_RULE
   }
 }
 
