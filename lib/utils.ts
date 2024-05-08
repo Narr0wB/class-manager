@@ -27,7 +27,18 @@ export function getValidDate() {
 export function formatHour(minutes: number): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
-  return `${h}:${m}`;
+  return `${h}:${m <= 9 ? "0" + m : m}`;
+}
+
+/**
+ * Returns the minutes of an hour string ignoring the seconds.
+ *
+ * @param timeString a string in the format "hh:mm:ss"
+ * @return the sum of a and b
+ */
+export function stringToMinutes(timeString: string): number {
+  const [hours, minutes, _] = timeString.split(':');
+  return parseInt(hours) * 60 + parseInt(minutes);
 }
 
 export function formatDate(date: Date): string {
