@@ -30,7 +30,11 @@ export type FilterRule = DashboardRule
 
 export type Ruleset = {
   dashRule: DashboardRule,
-  filterRules: FilterRule[]
+  filterSearch: FilterRule,
+  filterDateFrom: FilterRule,
+  filterDateTo: FilterRule,
+  filterHourFrom: FilterRule,
+  filterHourTo: FilterRule
 }
 
 export const PRENOTAZIONE_PENDING = 0;
