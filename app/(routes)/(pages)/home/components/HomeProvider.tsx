@@ -1,7 +1,7 @@
 import { TimeFrame } from '@/lib/backend/database';
 import { getValidDate } from '@/lib/utils';
 import React, { createContext, SetStateAction, useContext, useState } from 'react';
-import { dash_rules, Ruleset } from '../../../../../lib/backend/admin';
+import { dash_rules, filter_rules, Ruleset } from '../../../../../lib/backend/admin';
 
 type HomeClientContextValue = {
   timeframe: TimeFrame,
@@ -24,7 +24,7 @@ export const HomeContext = createContext<HomeClientContextValue>({
 });
 
 export const AdminContext = createContext<HomeAdminContextValue>({
-  ruleset: { dashRule: { values: [], sqlRule: "none" }, filterRules: [] },
+  ruleset: { dashRule: dash_rules.in_arrivo, filterSearch: filter_rules.da_utente, filterDateFrom: filter_rules.da_data, filterDateTo: filter_rules.a_data, filterHourFrom: filter_rules.da_ora, filterHourTo: filter_rules.a_ora },
   setRuleset: () => { }
 });
 
@@ -55,7 +55,7 @@ type HomeProviderProps = {
 
 const HomeProvider: React.FC<HomeProviderProps> = ({ children }) => {
   const [timeframe, setTimeframe] = useState<TimeFrame>({ data: getValidDate(), inizio: 13 * 60 + 30, fine: 14 * 60 + 30 });
-  const [ruleset, setRuleset] = useState<Ruleset>({ dashRule: dash_rules.in_arrivo, filterRules: [] });
+  const [ruleset, setRuleset] = useState<Ruleset>({ dashRule: dash_rules.in_arrivo, filterSearch: filter_rules.da_utente, filterDateFrom: filter_rules.da_data, filterDateTo: filter_rules.a_data, filterHourFrom: filter_rules.da_ora, filterHourTo: filter_rules.a_ora });
   const [trigger, setTrigger] = useState<boolean>(false);
 
   const value = {
