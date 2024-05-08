@@ -30,19 +30,19 @@ const HomeClientAdmin: React.FC = () => {
     // fetch all the prenotazioni that match the ruleset rules
     setCachelist([]);
 
-    fetchData(10, new Date()).then(result => setCachelist(result))
+    fetchData(10, new Date()).then(result => {setCachelist(result);});
 
   }, [ruleset, trigger])
 
   return (
-    cachelist ? 
+    (cachelist) ? 
     <div>
       <AdminDashboard
       prenotazioni={cachelist}
       defaultLayout = {undefined}
       defaultCollapsed = {false}
       navCollapsedSize={1000}
-      
+
       >
       </AdminDashboard>
     </div> :
