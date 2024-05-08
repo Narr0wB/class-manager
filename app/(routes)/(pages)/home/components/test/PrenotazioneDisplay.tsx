@@ -40,16 +40,18 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED, PrenotazioneInfo } from "./admin"
+import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED, PrenotazioneInfo, usePrenotazione } from "./admin"
 import { Badge } from "@/components/ui/badge"
 import { ComponentProps } from "react"
+import { useTrigger } from "../HomeProvider"
 
 interface MailDisplayProps {
   prenotazione: PrenotazioneInfo | null
 }
 
 export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
-  const today = new Date()
+  const [pren, setPren] = usePrenotazione();
+  const [trigger, setTrigger] = useTrigger();
 
   return (
     <div className="flex h-full flex-col">
@@ -66,9 +68,16 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
                   status: PRENOTAZIONE_APPROVED,
                 })
               });
+              
+              setTrigger(prev => !prev);
+              setPren({
+                ...pren,
+                selected: -1,
+              });
+              
             }}>
                 <Check className="h-4 w-4" />
-                <span className="sr-only">Archive</span>
+                <span className="sr-only">Approva</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent>Approva</TooltipContent>
@@ -84,6 +93,13 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
                   status: PRENOTAZIONE_REJECTED,
                 })
               });
+
+              setPren({
+                ...pren,
+                selected: -1,
+              });
+
+              setTrigger(prev => !prev);
             }}>
                 <X className="h-4 w-4" />
                 <span className="sr-only">Rifiuta</span>

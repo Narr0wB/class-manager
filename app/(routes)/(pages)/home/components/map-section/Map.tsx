@@ -43,7 +43,7 @@ const Map: React.FC<MapProps> = (props) => {
         {...others}
         key={theme}
         dangerouslySetInnerHTML={{ __html: svgInnerHtml }}
-        className="w-full h-full fade-in-1s"
+        className="w-full h-full fade-in"
       />
       : (
         <div className="flex items-center space-x-4">

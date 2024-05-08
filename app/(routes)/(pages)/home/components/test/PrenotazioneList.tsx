@@ -14,7 +14,7 @@ export function PrenotazioneList({ items }: PrenotazioneListProps) {
     <ScrollArea className="h-screen">
       <div className="flex flex-col gap-2 p-4 pt-0">
         {items.map((item) => (
-          <PrenotazioneCard card={item}></PrenotazioneCard>
+          <PrenotazioneCard card={item}/>
         ))}
       </div>
     </ScrollArea>

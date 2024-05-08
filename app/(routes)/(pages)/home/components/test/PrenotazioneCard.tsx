@@ -7,7 +7,7 @@ import { ComponentProps } from "react";
 
 type PrenotazioneCardProps = {
   card: PrenotazioneInfo;
-}
+};
 
 // Still need a better way to name this
 
@@ -19,7 +19,7 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
         <button
             key={card.id}
             className={cn(
-              "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
+              "fade-in flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
               prenotazione.selected === card.id && "bg-muted"
             )}
             onClick={() => {
