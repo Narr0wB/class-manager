@@ -1,4 +1,4 @@
-import { PrenotazioneInfo, Ruleset } from "@/lib/backend/admin";
+import { PrenotazioneInfo, Ruleset, DashboardRule } from "@/lib/backend/admin";
 import { formatHour } from "../utils";
 import { query } from "./mysql";
 import { RowDataPacket } from "mysql2";
@@ -12,6 +12,12 @@ const QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id = ?"
 const QUERY_UPDATE_PRE = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?"
 const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
 const QUERY_SELECT_AULA = "SELECT * FROM AM_Aule";
+
+function createDescription(nome: string, ora_inizio: string, ora_fine: string, aula: number) {
+  let description = nome + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5);
+
+  return description;
+}
 
 export type TimeFrame = {
   data: Date,
@@ -105,13 +111,17 @@ export async function IDfromEmail(email: string) {
 export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, before: Date) {
   let query_string: string = QUERY_SELECT_PRE_RULESET + ruleset.dashRule.sqlRule;
   let query_values: any[] = [...ruleset.dashRule.values];
+ 
+  for (const [key, value] of Object.entries(ruleset)) {
+    if (key == "dashRule") {
+      continue;
+    }
 
-  ruleset.filterRules.forEach((r) => {
     query_string += " and ";
-    query_string += r.sqlRule;
+    query_string += value.sqlRule;
 
-    query_values.concat(...r.values);
-  });
+    query_values = query_values.concat(...value.values);
+  }
 
   query_string += " and ";
   query_string += "data_ora_prenotazione <= ?";
@@ -126,25 +136,27 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
 
   var result: PrenotazioneInfo[] = [];
 
-
+  console.log(query_string, [...query_values, date_string, num])
 
   ret?.forEach((pren: RowDataPacket) => {
     result.push({
       id: pren.id,
-      data_ora_prenotazione: (pren.data_ora_prenotazione),
+      data_ora_prenotazione: pren.data_ora_prenotazione,
       id_utente: pren.id_utente,
       id_aula: pren.id_aula,
-      data: (pren.data),
+      data: pren.data,
       status: pren.status,
       ora_inizio: pren.ora_inizio.substring(0, 5),
       ora_fine: pren.ora_fine.substring(0, 5),
       name: pren.nome,
-      desc: "eddu gaming for now",
-      subject: "gaming",
+      desc: createDescription(pren.nome, pren.ora_inizio, pren.ora_fine, pren.id_aula),
+      subject: "Prenotazione",
       read: false,
       label: "Aula " + pren.id_aula
     })
   })
+
+  console.log(ret);
 
   return result;
 }

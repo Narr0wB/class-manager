@@ -19,12 +19,24 @@ import { Separator } from "@/components/ui/separator"
 import { TooltipProvider } from "@/components/ui/tooltip"
 // import { AccountSwitcher } from "@/app/(app)/examples/mail/components/account-switcher"
 import { PrenotazioneDisplay } from "./PrenotazioneDisplay"
-import { dash_rules, PRENOTAZIONE_PENDING, usePrenotazione } from "../../../../../../lib/backend/admin"
+import { dash_rules, filter_rules, PRENOTAZIONE_APPROVED, PRENOTAZIONE_PENDING, PRENOTAZIONE_REJECTED, usePrenotazione } from "../../../../../../lib/backend/admin"
 import { useState } from "react"
 import { PrenotazioneInfo } from "../../../../../../lib/backend/admin"
 import { useRuleset } from "../HomeProvider"
 import { Nav } from "./Nav"
 import FiltersDropdown from "./FiltersDropdown"
+import { PrenotazioneList } from "./PrenotazioneList"
+
+function getTitle(tmp: number) {
+  switch (tmp) {
+    case PRENOTAZIONE_PENDING:
+      return "In arrivo";
+    case PRENOTAZIONE_APPROVED:
+      return "Approvate";
+    case PRENOTAZIONE_REJECTED:
+      return "Rifiutate";
+  }
+}
 
 interface AdminDashboardProps {
   prenotazioni: PrenotazioneInfo[]
@@ -80,14 +92,14 @@ export function AdminDashboard({
             links={[
               {
                 title: "In arrivo",
-                label: "128",
+                label: "",
                 icon: Inbox,
                 variant: "default",
                 action: () => { setRuleset(prev => ({ ...prev, dashRule: dash_rules.in_arrivo })); }
               },
               {
                 title: "Approvate",
-                label: "9",
+                label: "",
                 icon: Check,
                 variant: "ghost",
                 action: () => { setRuleset(prev => ({ ...prev, dashRule: dash_rules.approvate })); }
@@ -105,7 +117,7 @@ export function AdminDashboard({
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
           <div className="flex items-center justify-between px-4 py-2">
-            <h1 className="text-xl font-bold">Inbox</h1>
+            <h1 className="text-xl font-bold">{getTitle(ruleset.dashRule.values[0])}</h1>
             <FiltersDropdown />
           </div>
           <Separator />
@@ -113,10 +125,28 @@ export function AdminDashboard({
             <form>
               <div className="relative">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Search" className="pl-8" />
+                <Input placeholder="Cerca per nome o per email" className="pl-8" onChange={(e) => {
+                  let search_rule = filter_rules.da_utente;
+                  
+                  search_rule.values[0] = e.target.value!;
+                  search_rule.values[1] = e.target.value!;
+                  
+                  if (e.target.value == "") {
+                    setRuleset(prev => {
+                      const new_ruleset = {...prev, filterSearchRule: undefined};
+                      return new_ruleset;
+                    })
+                  } else{
+                    setRuleset(prev => {
+                      const new_ruleset = {...prev, filterSearchRule: search_rule};
+                      return new_ruleset;
+                    })
+                  }
+                }}/>
               </div>
             </form>
           </div>
+          <PrenotazioneList items={prenotazioni}/>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]}>

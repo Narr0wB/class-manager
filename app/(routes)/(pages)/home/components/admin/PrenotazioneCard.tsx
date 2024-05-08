@@ -1,9 +1,19 @@
-import { Prenotazione } from "@/lib/backend/database"
-import { PrenotazioneInfo, usePrenotazione } from "../../../../../../lib/backend/admin";
-import { cn, formatHour } from "@/lib/utils";
+import { PrenotazioneInfo, usePrenotazione } from "@/lib/backend/admin";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ComponentProps } from "react";
 
+function getRead(id: number): boolean {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.includes(id + '=')) {
+      return Boolean(cookie.substring(String(id).length + 1));
+    }
+  }
+
+  return false;
+}
 
 type PrenotazioneCardProps = {
   card: PrenotazioneInfo;
@@ -15,15 +25,19 @@ type PrenotazioneCardProps = {
 const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
   const [prenotazione, setPrenotazione] = usePrenotazione();
 
+  card.read = getRead(card.id!);
+
   return (
     <button
-      key={card.id}
       className={cn(
         "fade-in flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
         prenotazione.selected === card.id && "bg-muted"
       )}
       onClick={() => {
-        card.read = true;
+        if (!card.read) {
+          card.read = true;
+          document.cookie = `${card.id}=true;path=/`;
+        }
 
         setPrenotazione({
           ...prenotazione,
@@ -49,7 +63,7 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
                 : "text-muted-foreground"
             )}
           >
-            {card.data_ora_prenotazione.toISOString().substring(0, 10) /* TODO: create a formatTimeFromNow function} */}
+            {card.data_ora_prenotazione.toLocaleString("it-it", { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) /* TODO: create a formatTimeFromNow function} */}
           </div>
         </div>
         <div className="text-xs font-medium">{card.subject}</div>
@@ -76,10 +90,6 @@ function getBadgeVariantFromLabel(
   if (label.toLowerCase().includes("aula")) {
     return "default"
   }
-
-  // if (["personal"].includes(label.toLowerCase())) {
-  //   return "outline"
-  // }
 
   return "secondary"
 }

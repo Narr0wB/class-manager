@@ -24,7 +24,7 @@ export const HomeContext = createContext<HomeClientContextValue>({
 });
 
 export const AdminContext = createContext<HomeAdminContextValue>({
-  ruleset: { dashRule: dash_rules.in_arrivo, filterSearch: filter_rules.da_utente, filterDateFrom: filter_rules.da_data, filterDateTo: filter_rules.a_data, filterHourFrom: filter_rules.da_ora, filterHourTo: filter_rules.a_ora },
+  ruleset: { dashRule: dash_rules.in_arrivo },
   setRuleset: () => { }
 });
 
@@ -55,7 +55,7 @@ type HomeProviderProps = {
 
 const HomeProvider: React.FC<HomeProviderProps> = ({ children }) => {
   const [timeframe, setTimeframe] = useState<TimeFrame>({ data: getValidDate(), inizio: 13 * 60 + 30, fine: 14 * 60 + 30 });
-  const [ruleset, setRuleset] = useState<Ruleset>({ dashRule: dash_rules.in_arrivo, filterSearch: filter_rules.da_utente, filterDateFrom: filter_rules.da_data, filterDateTo: filter_rules.a_data, filterHourFrom: filter_rules.da_ora, filterHourTo: filter_rules.a_ora });
+  const [ruleset, setRuleset] = useState<Ruleset>({ dashRule: dash_rules.in_arrivo });
   const [trigger, setTrigger] = useState<boolean>(false);
 
   const value = {
