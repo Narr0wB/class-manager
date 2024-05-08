@@ -40,10 +40,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED, PrenotazioneInfo, usePrenotazione } from "./admin"
+import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED, PrenotazioneInfo, dash_rules, usePrenotazione } from "./admin"
 import { Badge } from "@/components/ui/badge"
 import { ComponentProps } from "react"
-import { useTrigger } from "../HomeProvider"
+import { useRuleset, useTrigger } from "../HomeProvider"
 
 interface MailDisplayProps {
   prenotazione: PrenotazioneInfo | null
@@ -52,13 +52,15 @@ interface MailDisplayProps {
 export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
   const [pren, setPren] = usePrenotazione();
   const [trigger, setTrigger] = useTrigger();
+  const [ruleset, setRuleset] = useRuleset();
 
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center p-2">
         <div className="flex items-center gap-2">
           <Tooltip>
-            <TooltipTrigger asChild>
+            { ruleset.dashRule != dash_rules.approvate &&
+              <TooltipTrigger asChild>
               <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {
               const res = await fetch(
                 "/api/database/prenotazione/admin/CHANGE", {
@@ -79,10 +81,11 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
                 <Check className="h-4 w-4" />
                 <span className="sr-only">Approva</span>
               </Button>
-            </TooltipTrigger>
+            </TooltipTrigger>}
             <TooltipContent>Approva</TooltipContent>
           </Tooltip>
           <Tooltip>
+            { ruleset.dashRule != dash_rules.rifiutate &&
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {
               const res = await fetch(
@@ -104,7 +107,7 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
                 <X className="h-4 w-4" />
                 <span className="sr-only">Rifiuta</span>
               </Button>
-            </TooltipTrigger>
+            </TooltipTrigger> }
             <TooltipContent>Rifiuta</TooltipContent>
           </Tooltip>
           <Tooltip>

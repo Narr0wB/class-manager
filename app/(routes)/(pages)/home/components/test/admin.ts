@@ -82,7 +82,7 @@ export var filter_rules = {
   },
   da_utente: {
     values: ["nome", "email"],
-    sqlRule: "nome = ? OR email = ?"
+    sqlRule: "nome LIKE '%?%' OR email LIKE '%?%'"
   }
 }
 

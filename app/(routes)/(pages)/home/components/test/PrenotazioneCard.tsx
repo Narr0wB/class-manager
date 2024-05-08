@@ -4,16 +4,26 @@ import { cn, formatHour } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ComponentProps } from "react";
 
+function getRead(id: number): boolean {
+  var cookies = document.cookie.split(";");
+  for (var i = 0; i < cookies.length; i++) {
+    var cookie = cookies[i].trim();
+    if (cookie.includes(id+"=")) {
+      return Boolean(cookie.substring(String(id).length + 1));
+    }
+  }
+
+  return false;
+}
 
 type PrenotazioneCardProps = {
   card: PrenotazioneInfo;
 };
 
-// Still need a better way to name this
-
-
 const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
     const [prenotazione, setPrenotazione] = usePrenotazione();
+
+    card.read = getRead(card.id!);
 
     return (
         <button
@@ -23,7 +33,11 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
               prenotazione.selected === card.id && "bg-muted"
             )}
             onClick={() => {
-              card.read = true;
+              if (!card.read)
+              {
+                card.read = true;
+                document.cookie = `${card.id}=true; path=/`;
+              }
 
               setPrenotazione({
                 ...prenotazione,
