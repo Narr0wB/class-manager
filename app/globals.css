@@ -48,19 +48,6 @@
     --ring: 263.4 70% 50.4%;
   }
 }
-
-.fade-in-1s {
-  animation: fade-in 1s
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 100;
-  }
-}
  
 @layer base {
   * {

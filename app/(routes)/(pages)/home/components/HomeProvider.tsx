@@ -13,15 +13,25 @@ type HomeAdminContextValue = {
   setRuleset: React.Dispatch<SetStateAction<Ruleset>>
 }
 
+type ControlContextValue = {
+  trigger: boolean,
+  setTrigger: React.Dispatch<SetStateAction<boolean>>
+}
+
 export const HomeContext = createContext<HomeClientContextValue>({
   timeframe: { data: new Date(), inizio: 0, fine: 0 },
   setTimeframe: () => {}
-})
+});
 
 export const AdminContext = createContext<HomeAdminContextValue>({
   ruleset: {dashRule: {values: [], sqlRule: "none"}, filterRules: []},
   setRuleset: () => {}
-})
+});
+
+export const ControlContext = createContext<ControlContextValue>({
+  trigger: false,
+  setTrigger: () => {}
+});
 
 export function useTimeframe(): [TimeFrame, React.Dispatch<SetStateAction<TimeFrame>>] {
   let context = useContext(HomeContext);
@@ -33,6 +43,12 @@ export function useRuleset(): [Ruleset, React.Dispatch<SetStateAction<Ruleset>>]
   return [context.ruleset, context.setRuleset];
 }
 
+export function useTrigger(): [boolean, React.Dispatch<SetStateAction<boolean>>] {
+  let context = useContext(ControlContext);
+
+  return [context.trigger, context.setTrigger];
+}
+
 type HomeProviderProps = {
   children?: React.ReactNode;
 }
@@ -40,7 +56,8 @@ type HomeProviderProps = {
 const HomeProvider: React.FC<HomeProviderProps> = ({ children }) => {
   const [timeframe, setTimeframe] = useState<TimeFrame>({ data: getValidDate(), inizio: 13 * 60 + 30, fine: 14 * 60 + 30 });
   const [ruleset, setRuleset] = useState<Ruleset>({dashRule: dash_rules.in_arrivo, filterRules: []});
-
+  const [trigger, setTrigger] = useState<boolean>(false);
+  
   const value = {
     timeframe: timeframe,
     setTimeframe: setTimeframe
@@ -51,12 +68,19 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children }) => {
     setRuleset: setRuleset
   } satisfies HomeAdminContextValue;
 
+  const value3 = {
+    trigger: trigger,
+    setTrigger: setTrigger
+  } satisfies ControlContextValue;
+
   return (
-    <AdminContext.Provider value={value2}>
-      <HomeContext.Provider value={value}>
-        {children}
-      </HomeContext.Provider>
-    </AdminContext.Provider>
+    <ControlContext.Provider value={value3}>
+      <AdminContext.Provider value={value2}>
+        <HomeContext.Provider value={value}>
+          {children}
+        </HomeContext.Provider>
+      </AdminContext.Provider>
+    </ControlContext.Provider>
   )
 }
 

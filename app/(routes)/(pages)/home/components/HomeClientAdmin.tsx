@@ -1,12 +1,13 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react";
-import { useRuleset } from "./HomeProvider";
+import { useRuleset, useTrigger } from "./HomeProvider";
 import { AdminDashboard } from "./test/AdminDashboard"
 import { PrenotazioneInfo } from "./test/admin";
 
 const HomeClientAdmin: React.FC = () => {
   const [ruleset, setRuleset] = useRuleset();
+  const [trigger, setTrigger] = useTrigger();
   const [cachelist, setCachelist] = useState<PrenotazioneInfo[]>();
 
   const fetchData = useCallback(async (count: number, before: Date) => {
@@ -23,7 +24,7 @@ const HomeClientAdmin: React.FC = () => {
     })
 
     return prenotazioni;
-  }, [ruleset]);
+  }, [ruleset, trigger]);
 
   useEffect(() => {
     // fetch all the prenotazioni that match the ruleset rules
@@ -31,7 +32,7 @@ const HomeClientAdmin: React.FC = () => {
 
     fetchData(10, new Date()).then(result => setCachelist(result))
 
-  }, [ruleset])
+  }, [ruleset, trigger])
 
   return (
     cachelist ? 
@@ -41,6 +42,7 @@ const HomeClientAdmin: React.FC = () => {
       defaultLayout = {undefined}
       defaultCollapsed = {false}
       navCollapsedSize={1000}
+      
       >
       </AdminDashboard>
     </div> :

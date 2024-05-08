@@ -62,7 +62,7 @@ export function AdminDashboard({
   const [prenotazione] = usePrenotazione()
   const [ruleset, setRuleset] = useRuleset();
 
-  const prenotazione_list = [{id: 0, data_ora_prenotazione: new Date(), id_utente: 2, id_aula: 2, data: new Date("May 6, 2024, 6:14:30 PM"), status: PRENOTAZIONE_PENDING, ora_inizio: 100, ora_fine: 200, selected: 0, name: "Ilias El Fourati", desc: "eddi", subject: "gaming", read: false, label: "Aula 23"}];
+  // const prenotazione_list = [{id: 0, data_ora_prenotazione: new Date(), id_utente: 2, id_aula: 2, data: new Date("May 6, 2024, 6:14:30 PM"), status: PRENOTAZIONE_PENDING, ora_inizio: 100, ora_fine: 200, selected: 0, name: "Ilias El Fourati", desc: "eddi", subject: "gaming", read: false, label: "Aula 23"}];
 
   return (
     <TooltipProvider delayDuration={0}>
