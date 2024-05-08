@@ -1,4 +1,4 @@
-import { PrenotazioneInfo, Ruleset } from "@/app/(routes)/(pages)/home/components/test/admin";
+import { PrenotazioneInfo, Ruleset } from "@/lib/backend/admin";
 import { formatHour } from "../utils";
 import { query } from "./mysql";
 import { RowDataPacket } from "mysql2";
@@ -45,7 +45,7 @@ export type Prenotazione = {
   ora_fine: number
 }
 
-export const PRENOTAZIONE_PENDING  = 0;
+export const PRENOTAZIONE_PENDING = 0;
 export const PRENOTAZIONE_APPROVED = 1;
 export const PRENOTAZIONE_REJECTED = 2;
 
@@ -126,7 +126,7 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
 
   var result: PrenotazioneInfo[] = [];
 
-  
+
 
   ret?.forEach((pren: RowDataPacket) => {
     result.push({

@@ -1,15 +1,7 @@
 import { atom, useAtom } from "jotai"
 import { Prenotazione } from "@/lib/backend/database"
 
-export type PrenotazioneInfo = {
-  id?: number;
-  data_ora_prenotazione: Date;
-  id_utente: number;
-  id_aula: number;
-  data: Date;
-  status: number;
-  ora_inizio: number,
-  ora_fine: number,
+export type PrenotazioneInfo = Prenotazione & {
   name: string,
   desc: string,
   subject: string,
@@ -34,22 +26,19 @@ export type DashboardRule = {
   sqlRule: string;
 }
 
-export type FilterRule = {
-  values: any[];
-  sqlRule: string;
-}
+export type FilterRule = DashboardRule
 
 export type Ruleset = {
   dashRule: DashboardRule,
   filterRules: FilterRule[]
 }
 
-export const PRENOTAZIONE_PENDING  = 0;
+export const PRENOTAZIONE_PENDING = 0;
 export const PRENOTAZIONE_APPROVED = 1;
 export const PRENOTAZIONE_REJECTED = 2;
 
 export const dash_rules = {
-  in_arrivo:  {
+  in_arrivo: {
     values: [PRENOTAZIONE_PENDING],
     sqlRule: "status = ?",
   },

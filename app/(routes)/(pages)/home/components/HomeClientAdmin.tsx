@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRuleset, useTrigger } from "./HomeProvider";
-import { AdminDashboard } from "./test/AdminDashboard"
-import { PrenotazioneInfo } from "./test/admin";
+import { AdminDashboard } from "./admin/AdminDashboard"
+import { PrenotazioneInfo } from "../../../../../lib/backend/admin";
 
 const HomeClientAdmin: React.FC = () => {
   const [ruleset, setRuleset] = useRuleset();
@@ -11,7 +11,6 @@ const HomeClientAdmin: React.FC = () => {
   const [cachelist, setCachelist] = useState<PrenotazioneInfo[]>();
 
   const fetchData = useCallback(async (count: number, before: Date) => {
-
     const res = await fetch(
       `/api/database/prenotazione/admin/SELECT?count=${count}&ruleset=${JSON.stringify(ruleset)}&before=${before}`,
       { method: "GET" }
@@ -30,23 +29,18 @@ const HomeClientAdmin: React.FC = () => {
     // fetch all the prenotazioni that match the ruleset rules
     setCachelist([]);
 
-    fetchData(10, new Date()).then(result => {setCachelist(result);});
+    fetchData(10, new Date()).then(result => { setCachelist(result); });
 
   }, [ruleset, trigger])
 
   return (
-    (cachelist) ? 
-    <div>
-      <AdminDashboard
+    cachelist &&
+    <AdminDashboard
       prenotazioni={cachelist}
-      defaultLayout = {undefined}
-      defaultCollapsed = {false}
+      defaultLayout={undefined}
+      defaultCollapsed={false}
       navCollapsedSize={1000}
-
-      >
-      </AdminDashboard>
-    </div> :
-    <></>
+    />
   );
 }
 
