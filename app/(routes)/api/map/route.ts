@@ -16,7 +16,6 @@ export async function GET(req: NextRequest) {
   const timeframeParam = searchParams.get("timeframe") as string;
   const userEmailParam = searchParams.get("userEmail") as string;
 
-
   // if (!floorParam || !themeParam || !timeframeParam || !userEmailParam) return NextResponse.error();
 
   let selectedFloor;

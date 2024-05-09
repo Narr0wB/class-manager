@@ -7,13 +7,13 @@ type SheetContextValue = {
   setOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
-export const HomeContext = createContext<SheetContextValue>({
+export const SheetContext = createContext<SheetContextValue>({
   open: false,
   setOpen: () => { }
 })
 
 export function useSheet(): [boolean, React.Dispatch<SetStateAction<boolean>>] {
-  let context = useContext(HomeContext);
+  let context = useContext(SheetContext);
   return [context.open, context.setOpen];
 }
 
@@ -30,9 +30,9 @@ const SheetProvider: React.FC<SheetProviderProps> = ({ children }) => {
   } satisfies SheetContextValue;
 
   return (
-    <HomeContext.Provider value={value}>
+    <SheetContext.Provider value={value}>
       {children}
-    </HomeContext.Provider>
+    </SheetContext.Provider>
   )
 }
 

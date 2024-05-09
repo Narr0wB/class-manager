@@ -31,10 +31,9 @@ export function formatHour(minutes: number): string {
 }
 
 /**
- * Returns the minutes of an hour string ignoring the seconds.
  *
  * @param timeString a string in the format "hh:mm:ss"
- * @return the sum of a and b
+ * @return the minutes of an hour string ignoring the seconds.
  */
 export function stringToMinutes(timeString: string): number {
   const [hours, minutes, _] = timeString.split(':');

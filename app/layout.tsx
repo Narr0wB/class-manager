@@ -8,6 +8,7 @@ import HeaderBar from "@/app/components/header/HeaderBar";
 import SessionProvider from "./components/SessionProvider";
 import { Toaster } from "@/components/ui/toaster";
 import SheetProvider from "./components/SheetProvider";
+import DrawerProvider from "./components/DrawerProvider";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -29,9 +30,11 @@ const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SessionProvider session={session}>
             <SheetProvider>
-              <HeaderBar />
-              <Toaster />
-              {children}
+              <DrawerProvider>
+                <HeaderBar />
+                <Toaster />
+                {children}
+              </DrawerProvider>
             </SheetProvider>
           </SessionProvider>
         </ThemeProvider>

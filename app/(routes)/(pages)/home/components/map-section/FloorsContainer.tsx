@@ -13,7 +13,7 @@ const FloorsContainer: React.FC<FloorsContainerProps> = ({ children, className, 
       {
         React.Children.map(children, (child, i) => (
           // Render the floor only if its selected
-          i == floor &&
+          (i + 1) == floor &&
           // Use clone to avoid wrapping the child in a div (to use the key prop)
           React.cloneElement(child as React.ReactElement, { key: i })
         ))

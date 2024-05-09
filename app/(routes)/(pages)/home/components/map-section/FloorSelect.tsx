@@ -10,11 +10,11 @@ type FloorSelectProps = {
 const FloorSelect: React.FC<FloorSelectProps> = ({ className, items, setFloor }) => {
   // piano x => x
   const map = new Map<string, number>();
-  items.forEach((item, i) => map.set(item, i));
+  items.forEach((item, i) => map.set(item, i + 1));
 
   return (
     <div className={className}>
-      <Select onValueChange={value => setFloor(map.get(value) || 0)} defaultValue={items[0]}>
+      <Select onValueChange={value => setFloor(map.get(value) || 1)} defaultValue={items[0]}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Seleziona un piano..." />
         </SelectTrigger>
