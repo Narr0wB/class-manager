@@ -33,6 +33,8 @@ const FiltersDropdown: React.FC<FiltersDropdownProps> = (props) => {
             <DropdownMenuLabel>Da</DropdownMenuLabel>
             <DateTimePicker className="border-0" value={from} onChange={(event) => {
               let date_time_from_rule = filter_rules.da_data_ora;
+              
+              
               setFrom(event.target.value);
 
               date_time_from_rule.values[0] = event.target.value.replace("T", " ") + ":00";
@@ -43,7 +45,7 @@ const FiltersDropdown: React.FC<FiltersDropdownProps> = (props) => {
               })
             }}/>
             <Button onClick={() => {
-              setFrom(undefined);
+              setFrom("");
               setRuleset(prev => {
                 const new_ruleset = {...prev, filterDateHourFrom: undefined};
                 return new_ruleset;
@@ -57,8 +59,9 @@ const FiltersDropdown: React.FC<FiltersDropdownProps> = (props) => {
             <DropdownMenuLabel>A&nbsp;&nbsp;</DropdownMenuLabel>
             <DateTimePicker className="border-0" value={to} onChange={(event) => {
               let date_time_to_rule = filter_rules.a_data_ora;
+              
               setTo(event.target.value);
-
+              
               date_time_to_rule.values[0] = event.target.value.replace("T", " ") + ":00";
 
               setRuleset(prev => {
@@ -67,7 +70,7 @@ const FiltersDropdown: React.FC<FiltersDropdownProps> = (props) => {
               });
             }}/>
             <Button onClick={() => {
-              setTo(undefined);
+              setTo("");
               setRuleset(prev => {
                 const new_ruleset = {...prev, filterDateHourTo: undefined};
                 return new_ruleset;

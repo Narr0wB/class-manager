@@ -44,6 +44,18 @@ import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED, PrenotazioneInfo, dash_ru
 import { Badge } from "@/components/ui/badge"
 import { ComponentProps } from "react"
 import { useRuleset, useTrigger } from "../HomeProvider"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 
 interface MailDisplayProps {
   prenotazione: PrenotazioneInfo | null
@@ -110,14 +122,43 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
               </TooltipTrigger>}
             <TooltipContent>Rifiuta</TooltipContent>
           </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!prenotazione}>
-                <Trash2 className="h-4 w-4" />
+          <AlertDialog>
+            <AlertDialogTrigger>
+            <Button variant="ghost" size="icon" disabled={!prenotazione}>
+              <Trash2 className="h-4 w-4" />
                 <span className="sr-only">Elimina</span>
+                
               </Button>
-            </TooltipTrigger>
-            <TooltipContent>Elimina</TooltipContent>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Eliminare?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Questa azione è irreversibile. Sicuri di volere procedere?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annulla</AlertDialogCancel>
+                <AlertDialogAction onClick={async () => {
+                const res = await fetch(
+                  "/api/database/prenotazione/admin/DELETE", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    id: prenotazione!.id,
+                  })
+                });
+
+                setPren({
+                  ...pren,
+                  selected: -1,
+                });
+
+                setTrigger(prev => !prev);
+              }}>Continua</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <Tooltip>
           </Tooltip>
           <Separator orientation="vertical" className="mx-1 h-6" />
           <Tooltip>
