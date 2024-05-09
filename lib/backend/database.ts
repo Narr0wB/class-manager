@@ -9,7 +9,8 @@ const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? AND
 const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
 const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
 const QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id = ?"
-const QUERY_UPDATE_PRE = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?"
+const QUERY_UPDATE_PRE_STATUS = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?"
+const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fine = ? WHERE id = ?"
 const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
 const QUERY_SELECT_AULA = "SELECT * FROM AM_Aule";
 
@@ -62,7 +63,7 @@ export function timeToString(time: number) {
 export async function changeStatusPrenotazione(id: number, status: number) {
 
   const res = await query(
-    QUERY_UPDATE_PRE,
+    QUERY_UPDATE_PRE_STATUS,
     [status, id]
   );
 
@@ -111,7 +112,7 @@ export async function IDfromEmail(email: string) {
 export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, before: Date) {
   let query_string: string = QUERY_SELECT_PRE_RULESET + ruleset.dashRule.sqlRule;
   let query_values: any[] = [...ruleset.dashRule.values];
- 
+
   for (const [key, value] of Object.entries(ruleset)) {
     if (key == "dashRule") {
       continue;
@@ -198,10 +199,16 @@ export async function selectPrenotazioniUser(email_utente: string, data: Date | 
   return ret;
 }
 
+export async function updatePrenotazione(ora_inizio: number, ora_fine: number, id: number) {
+  const ret = await query<Prenotazione>(
+    QUERY_UPDATE_PRE_HOUR,
+    [formatHour(ora_inizio), formatHour(ora_fine), id]
+  );
+
+  return ret;
+}
+
 export async function deletePrenotazione(id_prenotazione: number) {
 
 }
 
-export async function modifyPrenotazione(new_prenotazione: Prenotazione) {
-
-}

@@ -8,6 +8,7 @@ import { Clock10Icon } from 'lucide-react';
 import CustomTooltip from '@/components/custom/CustomTooltip';
 import { useTimeframe } from '../HomeProvider';
 import { TimeFrame } from '@/lib/backend/database';
+import { useDrawer } from '@/app/components/DrawerProvider';
 
 type HourRangeDrawerProps = {
   className?: string;
@@ -17,6 +18,7 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
   const [timeframe, setTimeframe] = useTimeframe();
   const [startMinutes, setStartMinutes] = useState(13 * 60 + 30);
   const [endMinutes, setEndMinutes] = useState(14 * 60 + 30);
+  const [drawerOpen, setDrawerOpen] = useDrawer();
 
   function inStartBounds(minutes: number) {
     let hours = Math.floor(minutes / 60);
@@ -72,7 +74,7 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
 
   return (
     <div id="hour-range-drawer" className={className}>
-      <Drawer>
+      <Drawer onOpenChange={() => setDrawerOpen(prev => !prev)}>
         <CustomTooltip content="Seleziona l'ora" side="bottom">
           <DrawerTrigger asChild>
             <Button className="w-full aspect-square p-2">

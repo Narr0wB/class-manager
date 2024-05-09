@@ -1,7 +1,7 @@
 "use client"
 
 import { useTimeframe } from '@/app/(routes)/(pages)/home/components/HomeProvider';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Prenotazione } from '@/lib/backend/database';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
@@ -37,16 +37,18 @@ const Bookings: React.FC<BookingsProps> = () => {
 
   return (
     <Sheet key={Number(sheetOpen)} open={sheetOpen} onOpenChange={() => setSheetOpen(prev => !prev)}>
-      <SheetContent className="sm:max-w-fit overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle className="mb-4">Le mie prenotazioni</SheetTitle>
+      {/* TODO Fix mobile view */}
+      <SheetContent className="w-[400px] sm:w-md sm:max-w-md overflow-y-auto">
+        <SheetHeader className="space-y-1 mb-4">
+          <SheetTitle>Le mie prenotazioni</SheetTitle>
+          <SheetDescription>Tasto destro per modificare o eliminare</SheetDescription>
         </SheetHeader>
         {prenotazioni &&
-          <ul className="w-fit flex flex-col gap-3">
+          <ul className="w-full flex flex-col gap-3 items-center">
             {
               prenotazioni.map((prenotazione, i) => {
                 return (
-                  <li key={i} className="flex flex-row w-max">
+                  <li key={i} className="flex flex-row w-full">
                     <Booking prenotazione={prenotazione} n={i} />
                   </li>
                 )
