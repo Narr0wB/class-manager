@@ -69,7 +69,7 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
         <div className="text-xs font-medium">{card.subject}</div>
       </div>
       <div className="line-clamp-2 text-xs text-muted-foreground">
-        {(card.ora_inizio) + " - " + (card.ora_fine)}
+        {card.data.toLocaleString("it-it", { year: 'numeric', month: '2-digit', day: '2-digit' })}
       </div>
       {true ? (
         <div className="flex items-center gap-2">
