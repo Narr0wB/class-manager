@@ -16,7 +16,7 @@ import { redirect } from "next/navigation"
 import { Skeleton } from "@/components/ui/skeleton"
 import React from "react"
 import CustomTooltip from "@/components/custom/CustomTooltip"
-import { useSheet } from "../SheetProvider"
+import { useSheet } from "../LayoutProvider"
 
 type ProfileButtonProps = {
   className?: string,
@@ -60,17 +60,13 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ className }) => {
       case "authenticated":
         return (
           <>
-            <DropdownMenuItem onClick={() => setSheetOpen(true)}>
-              <div className="flex flex-row items-center justify-start">
-                <CalendarIcon className="w-5 h-5" />
-                <span className="ml-2">Le mie prenotazioni</span>
-              </div>
+            <DropdownMenuItem onClick={() => setSheetOpen(true)} className="flex flex-row items-center justify-start">
+              <CalendarIcon className="w-5 h-5" />
+              <span className="ml-2">Le mie prenotazioni</span>
             </DropdownMenuItem >
-            <DropdownMenuItem onClick={() => signOut()}>
-              <div className="flex flex-row items-center justify-start">
-                <LogOutIcon className="w-5 h-5"></LogOutIcon>
-                <span className="ml-2">Esci</span>
-              </div>
+            <DropdownMenuItem onClick={() => signOut()} className="flex flex-row items-center justify-start">
+              <LogOutIcon className="w-5 h-5"></LogOutIcon>
+              <span className="ml-2">Esci</span>
             </DropdownMenuItem>
           </>
         )
