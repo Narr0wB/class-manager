@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Map from "@/app/(routes)/(pages)/home/components/map-section/Map";
-import SaveDialog from '../SaveDialog';
+import SavePrenotazioneDialog from '../SavePrenotazioneDialog';
 
 type FloorProps = {
   className?: string;
@@ -108,8 +108,9 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
       />
-      {selectedAula &&
-        <SaveDialog
+      {
+        selectedAula &&
+        <SavePrenotazioneDialog
           open={[isDialogOpen, setIsDialogOpen]}
           aula={parseInt(selectedAula)}
           setRenderMapFlag={setRenderMapFlag}

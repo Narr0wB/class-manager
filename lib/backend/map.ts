@@ -109,7 +109,7 @@ export function loadMap(mapPath: string): Map {
       if (button_text) {
         // TODO add new color for the text in dark mode
         button_text.style.fontFamily = "Arial";
-        button_text.style.pointerEvents = "none";  
+        button_text.style.pointerEvents = "none";
         const spans = button_text.querySelectorAll("tspan");
         spans[1].textContent = aula;
         spans[1].style.fontFamily = "Roboto";
@@ -205,8 +205,8 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
       }
 
       rect.style.fill = btn.color;
-      // rect.style.transition = "filter 0.1s ease";
-      // rect.id = btn.code + map.config[rect.id as keyof typeof map.config];
+      rect.style.transition = "filter 0.1s ease";
+      rect.id = btn.code + map.config[rect.id as keyof typeof map.config];
     }
 
     // If the button is not in the config file, then is it deactivated. Still, its color has to be updated on any theme changes

@@ -3,11 +3,10 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } 
 import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED } from "@/lib/backend/admin";
 import { Prenotazione } from "@/lib/backend/database";
 import { formatDate, formatHour, stringToMinutes } from "@/lib/utils";
-import { CalendarIcon, Clock3Icon, DoorClosedIcon, DoorOpenIcon, Edit3Icon, School2Icon, SchoolIcon, Table2Icon, TableIcon, TrashIcon } from "lucide-react";
+import { CalendarIcon, Clock3Icon, DoorOpenIcon, Edit3Icon, TrashIcon } from "lucide-react";
 import Pulse from "./Pulse";
 import { useCallback } from "react";
-import { useDrawer } from "../DrawerProvider";
-import { useSheet } from "../SheetProvider";
+import { useEndMinutes, useSheet, useStartMinutes } from "../LayoutProvider";
 
 type BookingProps = {
   prenotazione: Prenotazione;
@@ -18,8 +17,9 @@ type Status = "In approvazione" | "Approvata" | "Rifiutata";
 type Color = "bg-yellow-500" | "bg-green-500" | "bg-red-500";
 
 const Booking: React.FC<BookingProps> = (props) => {
-  const [drawerOpen, setDrawerOpen] = useDrawer();
   const [sheetOpen, setSheetOpen] = useSheet();
+  const [startMinutes, setStartMinutes] = useStartMinutes();
+  const [endMinutes, setEndMinutes] = useEndMinutes();
 
   const { prenotazione, n, ...others } = props;
 
@@ -39,17 +39,6 @@ const Booking: React.FC<BookingProps> = (props) => {
     }
   }
 
-  const updatePrenotazione = useCallback(async (ora_inizio: number, ora_fine: number) => {
-    await fetch(`/api/database/prenotazione/UPDATE`, {
-      method: "POST",
-      body: JSON.stringify({
-        ora_inizio: ora_inizio,
-        ora_fine: ora_fine,
-        id: prenotazione.id
-      })
-    });
-  }, []);
-
   return (
     <ContextMenu>
       <ContextMenuTrigger className="w-full">
@@ -66,10 +55,10 @@ const Booking: React.FC<BookingProps> = (props) => {
             </CardDescription>
           </CardHeader>
           <CardContent className="w-full flex flex-col justify-center items-center gap-2 relative">
-            {/* Here a new Date object must be created */}
             <div className="space-y-3">
               <span className="flex flex-row gap-1">
                 <CalendarIcon />
+                {/* Here a new Date object must be created */}
                 {formatDate(new Date(prenotazione.data))}
               </span>
               <span className="flex flex-row gap-1">
@@ -88,11 +77,8 @@ const Booking: React.FC<BookingProps> = (props) => {
         </Card>
       </ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuItem onClick={() => {
-          setSheetOpen(false);
-          setDrawerOpen(true);
-          updatePrenotazione(800, 900);
-        }}
+        <ContextMenuItem
+          onClick={() => setSheetOpen(false)}
           className="flex flex-row gap-2"
         >
           <Edit3Icon className="w-fit aspect-square" />
