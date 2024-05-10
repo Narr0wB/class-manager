@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTrigger } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import HourRangeSelector from './HourRangeSelector';
@@ -8,7 +8,7 @@ import { Clock10Icon } from 'lucide-react';
 import CustomTooltip from '@/components/custom/CustomTooltip';
 import { useTimeframe } from '../HomeProvider';
 import { TimeFrame } from '@/lib/backend/database';
-import { useDrawer } from '@/app/components/DrawerProvider';
+import { useEndMinutes, useStartMinutes } from '@/app/components/LayoutProvider';
 
 type HourRangeDrawerProps = {
   className?: string;
@@ -16,9 +16,8 @@ type HourRangeDrawerProps = {
 
 const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
   const [timeframe, setTimeframe] = useTimeframe();
-  const [startMinutes, setStartMinutes] = useState(13 * 60 + 30);
-  const [endMinutes, setEndMinutes] = useState(14 * 60 + 30);
-  const [drawerOpen, setDrawerOpen] = useDrawer();
+  const [startMinutes, setStartMinutes] = useStartMinutes();
+  const [endMinutes, setEndMinutes] = useEndMinutes();
 
   function inStartBounds(minutes: number) {
     let hours = Math.floor(minutes / 60);
@@ -74,7 +73,7 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
 
   return (
     <div id="hour-range-drawer" className={className}>
-      <Drawer onOpenChange={() => setDrawerOpen(prev => !prev)}>
+      <Drawer>
         <CustomTooltip content="Seleziona l'ora" side="bottom">
           <DrawerTrigger asChild>
             <Button className="w-full aspect-square p-2">
@@ -86,16 +85,12 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
           <DrawerHeader id="drawer-header">
             <DrawerDescription>Seleziona l'ora della prenotazione</DrawerDescription>
           </DrawerHeader>
-          <HourRangeSelector
-            start={[startMinutes, setStartMinutes]}
-            end={[endMinutes, setEndMinutes]}
-            className="w-fit md:w-[75%] h-max flex flex-col justify-center space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:lg:xl:2xl"
-          />
+          <HourRangeSelector className="w-fit md:w-[75%] h-max flex flex-col justify-center space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:lg:xl:2xl" />
           <DrawerFooter id="drawer-footer" className="flex items-center w-full h-full">
             <div className="w-[75%] flex flex-col gap-2 justify-center">
               <DrawerClose asChild>
-                <Button
-                  onClick={() => {
+                <Button onClick={
+                  () => {
                     setTimeframe(prev => {
                       const t: TimeFrame = {
                         inizio: startMinutes,
@@ -104,8 +99,7 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
                       };
                       return t;
                     });
-                  }}
-                >
+                  }}>
                   Salva
                 </Button>
               </DrawerClose>
@@ -116,7 +110,7 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer >
-    </div>
+    </div >
   )
 }
 
