@@ -5,11 +5,11 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '
 import { Prenotazione } from '@/lib/backend/database';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
-import { useSheet } from '../SheetProvider';
 import { formatDate, } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Edit3Icon, TrashIcon } from 'lucide-react';
 import Booking from './Booking';
+import { useSheet } from '../LayoutProvider';
 
 type BookingsProps = {
 }
@@ -36,7 +36,7 @@ const Bookings: React.FC<BookingsProps> = () => {
   }, []);
 
   return (
-    <Sheet key={Number(sheetOpen)} open={sheetOpen} onOpenChange={() => setSheetOpen(prev => !prev)}>
+    <Sheet key={Number(sheetOpen)} open={sheetOpen} onOpenChange={setSheetOpen}>
       {/* TODO Fix mobile view */}
       <SheetContent className="w-[400px] sm:w-md sm:max-w-md overflow-y-auto">
         <SheetHeader className="space-y-1 mb-4">

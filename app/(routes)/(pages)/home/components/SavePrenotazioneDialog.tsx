@@ -3,26 +3,24 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
-import { useCallback } from "react";
 import { useTimeframe } from "./HomeProvider";
-import { Prenotazione, TimeFrame, Utente } from "@/lib/backend/database";
-import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
 import { formatDate, formatHour } from "@/lib/utils";
 import React from "react";
 
-type SaveDialogProps = {
+type SavePrenotazioneDialogProps = {
   open: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
   aula: number,
   setRenderMapFlag: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const SaveDialog: React.FC<SaveDialogProps> = ({ open, aula, setRenderMapFlag }) => {
+const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, aula, setRenderMapFlag }) => {
   const [isOpen, setIsOpen] = open;
   const { toast } = useToast();
   const [timeframe, setTimeframe] = useTimeframe();
@@ -41,7 +39,7 @@ const SaveDialog: React.FC<SaveDialogProps> = ({ open, aula, setRenderMapFlag })
   </>
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={() => setIsOpen(prev => !prev)}>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Sei sicuro?</AlertDialogTitle>
@@ -82,6 +80,6 @@ const SaveDialog: React.FC<SaveDialogProps> = ({ open, aula, setRenderMapFlag })
   )
 }
 
-SaveDialog.displayName = "SaveDialog";
+SavePrenotazioneDialog.displayName = "SavePrenotazioneDialog";
 
-export default SaveDialog;
+export default SavePrenotazioneDialog;
