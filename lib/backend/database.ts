@@ -137,8 +137,6 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
 
   var result: PrenotazioneInfo[] = [];
 
-  console.log(query_string, [...query_values, date_string, num])
-
   ret?.forEach((pren: RowDataPacket) => {
     result.push({
       id: pren.id,
@@ -156,8 +154,6 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
       label: "Aula " + pren.id_aula
     })
   })
-
-  console.log(ret);
 
   return result;
 }

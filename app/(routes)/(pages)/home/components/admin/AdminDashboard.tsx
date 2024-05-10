@@ -84,7 +84,7 @@ export function AdminDashboard({
           }}
           className={cn(
             isCollapsed &&
-            "min-w-[50px] transition-all duration-300 ease-in-out"
+            "min-w-[50px] transition-all duration-300 ease-in-out fade-in"
           )}
         >
           <Nav
@@ -115,7 +115,7 @@ export function AdminDashboard({
           />
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
+        <ResizablePanel defaultSize={defaultLayout[1]} minSize={30} className="overflow: auto">
           <div className="flex items-center justify-between px-4 py-2">
             <h1 className="text-xl font-bold">{getTitle(ruleset.dashRule.values[0])}</h1>
             <FiltersDropdown />
