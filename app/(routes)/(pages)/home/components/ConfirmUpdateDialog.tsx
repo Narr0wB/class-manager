@@ -49,7 +49,7 @@ const ConfirmUpdateDialog: React.FC<ConfirmUpdateDialogProps> = ({ open, setRend
         <AlertDialogHeader>
           <AlertDialogTitle>Sei sicuro?</AlertDialogTitle>
           <AlertDialogDescription>
-            Dati che cambieranno:
+            Il nuovo orario diventerà:
             {prenotazioneInfo}
           </AlertDialogDescription>
         </AlertDialogHeader>

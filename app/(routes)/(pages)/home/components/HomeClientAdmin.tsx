@@ -12,7 +12,7 @@ const HomeClientAdmin: React.FC = () => {
 
   const fetchData = useCallback(async (count: number, before: Date) => {
     const res = await fetch(
-      `/api/database/prenotazione/admin/SELECT?count=${count}&ruleset=${JSON.stringify(ruleset)}&before=${before}`,
+      `/api/database/prenotazione/SELECTADMIN?count=${count}&ruleset=${JSON.stringify(ruleset)}&before=${before}`,
       { method: "GET" }
     );
 

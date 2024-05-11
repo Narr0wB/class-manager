@@ -10,7 +10,7 @@ import FloorsContainer from './map-section/FloorsContainer';
 import Floor from './map-section/Floor';
 import { useTimeframe } from './HomeProvider';
 import { useState } from 'react';
-import Bookings from '@/app/components/header/Bookings';
+import Bookings from '@/app/components/header/bookings';
 
 export const FLOORS = {
   FLOOR_1: 1,

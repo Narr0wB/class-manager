@@ -3,10 +3,14 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } 
 import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED } from "@/lib/backend/admin";
 import { Prenotazione } from "@/lib/backend/database";
 import { formatDate, formatHour, stringToMinutes } from "@/lib/utils";
-import { CalendarIcon, Clock3Icon, DoorOpenIcon, Edit3Icon, TrashIcon } from "lucide-react";
+import { CalendarIcon, Clock3Icon, DoorOpenIcon, Edit3Icon, Trash2, TrashIcon } from "lucide-react";
 import Pulse from "./Pulse";
-import { useCallback } from "react";
 import { useEndMinutes, useSheet, useStartMinutes } from "../LayoutProvider";
+import UpdatePrenotazioneDialog from "@/app/(routes)/(pages)/home/components/UpdatePrenotazioneDialog";
+import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import ConfirmDeletionDialog from "@/app/(routes)/(pages)/home/components/ConfirmDeletionDialog";
+import { useState } from "react";
 
 type BookingProps = {
   prenotazione: Prenotazione;
@@ -17,9 +21,7 @@ type Status = "In approvazione" | "Approvata" | "Rifiutata";
 type Color = "bg-yellow-500" | "bg-green-500" | "bg-red-500";
 
 const Booking: React.FC<BookingProps> = (props) => {
-  const [sheetOpen, setSheetOpen] = useSheet();
-  const [startMinutes, setStartMinutes] = useStartMinutes();
-  const [endMinutes, setEndMinutes] = useEndMinutes();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const { prenotazione, n, ...others } = props;
 
@@ -70,23 +72,17 @@ const Booking: React.FC<BookingProps> = (props) => {
               </span>
               <span className="flex flex-row gap-1">
                 <DoorOpenIcon />
-                {prenotazione.id_aula}
+                Aula {prenotazione.id_aula}
               </span>
             </div>
           </CardContent>
         </Card>
       </ContextMenuTrigger>
+      <ConfirmDeletionDialog prenotazioneId={props.prenotazione.id!} open={dialogOpen} setOpen={setDialogOpen}/>
       <ContextMenuContent>
-        <ContextMenuItem
-          onClick={() => setSheetOpen(false)}
-          className="flex flex-row gap-2"
-        >
-          <Edit3Icon className="w-fit aspect-square" />
-          Modifica
-        </ContextMenuItem>
-        <ContextMenuItem className="flex flex-row gap-2">
-          <TrashIcon className="w-fit aspect-square" />
-          Elimina
+        <ContextMenuItem className="flex flex-row gap-2" onClick={() => {setDialogOpen(true);}}>
+            <TrashIcon className="w-fit aspect-square" />
+            Elimina
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

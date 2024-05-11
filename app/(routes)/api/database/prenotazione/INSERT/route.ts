@@ -1,8 +1,13 @@
 import { IDfromEmail, PRENOTAZIONE_PENDING, Prenotazione, TimeFrame, insertPrenotazione } from "@/lib/backend/database";
-import { formatHour } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "@/app/(routes)/api/auth/[...nextauth]/options";
+import { getServerSession } from "next-auth";
+
 
 export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.error();
+
   const obj = await req.json() as any;
 
   const timeframe = obj.timeframe as TimeFrame;

@@ -1,11 +1,16 @@
 import { parseSVG, Map, loadMap } from "@/lib/backend/map";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "../auth/[...nextauth]/options";
+import { getServerSession } from "next-auth";
 
 let FLOOR0: Map | undefined;
 let FLOOR1: Map | undefined;
 let FLOOR2: Map | undefined;
 
 export async function GET(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.error();
+  
   const { searchParams } = new URL(req.url);
 
   // When the client requests a map, i.e. they are trying to render it, we should receive
