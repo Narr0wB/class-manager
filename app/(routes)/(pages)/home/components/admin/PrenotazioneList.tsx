@@ -9,6 +9,9 @@ interface PrenotazioneListProps {
 }
 
 export function PrenotazioneList({ items }: PrenotazioneListProps) {
+
+  items = items.sort((a, b) => {return (a.data_ora_prenotazione > b.data_ora_prenotazione) ? 1 : -1});
+  
   return (
     <ScrollArea className="h-screen">
       <div className="flex flex-col gap-2 p-4 pt-0">

@@ -42,7 +42,7 @@ import {
 } from "@/components/ui/tooltip"
 import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED, PrenotazioneInfo, dash_rules, usePrenotazione } from "../../../../../../lib/backend/admin"
 import { Badge } from "@/components/ui/badge"
-import { ComponentProps } from "react"
+import { ComponentProps, useCallback } from "react"
 import { useRuleset, useTrigger } from "../HomeProvider"
 import {
   AlertDialog,
@@ -66,6 +66,23 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
   const [trigger, setTrigger] = useTrigger();
   const [ruleset, setRuleset] = useRuleset();
 
+  const updateStatusCallback = async (status: number) => {
+    const res = await fetch(
+      "/api/database/prenotazione/CHANGESTATUS", {
+      method: "POST",
+      body: JSON.stringify({
+        id: prenotazione!.id,
+        status: status,
+      })
+    });
+
+    setTrigger(prev => !prev);
+    setPren({
+      ...pren,
+      selected: -1,
+    });
+  }
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center p-2">
@@ -73,23 +90,7 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
           <Tooltip>
             {ruleset.dashRule != dash_rules.approvate &&
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {
-                  const res = await fetch(
-                    "/api/database/prenotazione/admin/CHANGE", {
-                    method: "POST",
-                    body: JSON.stringify({
-                      id: prenotazione!.id,
-                      status: PRENOTAZIONE_APPROVED,
-                    })
-                  });
-
-                  setTrigger(prev => !prev);
-                  setPren({
-                    ...pren,
-                    selected: -1,
-                  });
-
-                }}>
+                <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {await updateStatusCallback(PRENOTAZIONE_APPROVED)}}>
                   <Check className="h-4 w-4" />
                   <span className="sr-only">Approva</span>
                 </Button>
@@ -99,23 +100,7 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
           <Tooltip>
             {ruleset.dashRule != dash_rules.rifiutate &&
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {
-                  const res = await fetch(
-                    "/api/database/prenotazione/admin/CHANGE", {
-                    method: "POST",
-                    body: JSON.stringify({
-                      id: prenotazione!.id,
-                      status: PRENOTAZIONE_REJECTED,
-                    })
-                  });
-
-                  setPren({
-                    ...pren,
-                    selected: -1,
-                  });
-
-                  setTrigger(prev => !prev);
-                }}>
+                <Button variant="ghost" size="icon" disabled={!prenotazione} onClick={async () => {await updateStatusCallback(PRENOTAZIONE_REJECTED)}}>
                   <X className="h-4 w-4" />
                   <span className="sr-only">Rifiuta</span>
                 </Button>
@@ -123,11 +108,10 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
             <TooltipContent>Rifiuta</TooltipContent>
           </Tooltip>
           <AlertDialog>
-            <AlertDialogTrigger>
+            <AlertDialogTrigger disabled={!prenotazione}>
             <Button variant="ghost" size="icon" disabled={!prenotazione}>
               <Trash2 className="h-4 w-4" />
                 <span className="sr-only">Elimina</span>
-                
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -141,7 +125,7 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
                 <AlertDialogCancel>Annulla</AlertDialogCancel>
                 <AlertDialogAction onClick={async () => {
                 const res = await fetch(
-                  "/api/database/prenotazione/admin/DELETE", {
+                  "/api/database/prenotazione/DELETE", {
                   method: "POST",
                   body: JSON.stringify({
                     id: prenotazione!.id,

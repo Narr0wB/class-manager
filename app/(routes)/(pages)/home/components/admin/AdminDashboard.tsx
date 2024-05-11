@@ -122,29 +122,27 @@ export function AdminDashboard({
           </div>
           <Separator />
           <div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <form>
-              <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Cerca per nome o per email" className="pl-8" onChange={(e) => {
-                  let search_rule = filter_rules.da_utente;
-                  
-                  search_rule.values[0] = e.target.value!;
-                  search_rule.values[1] = e.target.value!;
-                  
-                  if (e.target.value == "") {
-                    setRuleset(prev => {
-                      const new_ruleset = {...prev, filterSearchRule: undefined};
-                      return new_ruleset;
-                    })
-                  } else{
-                    setRuleset(prev => {
-                      const new_ruleset = {...prev, filterSearchRule: search_rule};
-                      return new_ruleset;
-                    })
-                  }
-                }}/>
-              </div>
-            </form>
+            <div className="relative">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Cerca per nome o per email" className="pl-8" onChange={(e) => {
+                let search_rule = filter_rules.da_utente;
+                
+                search_rule.values[0] = e.target.value!;
+                search_rule.values[1] = e.target.value!;
+                
+                if (e.target.value == "") {
+                  setRuleset(prev => {
+                    const new_ruleset = {...prev, filterSearchRule: undefined};
+                    return new_ruleset;
+                  })
+                } else{
+                  setRuleset(prev => {
+                    const new_ruleset = {...prev, filterSearchRule: search_rule};
+                    return new_ruleset;
+                  })
+                }
+              }}/>
+            </div>
           </div>
           <PrenotazioneList items={prenotazioni}/>
         </ResizablePanel>

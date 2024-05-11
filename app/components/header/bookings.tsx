@@ -5,9 +5,6 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '
 import { Prenotazione } from '@/lib/backend/database';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
-import { formatDate, } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Edit3Icon, TrashIcon } from 'lucide-react';
 import Booking from './Booking';
 import { useSheet } from '../LayoutProvider';
 
@@ -25,15 +22,16 @@ const Bookings: React.FC<BookingsProps> = () => {
       `/api/database/prenotazione/SELECT?userEmail=${session.data?.user?.email}`,
       { method: "GET" }
     );
+
     const prenotazioni = await res.json();
+
     return prenotazioni;
-  }, [timeframe.data, session.data?.user?.email]);
+  }, [timeframe.data, session.data?.user?.email, sheetOpen]);
 
   useEffect(() => {
-    fetchPrenotazioni().then(prenotazioni => {
-      setPrenotazioni(prenotazioni);
-    });
-  }, []);
+    if (!sheetOpen) return;
+    fetchPrenotazioni().then(prenotazioni => { setPrenotazioni(prenotazioni); });
+  }, [sheetOpen]);
 
   return (
     <Sheet key={Number(sheetOpen)} open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -41,7 +39,7 @@ const Bookings: React.FC<BookingsProps> = () => {
       <SheetContent className="w-[400px] sm:w-md sm:max-w-md overflow-y-auto">
         <SheetHeader className="space-y-1 mb-4">
           <SheetTitle>Le mie prenotazioni</SheetTitle>
-          <SheetDescription>Tasto destro per modificare o eliminare</SheetDescription>
+          <SheetDescription>Tasto destro per eliminare una prenotazione</SheetDescription>
         </SheetHeader>
         {prenotazioni &&
           <ul className="w-full flex flex-col gap-3 items-center">

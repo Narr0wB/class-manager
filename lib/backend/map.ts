@@ -1,10 +1,12 @@
 import { JSDOM } from "jsdom";
 import { IDfromEmail, PRENOTAZIONE_APPROVED, selectPrenotazioneRange, TimeFrame } from "./database";
 import fs from "fs";
+import { PRENOTAZIONE_REJECTED } from "./admin";
 
 export const COLORS = {
   FREE: "#dac3e8",
   BOOKED: "#2b2d42",
+  REJECTED: "#ff3333",
   PENDING: "#E9E900",
   APPROVED: "#7ABA78"
 };
@@ -12,6 +14,7 @@ export const COLORS = {
 export const CODES = {
   FREE: "F",
   BOOKED: "B",
+  REJECTED: "R",
   PENDING: "P",
   APPROVED: "A"
 };
@@ -153,16 +156,20 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
           // TODO put a switch statement to handle the case of PRENOTAZIONE_REJECTED
           if (prenotazioni.at(0)?.status == PRENOTAZIONE_APPROVED) {
             btn.color = COLORS.APPROVED;
-            btn.code = CODES.APPROVED
+            btn.code = CODES.APPROVED;
+          }
+          else if (prenotazioni.at(0)?.status == PRENOTAZIONE_REJECTED) {
+            btn.color = COLORS.REJECTED;
+            btn.code = CODES.REJECTED;
           }
           else {
             btn.color = COLORS.PENDING;
-            btn.code = CODES.PENDING
+            btn.code = CODES.PENDING;
           }
         }
         else {
           btn.color = COLORS.BOOKED;
-          btn.code = CODES.BOOKED
+          btn.code = CODES.BOOKED;
         }
       }
 
