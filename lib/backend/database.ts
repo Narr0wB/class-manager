@@ -206,7 +206,7 @@ export async function updatePrenotazione(ora_inizio: number, ora_fine: number, i
 
 export async function deletePrenotazione(id_prenotazione: number) {
   const ret = query<Prenotazione>(
-    QUERY_DELETE_PRE, 
+    QUERY_DELETE_PRE,
     [id_prenotazione]
   );
 

@@ -3,14 +3,12 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } 
 import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED } from "@/lib/backend/admin";
 import { Prenotazione } from "@/lib/backend/database";
 import { formatDate, formatHour, stringToMinutes } from "@/lib/utils";
-import { CalendarIcon, Clock3Icon, DoorOpenIcon, Edit3Icon, Trash2, TrashIcon } from "lucide-react";
+import { CalendarIcon, Clock3Icon, DoorOpenIcon, TrashIcon } from "lucide-react";
 import Pulse from "./Pulse";
-import { useEndMinutes, useSheet, useStartMinutes } from "../LayoutProvider";
-import UpdatePrenotazioneDialog from "@/app/(routes)/(pages)/home/components/UpdatePrenotazioneDialog";
-import { Button } from "@/components/ui/button";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import ConfirmDeletionDialog from "@/app/(routes)/(pages)/home/components/ConfirmDeletionDialog";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import CustomTooltip from "@/components/custom/CustomTooltip";
 
 type BookingProps = {
   prenotazione: Prenotazione;
@@ -42,50 +40,52 @@ const Booking: React.FC<BookingProps> = (props) => {
   }
 
   return (
-    <ContextMenu>
-      <ContextMenuTrigger className="w-full">
-        <Card>
-          <CardHeader>
-            <div className="flex flex-row items-center gap-1">
-              <Pulse color={colorString} />
-              <CardTitle className="text-xl text-center flex-1">
-                Prenotazione {n + 1}
-              </CardTitle>
-            </div>
-            <CardDescription className="text-center">
-              {statusString}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="w-full flex flex-col justify-center items-center gap-2 relative">
-            <div className="space-y-3">
-              <span className="flex flex-row gap-1">
-                <CalendarIcon />
-                {/* Here a new Date object must be created */}
-                {formatDate(new Date(prenotazione.data))}
-              </span>
-              <span className="flex flex-row gap-1">
-                <Clock3Icon />
-                {/* TODO reformat this mess */}
-                {formatHour(stringToMinutes(`${prenotazione.ora_inizio}`))}
-                -
-                {formatHour(stringToMinutes(`${prenotazione.ora_fine}`))}
-              </span>
-              <span className="flex flex-row gap-1">
-                <DoorOpenIcon />
-                Aula {prenotazione.id_aula}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-      </ContextMenuTrigger>
-      <ConfirmDeletionDialog prenotazioneId={props.prenotazione.id!} open={dialogOpen} setOpen={setDialogOpen}/>
-      <ContextMenuContent>
-        <ContextMenuItem className="flex flex-row gap-2" onClick={() => {setDialogOpen(true);}}>
-            <TrashIcon className="w-fit aspect-square" />
-            Elimina
-        </ContextMenuItem>
-      </ContextMenuContent>
-    </ContextMenu>
+    <>
+      <Card className="w-full overflow-y-auto relative">
+        <CustomTooltip content="Elimina">
+          <Button
+            variant={"ghost"}
+            onClick={() => setDialogOpen(prev => !prev)}
+            className="absolute p-1 right-1 top-1 size-6"
+          >
+            <TrashIcon className="size-full" />
+            <span className="sr-only">Elimina</span>
+          </Button>
+        </CustomTooltip>
+        <CardHeader className="text-center p-4">
+          <div className="flex flex-row items-center gap-1">
+            <Pulse color={colorString} />
+            <CardTitle className="text-sm md:text-lg text-center flex-1 md:lg:xl:2xl">
+              Prenotazione {n + 1}
+            </CardTitle>
+          </div>
+          <CardDescription>
+            {statusString}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="w-full flex flex-col justify-center items-center gap-2 p-4">
+          <div className="space-y-3">
+            <span className="flex flex-row gap-1">
+              <CalendarIcon />
+              {/* Here a new Date object must be created */}
+              {formatDate(new Date(prenotazione.data))}
+            </span>
+            <span className="flex flex-row gap-1">
+              <Clock3Icon />
+              {/* TODO reformat this mess */}
+              {formatHour(stringToMinutes(`${prenotazione.ora_inizio}`))}
+              -
+              {formatHour(stringToMinutes(`${prenotazione.ora_fine}`))}
+            </span>
+            <span className="flex flex-row gap-1">
+              <DoorOpenIcon />
+              Aula {prenotazione.id_aula}
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+      <ConfirmDeletionDialog prenotazioneId={props.prenotazione.id!} open={dialogOpen} setDialogOpen={setDialogOpen} />
+    </>
   )
 }
 

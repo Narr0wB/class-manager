@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Map from "@/app/(routes)/(pages)/home/components/map-section/Map";
 import SavePrenotazioneDialog from '../SavePrenotazioneDialog';
+import { useMap } from '@/app/components/LayoutProvider';
 
 type FloorProps = {
   className?: string;
@@ -10,7 +11,7 @@ type FloorProps = {
 const Floor: React.FC<FloorProps> = ({ id }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedAula, setSelectedAula] = useState<string | null>(null);
-  const [renderMapFlag, setRenderMapFlag] = useState(false);
+  const [renderMapFlag, _] = useMap();
 
   function getAulaStatus(rect: Element) {
     return rect.id[0];
@@ -113,7 +114,6 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
         <SavePrenotazioneDialog
           open={[isDialogOpen, setIsDialogOpen]}
           aula={parseInt(selectedAula)}
-          setRenderMapFlag={setRenderMapFlag}
         />
       }
     </>

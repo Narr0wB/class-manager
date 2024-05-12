@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
 import Booking from './Booking';
 import { useSheet } from '../LayoutProvider';
+import Loading from '../Loading';
 
 type BookingsProps = {
 }
@@ -30,29 +31,33 @@ const Bookings: React.FC<BookingsProps> = () => {
 
   useEffect(() => {
     if (!sheetOpen) return;
-    fetchPrenotazioni().then(prenotazioni => { setPrenotazioni(prenotazioni); });
+    fetchPrenotazioni().then(prenotazioni => setPrenotazioni(prenotazioni));
   }, [sheetOpen]);
 
   return (
-    <Sheet key={Number(sheetOpen)} open={sheetOpen} onOpenChange={setSheetOpen}>
-      {/* TODO Fix mobile view */}
-      <SheetContent className="w-[400px] sm:w-md sm:max-w-md overflow-y-auto">
+    // Do not give a key based on the "sheetOpen" state, because this will cause a re-render
+    // while the sheet is closing, causing the animation to work improperly
+    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+      <SheetContent className="w-60 md:w-72 lg:w-[450px] lg:max-w-[450px] overflow-y-auto">
         <SheetHeader className="space-y-1 mb-4">
-          <SheetTitle>Le mie prenotazioni</SheetTitle>
-          <SheetDescription>Tasto destro per eliminare una prenotazione</SheetDescription>
+          <SheetTitle className="text-center text-lg md:text-2xl md:lg:xl">Le mie prenotazioni</SheetTitle>
         </SheetHeader>
-        {prenotazioni &&
-          <ul className="w-full flex flex-col gap-3 items-center">
-            {
-              prenotazioni.map((prenotazione, i) => {
-                return (
-                  <li key={i} className="flex flex-row w-full">
-                    <Booking prenotazione={prenotazione} n={i} />
-                  </li>
-                )
-              })
-            }
-          </ul>
+        {
+          prenotazioni && prenotazioni.length == 0
+            ? <div className="w-full text-center">Nessuna prenotazione</div>
+            : prenotazioni ?
+              <ul className="w-full flex flex-col lg:grid lg:grid-cols-2 gap-3 items-center lg:xl:2xl">
+                {
+                  prenotazioni.map((prenotazione, i) => {
+                    return (
+                      <li key={i} className="w-full flex flex-row justify-center">
+                        <Booking prenotazione={prenotazione} n={i} />
+                      </li>
+                    )
+                  })
+                }
+              </ul>
+              : <Loading />
         }
       </SheetContent>
     </Sheet>

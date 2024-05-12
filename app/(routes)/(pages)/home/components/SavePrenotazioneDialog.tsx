@@ -13,18 +13,19 @@ import { useSession } from "next-auth/react";
 import { useTimeframe } from "./HomeProvider";
 import { formatDate, formatHour } from "@/lib/utils";
 import React from "react";
+import { useRerender } from "@/app/components/LayoutProvider";
 
 type SavePrenotazioneDialogProps = {
   open: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
   aula: number,
-  setRenderMapFlag: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, aula, setRenderMapFlag }) => {
+const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, aula }) => {
   const [isOpen, setIsOpen] = open;
   const { toast } = useToast();
   const [timeframe, setTimeframe] = useTimeframe();
   const session = useSession();
+  const rerenderMap = useRerender();
 
   const date = formatDate(timeframe.data);
 
@@ -69,8 +70,7 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
               description: prenotazioneInfo,
             });
 
-            // Workaround to trigger a re-render in the Map component
-            setRenderMapFlag(prev => !prev);
+            rerenderMap();
           }}>
             Salva
           </AlertDialogAction>
