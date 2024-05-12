@@ -13,13 +13,13 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import React, { SetStateAction, useCallback } from "react";
 
-type ConfirmUpdateDialogProps = {
+type ConfirmDeletionDialogProps = {
   prenotazioneId: number;
   open: boolean;
   setDialogOpen: React.Dispatch<SetStateAction<boolean>>;
 }
 
-const ConfirmUpdateDialog: React.FC<ConfirmUpdateDialogProps> = ({ prenotazioneId, open, setDialogOpen }) => {
+const ConfirmDeletionDialog: React.FC<ConfirmDeletionDialogProps> = ({ prenotazioneId, open, setDialogOpen }) => {
   const [_, setSheetOpen] = useSheet();
   const rerenderMap = useRerender();
   const { toast } = useToast();
@@ -74,6 +74,6 @@ const ConfirmUpdateDialog: React.FC<ConfirmUpdateDialogProps> = ({ prenotazioneI
   )
 }
 
-ConfirmUpdateDialog.displayName = "ConfirmUpdateDialog";
+ConfirmDeletionDialog.displayName = "ConfirmDeletionDialog";
 
-export default ConfirmUpdateDialog;
+export default ConfirmDeletionDialog;
