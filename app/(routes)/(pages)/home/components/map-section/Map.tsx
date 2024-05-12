@@ -3,6 +3,7 @@ import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 import { useTimeframe } from "../HomeProvider";
 import { useSession } from "next-auth/react";
+import Loading from "@/app/components/Loading";
 
 type MapProps = {
   floor: number
@@ -38,22 +39,14 @@ const Map: React.FC<MapProps> = (props) => {
   }, [theme, timeframe.data, timeframe.inizio, timeframe.fine]);
 
   return (
-    svgInnerHtml ?
-      <svg
+    svgInnerHtml
+      ? <svg
         {...others}
         key={theme}
         dangerouslySetInnerHTML={{ __html: svgInnerHtml }}
         className="w-full h-full fade-in"
       />
-      : (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
-      )
+      : <Loading />
   )
 }
 
