@@ -1,4 +1,4 @@
-import { IDfromEmail, PRENOTAZIONE_PENDING, Prenotazione, TimeFrame, insertPrenotazione } from "@/lib/backend/database";
+import { IDfromEmail, PRENOTAZIONE_PENDING, Prenotazione, TimeFrame, insertPrenotazione, selectPrenotazioneRange } from "@/lib/backend/database";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/app/(routes)/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
@@ -11,6 +11,10 @@ export async function POST(req: NextRequest) {
   const obj = await req.json() as any;
 
   const timeframe = obj.timeframe as TimeFrame;
+
+  const prenotazioni = await selectPrenotazioneRange(new Date(timeframe.data), timeframe.inizio, timeframe.fine, obj.id_aula)
+
+  if (prenotazioni?.length != 0) return NextResponse.error();
 
   const user_id = await IDfromEmail(obj.user_email);
   if (!user_id) return NextResponse.error();
