@@ -66,7 +66,8 @@ export function AdminDashboard({
             sizes
           )}`
         }}
-        className="h-100vh flex flex-row items-stretch"
+        // Just like in HomeClient (full screen height - header height)
+        className="max-h-[calc(100vh-5rem)] flex flex-row items-stretch"
       >
         <ResizablePanel
           defaultSize={defaultLayout[0]}
@@ -84,7 +85,7 @@ export function AdminDashboard({
           }}
           className={cn(
             isCollapsed &&
-            "min-w-[50px] transition-all duration-300 ease-in-out fade-in"
+            "transition-all duration-300 ease-in-out fade-in"
           )}
         >
           <Nav
@@ -115,7 +116,7 @@ export function AdminDashboard({
           />
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={defaultLayout[1]} minSize={30} className="overflow: auto">
+        <ResizablePanel defaultSize={defaultLayout[1]} minSize={30} className="flex flex-col">
           <div className="flex items-center justify-between px-4 py-2">
             <h1 className="text-xl font-bold">{getTitle(ruleset.dashRule.values[0])}</h1>
             <FiltersDropdown />
@@ -126,25 +127,25 @@ export function AdminDashboard({
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input placeholder="Cerca per nome o per email" className="pl-8" onChange={(e) => {
                 let search_rule = filter_rules.da_utente;
-                
+
                 search_rule.values[0] = e.target.value!;
                 search_rule.values[1] = e.target.value!;
-                
+
                 if (e.target.value == "") {
                   setRuleset(prev => {
-                    const new_ruleset = {...prev, filterSearchRule: undefined};
+                    const new_ruleset = { ...prev, filterSearchRule: undefined };
                     return new_ruleset;
                   })
-                } else{
+                } else {
                   setRuleset(prev => {
-                    const new_ruleset = {...prev, filterSearchRule: search_rule};
+                    const new_ruleset = { ...prev, filterSearchRule: search_rule };
                     return new_ruleset;
                   })
                 }
-              }}/>
+              }} />
             </div>
           </div>
-          <PrenotazioneList items={prenotazioni}/>
+          <PrenotazioneList items={prenotazioni} />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]}>
