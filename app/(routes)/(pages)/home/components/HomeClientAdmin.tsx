@@ -4,8 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import { useRuleset, useTrigger } from "./HomeProvider";
 import { AdminDashboard } from "./admin/AdminDashboard"
 import { PrenotazioneInfo } from "../../../../../lib/backend/admin";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 const HomeClientAdmin: React.FC = () => {
+  const session = useSession();
+  if (!session.data) redirect("/login"); 
+  
   const [ruleset, setRuleset] = useRuleset();
   const [trigger, setTrigger] = useTrigger();
   const [cachelist, setCachelist] = useState<PrenotazioneInfo[]>();

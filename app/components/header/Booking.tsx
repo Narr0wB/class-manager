@@ -52,10 +52,10 @@ const Booking: React.FC<BookingProps> = (props) => {
             <span className="sr-only">Elimina</span>
           </Button>
         </CustomTooltip>
-        <CardHeader className="text-center p-4">
-          <div className="flex flex-row items-center gap-1">
-            <Pulse color={colorString} />
-            <CardTitle className="text-sm md:text-lg text-center flex-1 md:lg:xl:2xl">
+        <CardHeader className="text-center p-4 space-y-0">
+          <div className="relative">
+            <Pulse color={colorString} className="absolute top-0 bottom-0 m-auto" />
+            <CardTitle className="w-full text-sm md:text-lg text-center md:lg:xl:2xl">
               Prenotazione {n + 1}
             </CardTitle>
           </div>
