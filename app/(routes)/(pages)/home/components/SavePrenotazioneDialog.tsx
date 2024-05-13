@@ -14,6 +14,7 @@ import { useTimeframe } from "./HomeProvider";
 import { formatDate, formatHour } from "@/lib/utils";
 import React from "react";
 import { useRerender } from "@/app/components/LayoutProvider";
+import { Button } from "@/components/ui/button";
 
 type SavePrenotazioneDialogProps = {
   open: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
@@ -39,6 +40,36 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
     <span className="text-primary"> {`${formatHour(timeframe.fine)}`} </span>
   </>
 
+const handleInsert = async () => {
+  // Insert the prenotazione
+  const res = await fetch(
+    "/api/database/prenotazione/INSERT", {
+    method: "POST",
+    body: JSON.stringify({
+      user_email: session.data?.user?.email,
+      id_aula: aula,
+      timeframe: timeframe
+    })
+  });
+
+  console.log(res.ok);
+  
+  if (res.ok) {
+    rerenderMap();
+    toast({
+      title: "Aggiunta prenotazione",
+      description: prenotazioneInfo,
+    });
+  } else {
+    toast({
+      title: "Errore...",
+      description: "Errore nell'inserire la prenotazione.",
+      action: <Button variant={"ghost"} onClick={handleInsert}>Riprova</Button>,
+      variant: "destructive"
+    });
+  }
+}
+
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent>
@@ -50,28 +81,7 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancella</AlertDialogCancel>
-          <AlertDialogAction onClick={async () => {
-            // Insert the prenotazione
-            const res = await fetch(
-              "/api/database/prenotazione/INSERT", {
-              method: "POST",
-              body: JSON.stringify({
-                user_email: session.data?.user?.email,
-                id_aula: aula,
-                timeframe: timeframe
-              })
-            });
-            const data = await res.json();
-
-            // IDK if its useful
-            const prenotazioneId = data.id;
-            toast({
-              title: "Aggiunta prenotazione",
-              description: prenotazioneInfo,
-            });
-
-            rerenderMap();
-          }}>
+          <AlertDialogAction onClick={handleInsert}>
             Salva
           </AlertDialogAction>
         </AlertDialogFooter>
