@@ -20,8 +20,6 @@ type PrenotazioneCardProps = {
 };
 
 // Still need a better way to name this
-
-
 const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
   const [prenotazione, setPrenotazione] = usePrenotazione();
 
@@ -51,9 +49,10 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
         <div className="flex items-center">
           <div className="flex items-center gap-2">
             <div className="font-semibold">{card.name}</div>
-            {!card.read && (
+            {
+              !card.read &&
               <span className="flex h-2 w-2 rounded-full bg-blue-600" />
-            )}
+            }
           </div>
           <div
             className={cn(
