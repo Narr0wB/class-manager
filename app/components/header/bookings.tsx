@@ -38,15 +38,15 @@ const Bookings: React.FC<BookingsProps> = () => {
     // Do not give a key based on the "sheetOpen" state, because this will cause a re-render
     // while the sheet is closing, causing the animation to work improperly
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-      <SheetContent className="w-60 md:w-72 lg:w-[450px] lg:max-w-[450px] overflow-y-auto">
+      <SheetContent className="w-60 md:w-72 lg:w-[500px] lg:max-w-[500px] overflow-y-auto">
         <SheetHeader className="space-y-1 mb-4">
-          <SheetTitle className="text-center text-lg md:text-2xl md:lg:xl">Le mie prenotazioni</SheetTitle>
+          <SheetTitle className="text-center text-lg md:text-2xl mb-4 md:lg:xl">Le mie prenotazioni</SheetTitle>
         </SheetHeader>
         {
           prenotazioni && prenotazioni.length == 0
             ? <div className="w-full text-center">Nessuna prenotazione</div>
-            : prenotazioni ?
-              <ul className="w-full flex flex-col lg:grid lg:grid-cols-2 gap-3 items-center lg:xl:2xl">
+            : prenotazioni
+              ? <ul className="w-full flex flex-col lg:grid lg:grid-cols-2 gap-3 items-center lg:xl:2xl">
                 {
                   prenotazioni.map((prenotazione, i) => {
                     return (
