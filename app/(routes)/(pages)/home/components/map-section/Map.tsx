@@ -1,4 +1,3 @@
-import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 import { useTimeframe } from "../HomeProvider";
@@ -9,12 +8,37 @@ type MapProps = {
   floor: number
 } & React.SVGProps<SVGSVGElement>
 
+// Increase the first parameter to “pan” right, decrease it to “pan” left.
+// Increase the second parameter to “pan” down, decrease it to “pan” up.
+// Other two are for zooming
+const [sm, md, lg] = ["275 0 800 1500", "300 0 800 1400", "300 0 800 1400"];
+
 const Map: React.FC<MapProps> = (props) => {
   const { floor, ...others } = props;
   const { theme } = useTheme();
   const [svgInnerHtml, setSvgInnerHtml] = useState<null | string>(null);
-  const [timeframe, setTimeframe] = useTimeframe();
+  const [timeframe, _] = useTimeframe();
   const session = useSession();
+  const [viewBox, setViewBox] = useState(sm);
+
+  useEffect(() => {
+    if (!window) return;
+    const res = () => {
+      const width = window.visualViewport?.width!;
+
+      // Breakpoints
+      if (width <= 767) {
+        setViewBox(sm);
+      } else if (width > 767 && width <= 1023) {
+        setViewBox(md);
+      } else if (width > 1023) {
+        setViewBox(lg);
+      }
+    };
+
+    window.addEventListener("load", res);
+    window.addEventListener("resize", res);
+  });
 
   const fetchData = useCallback(async () => {
     const res = await fetch(
@@ -43,6 +67,7 @@ const Map: React.FC<MapProps> = (props) => {
       ? <svg
         {...others}
         key={theme}
+        viewBox={viewBox}
         dangerouslySetInnerHTML={{ __html: svgInnerHtml }}
         className="w-full h-full fade-in"
       />

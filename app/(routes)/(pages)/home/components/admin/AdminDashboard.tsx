@@ -74,7 +74,7 @@ export function AdminDashboard({
           collapsedSize={navCollapsedSize}
           collapsible={true}
           minSize={15}
-          maxSize={20}
+          maxSize={30}
           onCollapse={() => {
             // Temporary workaround, look at it later
             const collapsed = false;

@@ -19,12 +19,13 @@ import CustomTooltip from "@/components/custom/CustomTooltip"
 import { useSheet } from "../LayoutProvider"
 
 type ProfileButtonProps = {
-  className?: string,
+  className?: string;
+  admin: boolean;
 }
 
-const ProfileButton: React.FC<ProfileButtonProps> = ({ className }) => {
+const ProfileButton: React.FC<ProfileButtonProps> = ({ className, admin }) => {
   const { status, data } = useSession();
-  const [sheetOpen, setSheetOpen] = useSheet();
+  const [_, setSheetOpen] = useSheet();
 
   const avatar = () => {
     switch (status) {
@@ -60,10 +61,13 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ className }) => {
       case "authenticated":
         return (
           <>
-            <DropdownMenuItem onClick={() => setSheetOpen(true)} className="flex flex-row items-center justify-start">
-              <CalendarIcon className="w-5 h-5" />
-              <span className="ml-2">Le mie prenotazioni</span>
-            </DropdownMenuItem >
+            {
+              !admin &&
+              <DropdownMenuItem onClick={() => setSheetOpen(true)} className="flex flex-row items-center justify-start">
+                <CalendarIcon className="w-5 h-5" />
+                <span className="ml-2">Le mie prenotazioni</span>
+              </DropdownMenuItem >
+            }
             <DropdownMenuItem onClick={() => signOut()} className="flex flex-row items-center justify-start">
               <LogOutIcon className="w-5 h-5"></LogOutIcon>
               <span className="ml-2">Esci</span>
