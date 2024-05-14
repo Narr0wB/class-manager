@@ -11,10 +11,10 @@ const HeaderBar: React.FC = async () => {
       <div className="size-full relative flex items-center justify-start">
         <Nav admin={admin} className="z-10" />
         <div className="absolute flex flex-row justify-center items-center gap-4 ml-40 right-0 left-0 m-auto select-none sm:ml-0 sm:md:lg:xl:2xl">
-          {/* <img src={"door.svg"} alt="Logo" className="size-[50px]" /> */}
+          {/* <img src={"door.svg"} alt="Logo" className="size-[50px]" />
           <h1 className="text-xl text-center sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-secondary-foreground lg:xl:2xl">
             Class manager
-          </h1>
+          </h1> */}
         </div>
       </div>
     </header>

@@ -8,6 +8,7 @@ const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente =
 const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? AND ora_inizio BETWEEN ? and ? AND id_aula = ?";
 const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
 const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
+const QUERY_SELECT_UTENTE_PRE = "SELECT AM_Utenti.* FROM AM_Prenotazioni JOIN AM_Utenti on AM_Prenotazioni.id_utente = AM_Utenti.id WHERE AM_Prenotazioni.id = ?"
 const QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id = ?"
 const QUERY_UPDATE_PRE_STATUS = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?"
 const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fine = ? WHERE id = ?"
@@ -109,6 +110,15 @@ export async function IDfromEmail(email: string) {
   return undefined;
 }
 
+export async function IDfromPrenotazione(pren_id: number) {
+  const user = await query<Utente>(
+    QUERY_SELECT_UTENTE_PRE,
+    [pren_id]
+  );
+
+  return user![0].id;
+}
+
 export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, before: Date) {
   let query_string: string = QUERY_SELECT_PRE_RULESET + ruleset.dashRule.sqlRule;
   let query_values: any[] = [...ruleset.dashRule.values];
@@ -162,8 +172,6 @@ export async function selectPrenotazioneRange(date: Date, time_start: number, ti
   const date_string = date.toISOString().slice(0, 10);
   const time_start_string = timeToString(time_start);
   const time_end_string = timeToString(time_end);
-
-  //console.log(date_string, time_start_string, time_end_string, aula);
 
   const ret = await query<Prenotazione>(
     QUERY_SELECT_PRE_RANGE,
