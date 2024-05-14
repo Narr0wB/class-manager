@@ -155,7 +155,7 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
                     <div className="font-semibold">{prenotazione.name}</div>
                     <div className="line-clamp-1 text-xs">{prenotazione.subject}</div>
                     <div className="line-clamp-1 text-xs">
-                      <span className="font-medium">{"Prenotato per il: " + (prenotazione.data).toISOString().substring(0, 10)}</span>
+                      <span className="font-medium">{"Prenotato per il: " + (prenotazione.data).toLocaleString("it-it", { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
                     </div>
                   </div>
                 </div>

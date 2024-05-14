@@ -5,15 +5,16 @@ import { RowDataPacket } from "mysql2";
 
 const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_utente, id_aula, data, status, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?, ?)";
 const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
-const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? AND ora_inizio BETWEEN ? and ? AND id_aula = ?";
+const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? and ora_inizio >= ? and ora_inizio <= ? and id_aula = ?";
 const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
 const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
 const QUERY_SELECT_UTENTE_PRE = "SELECT AM_Utenti.* FROM AM_Prenotazioni JOIN AM_Utenti on AM_Prenotazioni.id_utente = AM_Utenti.id WHERE AM_Prenotazioni.id = ?"
 const QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id = ?"
+const QUERY_SELECT_PRE = "SELECT * FROM AM_Prenotazioni WHERE id = ?"
 const QUERY_UPDATE_PRE_STATUS = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?"
 const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fine = ? WHERE id = ?"
 const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
-const QUERY_SELECT_AULA = "SELECT * FROM AM_Aule";
+const QUERY_NUMBER_PRE_AFTER = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
 
 function createDescription(nome: string, ora_inizio: string, ora_fine: string, aula: number) {
   let description = nome + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5);
@@ -117,6 +118,26 @@ export async function IDfromPrenotazione(pren_id: number) {
   );
 
   return user![0].id;
+}
+
+export async function numberPrenotazioniUtente(id_utente: number, after: Date) {
+  const date_string = after.toISOString().slice(0, 10);
+
+  const number = await query(
+    QUERY_NUMBER_PRE_AFTER,
+    [id_utente, date_string]
+  );
+
+  return number![0]["COUNT(*)"];
+}
+
+export async function statusPrenotazione(id_pren: number) {
+  const ret = await query<Prenotazione>(
+    QUERY_SELECT_PRE,
+    [id_pren]
+  );
+
+  return ret![0].status;
 }
 
 export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, before: Date) {
