@@ -2,14 +2,15 @@ import { IDfromEmail, PRENOTAZIONE_PENDING, Prenotazione, TimeFrame, insertPreno
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/app/(routes)/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
+import { user_map } from "@/lib/backend/user";
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
-export let user_map: Map<number, number> = new Map();
 let last_date: Date = today;
 
 export async function POST(req: NextRequest) {
+
   if (last_date == undefined) last_date = new Date();
 
   if (( new Date().getTime() - last_date.getTime() ) > 24 * 60 * 60 * 1000) {
