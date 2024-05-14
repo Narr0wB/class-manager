@@ -1,23 +1,9 @@
-import { IDfromEmail, PRENOTAZIONE_PENDING, Prenotazione, TimeFrame, insertPrenotazione, selectPrenotazioneRange } from "@/lib/backend/database";
+import { IDfromEmail, PRENOTAZIONE_PENDING, Prenotazione, TimeFrame, insertPrenotazione, numberPrenotazioniUtente, selectPrenotazioneRange } from "@/lib/backend/database";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/app/(routes)/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
-import { user_map } from "@/lib/backend/user";
-
-const today = new Date();
-today.setHours(0, 0, 0, 0);
-
-let last_date: Date = today;
 
 export async function POST(req: NextRequest) {
-
-  if (last_date == undefined) last_date = new Date();
-
-  if (( new Date().getTime() - last_date.getTime() ) > 24 * 60 * 60 * 1000) {
-    last_date = new Date();
-    user_map.clear();
-  }
-
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.error();
 
@@ -30,12 +16,8 @@ export async function POST(req: NextRequest) {
   const user_id = await IDfromEmail(obj.user_email);
   if (!user_id) return NextResponse.error();
 
-  // More than 3 prenotazioni per day per user returns an error
-  if (user_map.has(user_id)) {
-    if (user_map.get(user_id)! > 2) return NextResponse.error();
-  } else {
-    user_map.set(user_id, 0);
-  }
+  const pren_user = await numberPrenotazioniUtente(user_id, new Date());
+  if (pren_user > 2) return NextResponse.error(); 
 
   const prenotazione: Prenotazione = {
     id_utente: user_id,
@@ -49,8 +31,6 @@ export async function POST(req: NextRequest) {
   
   try {
     const res = await insertPrenotazione(prenotazione) as any;
-
-    user_map.set(user_id, user_map.get(user_id)! + 1);
 
     return NextResponse.json({ id: res.insertId });
   } catch (err: any) {
