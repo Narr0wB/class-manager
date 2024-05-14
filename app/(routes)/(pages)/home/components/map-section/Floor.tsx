@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react';
 import Map from "@/app/(routes)/(pages)/home/components/map-section/Map";
 import SavePrenotazioneDialog from '../SavePrenotazioneDialog';
@@ -26,7 +28,6 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
     if (getAulaStatus(target) == "F") {
       const aula = getAulaId(target);
       if (!aula) return;
-      console.log(`Aula: ${aula}`);
 
       setSelectedAula(aula.toString());
 
@@ -64,7 +65,6 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
     if (getAulaStatus(target) == "F") {
       const aula = getAulaId(target);
       if (!aula) return;
-      console.log(`Aula: ${aula}`);
 
       setSelectedAula(aula.toString());
 
@@ -73,7 +73,7 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
     }
   }
 
-  // TODO: Fix bug because of which whenever a button is hovered on the map lags
+  // TODO: Fix bug (on chrome) => whenever a button on the map is hovered the map flashes
   function handleMouseOver(e: React.MouseEvent) {
     const target = e.target as HTMLElement;
     if (getAulaStatus(target) == "F") {
@@ -100,7 +100,6 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
         key={Number(renderMapFlag)}
         floor={id}
         id={`floor-${id}`}
-        viewBox="300 0 800 1400"
         onClick={handleClick}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
