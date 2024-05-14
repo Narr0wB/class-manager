@@ -7,7 +7,7 @@ interface PrenotazioneListProps {
 }
 
 export function PrenotazioneList({ items }: PrenotazioneListProps) {
-  items = items.sort((a, b) => { return (a.data_ora_prenotazione > b.data_ora_prenotazione) ? 1 : -1 });
+  items = items.sort((a, b) => { return (a.data_ora_prenotazione < b.data_ora_prenotazione) ? 1 : -1 });
 
   return (
     <ScrollArea>
