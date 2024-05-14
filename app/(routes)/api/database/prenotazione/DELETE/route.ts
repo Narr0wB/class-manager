@@ -2,7 +2,7 @@ import { deletePrenotazione, IDfromPrenotazione } from "@/lib/backend/database";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../../auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
-import { user_map } from "../INSERT/route";
+import { user_map } from "@/lib/backend/user";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
