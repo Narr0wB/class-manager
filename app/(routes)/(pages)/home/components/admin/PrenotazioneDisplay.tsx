@@ -165,7 +165,7 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
                       {prenotazione.data_ora_prenotazione.toLocaleString("it-it", { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
                     </div>
                   )}
-                  <div className="w-[50%] flex flex-col items-end justify-center">
+                  <div className="w-1/2 flex flex-col items-end justify-center">
                   </div>
                 </div>
               </div>

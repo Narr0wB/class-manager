@@ -58,7 +58,11 @@
   }
 
   .rounded-secondary {
-    @apply rounded-md border-solid border-[1.2px] border-secondary shadow-md
+    @apply rounded-md border-solid border-[1.2px] border-secondary shadow-sm
+  }
+
+  .panel {
+    @apply flex gap-4 p-4 rounded-secondary
   }
 }
 

@@ -15,7 +15,7 @@ const Nav: React.FC<NavProps> = ({ className, admin }) => {
     <nav id="nav-bar" className={cn("w-fit h-[90%] flex flex-row space-x-2 items-center p-2", className)}>
       <ProfileButton admin={admin} className="aspect-square p-1" />
       <ThemeButton className="aspect-square p-1" />
-      <RepoButton className="aspect-square p-1" />
+      {/* <RepoButton className="aspect-square p-1" /> */}
     </nav>
   )
 }
