@@ -13,9 +13,9 @@ const Test: React.FC = () => {
   return (
     <main className="absolute w-screen h-screen flex justify-center items-center">
       <Button onClick={async () => {
-        const res = await fetch("/api/map", { method: "GET" });
+        const res = await fetch("/api/database/utente/SELECT?email=luc", { method: "GET" });
         const d = await res.json() as any;
-        console.log(d.data);
+        console.log(d);
       }}>
         test
       </Button>

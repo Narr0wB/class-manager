@@ -15,6 +15,7 @@ const QUERY_UPDATE_PRE_STATUS = "UPDATE AM_Prenotazioni SET status = ? WHERE id 
 const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fine = ? WHERE id = ?"
 const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
 const QUERY_NUMBER_PRE_AFTER = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
+const QUERY_SELECT_UTENTE_EMAIL_LIKE = "SELECT * FROM AM_Utenti WHERE email LIKE CONCAT('%', ?, '%')"
 
 function createDescription(nome: string, ora_inizio: string, ora_fine: string, aula: number) {
   let description = nome + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5);
@@ -100,6 +101,15 @@ export async function selectUtenteEmail(email: string) {
   }
 
   return undefined;
+}
+
+export async function selectUtentiEmailLike(email_like: string) {
+  const ret = await query<Utente>(
+    QUERY_SELECT_UTENTE_EMAIL_LIKE,
+    [email_like]
+  );
+
+  return ret;
 }
 
 export async function IDfromEmail(email: string) {
