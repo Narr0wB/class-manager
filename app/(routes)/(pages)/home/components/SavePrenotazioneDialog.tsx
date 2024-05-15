@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
-import { useTimeframe } from "./HomeProvider";
+import { usePartecipazioni, useTimeframe } from "./HomeProvider";
 import { formatDate, formatHour } from "@/lib/utils";
 import React from "react";
 import { useRerender } from "@/app/components/LayoutProvider";
@@ -25,6 +25,7 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
   const [isOpen, setIsOpen] = open;
   const { toast } = useToast();
   const [timeframe, setTimeframe] = useTimeframe();
+  const [partecipazioni, setPartecipazioni] = usePartecipazioni();
   const session = useSession();
   const rerenderMap = useRerender();
 
@@ -41,6 +42,8 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
   </>
 
 const handleInsert = async () => {
+  setPartecipazioni([2, 3, 7, 5]);
+
   // Insert the prenotazione
   const res = await fetch(
     "/api/database/prenotazione/INSERT", {
@@ -48,7 +51,8 @@ const handleInsert = async () => {
     body: JSON.stringify({
       user_email: session.data?.user?.email,
       id_aula: aula,
-      timeframe: timeframe
+      timeframe: timeframe,
+      partecipazioni: partecipazioni
     })
   });
 

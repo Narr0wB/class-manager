@@ -20,6 +20,7 @@ const pool = mysql.createPool({
 export async function query<T = RowDataPacket>(query: string, values: any[] = []): Promise<T[] | undefined> {
   try {
     const res = await pool.query(query, values);
+
     return res[0] as T[];
   }
   catch (error: any) {

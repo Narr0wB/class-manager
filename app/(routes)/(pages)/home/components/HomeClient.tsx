@@ -8,7 +8,7 @@ import DatePicker from './input-section/DatePicker';
 import FloorSelect from './map-section/FloorSelect';
 import FloorsContainer from './map-section/FloorsContainer';
 import Floor from './map-section/Floor';
-import { useTimeframe } from './HomeProvider';
+import { usePartecipazioni, useTimeframe } from './HomeProvider';
 import { useState } from 'react';
 import Bookings from '@/app/components/header/bookings';
 
@@ -23,6 +23,7 @@ const HomeClient: React.FC = () => {
   if (!session.data) redirect("/login");
 
   const [timeframe, setTimeframe] = useTimeframe();
+  const [partecipazioni, setPartecipazioni] = usePartecipazioni();
   const [floor, setFloor] = useState(FLOORS.FLOOR_1);
 
   return (
