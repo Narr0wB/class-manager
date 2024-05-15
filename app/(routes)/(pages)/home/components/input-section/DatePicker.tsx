@@ -13,7 +13,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ className }) => {
   const [timeframe, setTimeframe] = useTimeframe();
 
   return (
-    <div id="date-picker" className={cn(className, "overflow-auto")}>
+    <div id="date-picker" className={cn(className, "overflow-auto flex justify-center")}>
       <Calendar
         mode="single"
         selected={timeframe.data}

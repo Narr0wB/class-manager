@@ -1,13 +1,18 @@
 import { TimeFrame } from '@/lib/backend/database';
 import { getValidDate } from '@/lib/utils';
 import React, { createContext, SetStateAction, useContext, useState } from 'react';
-import { dash_rules, filter_rules, Ruleset } from '../../../../../lib/backend/admin';
+import { dash_rules, Ruleset } from '../../../../../lib/backend/admin';
+
+export type User = {
+  id: number,
+  email: string
+};
 
 type HomeClientContextValue = {
   timeframe: TimeFrame,
   setTimeframe: React.Dispatch<SetStateAction<TimeFrame>>,
-  partecipazioni: number[],
-  setPartecipazioni: React.Dispatch<SetStateAction<number[]>>
+  partecipanti: User[],
+  setPartecipanti: React.Dispatch<SetStateAction<User[]>>
 }
 
 type HomeAdminContextValue = {
@@ -23,8 +28,8 @@ type ControlContextValue = {
 export const HomeContext = createContext<HomeClientContextValue>({
   timeframe: { data: new Date(), inizio: 0, fine: 0 },
   setTimeframe: () => { },
-  partecipazioni: [],
-  setPartecipazioni: () => { }
+  partecipanti: [],
+  setPartecipanti: () => { }
 });
 
 export const AdminContext = createContext<HomeAdminContextValue>({
@@ -42,9 +47,9 @@ export function useTimeframe(): [TimeFrame, React.Dispatch<SetStateAction<TimeFr
   return [context.timeframe, context.setTimeframe];
 }
 
-export function usePartecipazioni(): [number[], React.Dispatch<SetStateAction<number[]>>] {
+export function usePartecipanti(): [User[], React.Dispatch<SetStateAction<User[]>>] {
   let context = useContext(HomeContext);
-  return [context.partecipazioni, context.setPartecipazioni];
+  return [context.partecipanti, context.setPartecipanti];
 }
 
 export function useRuleset(): [Ruleset, React.Dispatch<SetStateAction<Ruleset>>] {
@@ -66,13 +71,13 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children }) => {
   const [timeframe, setTimeframe] = useState<TimeFrame>({ data: getValidDate(), inizio: 13 * 60 + 30, fine: 14 * 60 + 30 });
   const [ruleset, setRuleset] = useState<Ruleset>({ dashRule: dash_rules.in_arrivo });
   const [trigger, setTrigger] = useState<boolean>(false);
-  const [partecipazioni, setPartecipazioni] = useState<number[]>([]);
+  const [partecipanti, setPartecipanti] = useState<User[]>([]);
 
   const value = {
     timeframe: timeframe,
     setTimeframe: setTimeframe,
-    partecipazioni: partecipazioni,
-    setPartecipazioni: setPartecipazioni
+    partecipanti: partecipanti,
+    setPartecipanti: setPartecipanti
   } satisfies HomeClientContextValue;
 
   const value2 = {
