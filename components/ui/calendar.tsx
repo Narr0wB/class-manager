@@ -45,7 +45,7 @@ function Calendar({
         nav: "space-x-1 flex items-center",
         nav_button: cn(
           buttonVariants(),
-          "h-7 w-7 bg-purple-600 p-0 opacity-100 hover:bg-purple-400"
+          "h-7 w-7 bg-primary p-0 opacity-100 hover:bg-purple-400"
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
@@ -61,7 +61,7 @@ function Calendar({
         ),
         day_range_end: "day-range-end",
         day_selected:
-          "bg-purple-600 text-white hover:bg-purple-700 focus:bg-purple-600",
+          "bg-primary text-white hover:bg-purple-700 focus:bg-primary",
         day_outside:
           "day-outside text-black aria-selected:text-white aria-selected:opacity-100",
         day_disabled: "text-muted-foreground opacity-50",

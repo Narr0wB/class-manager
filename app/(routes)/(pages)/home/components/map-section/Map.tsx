@@ -69,7 +69,7 @@ const Map: React.FC<MapProps> = (props) => {
         key={theme}
         viewBox={viewBox}
         dangerouslySetInnerHTML={{ __html: svgInnerHtml }}
-        className="w-full h-full fade-in"
+        className="size-full fade-in"
       />
       : <Loading />
   )

@@ -1,4 +1,4 @@
-import { PrenotazioneInfo, Ruleset, DashboardRule } from "@/lib/backend/admin";
+import { PrenotazioneInfo, Ruleset } from "@/lib/backend/admin";
 import { formatHour } from "../utils";
 import { query } from "./mysql";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
@@ -14,6 +14,7 @@ const QUERY_SELECT_PRE = "SELECT * FROM AM_Prenotazioni WHERE id = ?"
 const QUERY_UPDATE_PRE_STATUS = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?"
 const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fine = ? WHERE id = ?"
 const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
+const QUERY_SELECT_UTENTE_ID = "SELECT * FROM AM_Utenti WHERE id = ?";
 const QUERY_NUMBER_PRE_AFTER = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
 const QUERY_SELECT_UTENTE_EMAIL_LIKE = "SELECT * FROM AM_Utenti WHERE email LIKE CONCAT('%', ?, '%')";
 const QUERY_INSERT_PARTECIPAZIONE = "INSERT INTO AM_Partecipazioni(id_prenotazione, id_utente) VALUES (?, ?)";
@@ -87,7 +88,7 @@ export async function insertPrenotazione(pren: Prenotazione) {
     [formattedDateInsertion, pren.id_utente, pren.id_aula, formattedDate, pren.status, ora_inizio_string, ora_fine_string]
   );
 
-  return res!.insertId;
+  return res![0].insertId;
 }
 
 export async function insertPartecipazioni(id: number, partecipazioni: number[]) {
@@ -97,8 +98,21 @@ export async function insertPartecipazioni(id: number, partecipazioni: number[])
       [id, p]
     );
   })
-  
+
   return 0;
+}
+
+export async function selectUtenteId(id: number) {
+  const ret = await query<Utente>(
+    QUERY_SELECT_UTENTE_ID,
+    [id]
+  );
+
+  if (ret) {
+    return ret[0];
+  }
+
+  return undefined;
 }
 
 // Implement paramter-specific SELECT (e.g. SELECTing a user while only knowing the email)
