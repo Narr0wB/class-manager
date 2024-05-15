@@ -41,38 +41,38 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
     <span className="text-primary"> {`${formatHour(timeframe.fine)}`} </span>
   </>
 
-const handleInsert = async () => {
-  setPartecipazioni([2, 3, 7, 5]);
+  const handleInsert = async () => {
+    setPartecipazioni([2, 3, 7, 5]);
 
-  // Insert the prenotazione
-  const res = await fetch(
-    "/api/database/prenotazione/INSERT", {
-    method: "POST",
-    body: JSON.stringify({
-      user_email: session.data?.user?.email,
-      id_aula: aula,
-      timeframe: timeframe,
-      partecipazioni: partecipazioni
-    })
-  });
+    // Insert the prenotazioneS
+    const res = await fetch(
+      "/api/database/prenotazione/INSERT", {
+      method: "POST",
+      body: JSON.stringify({
+        user_email: session.data?.user?.email,
+        id_aula: aula,
+        timeframe: timeframe,
+        partecipazioni: partecipazioni
+      })
+    });
 
-  console.log(res.ok);
-  
-  if (res.ok) {
-    rerenderMap();
-    toast({
-      title: "Aggiunta prenotazione",
-      description: prenotazioneInfo,
-    });
-  } else {
-    toast({
-      title: "Errore...",
-      description: "Errore nell'inserire la prenotazione.",
-      action: <Button variant={"ghost"} onClick={handleInsert}>Riprova</Button>,
-      variant: "destructive"
-    });
+    console.log(res.ok);
+
+    if (res.ok) {
+      rerenderMap();
+      toast({
+        title: "Aggiunta prenotazione",
+        description: prenotazioneInfo,
+      });
+    } else {
+      toast({
+        title: "Errore...",
+        description: "Errore nell'inserire la prenotazione.",
+        action: <Button variant={"ghost"} onClick={handleInsert}>Riprova</Button>,
+        variant: "destructive"
+      });
+    }
   }
-}
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
