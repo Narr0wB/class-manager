@@ -5,7 +5,9 @@ import { dash_rules, filter_rules, Ruleset } from '../../../../../lib/backend/ad
 
 type HomeClientContextValue = {
   timeframe: TimeFrame,
-  setTimeframe: React.Dispatch<SetStateAction<TimeFrame>>
+  setTimeframe: React.Dispatch<SetStateAction<TimeFrame>>,
+  partecipazioni: number[],
+  setPartecipazioni: React.Dispatch<SetStateAction<number[]>>
 }
 
 type HomeAdminContextValue = {
@@ -20,7 +22,9 @@ type ControlContextValue = {
 
 export const HomeContext = createContext<HomeClientContextValue>({
   timeframe: { data: new Date(), inizio: 0, fine: 0 },
-  setTimeframe: () => { }
+  setTimeframe: () => { },
+  partecipazioni: [],
+  setPartecipazioni: () => { }
 });
 
 export const AdminContext = createContext<HomeAdminContextValue>({
@@ -36,6 +40,11 @@ export const ControlContext = createContext<ControlContextValue>({
 export function useTimeframe(): [TimeFrame, React.Dispatch<SetStateAction<TimeFrame>>] {
   let context = useContext(HomeContext);
   return [context.timeframe, context.setTimeframe];
+}
+
+export function usePartecipazioni(): [number[], React.Dispatch<SetStateAction<number[]>>] {
+  let context = useContext(HomeContext);
+  return [context.partecipazioni, context.setPartecipazioni];
 }
 
 export function useRuleset(): [Ruleset, React.Dispatch<SetStateAction<Ruleset>>] {
@@ -57,10 +66,13 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children }) => {
   const [timeframe, setTimeframe] = useState<TimeFrame>({ data: getValidDate(), inizio: 13 * 60 + 30, fine: 14 * 60 + 30 });
   const [ruleset, setRuleset] = useState<Ruleset>({ dashRule: dash_rules.in_arrivo });
   const [trigger, setTrigger] = useState<boolean>(false);
+  const [partecipazioni, setPartecipazioni] = useState<number[]>([]);
 
   const value = {
     timeframe: timeframe,
-    setTimeframe: setTimeframe
+    setTimeframe: setTimeframe,
+    partecipazioni: partecipazioni,
+    setPartecipazioni: setPartecipazioni
   } satisfies HomeClientContextValue;
 
   const value2 = {

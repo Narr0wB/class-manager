@@ -1,7 +1,7 @@
 import { PrenotazioneInfo, Ruleset, DashboardRule } from "@/lib/backend/admin";
 import { formatHour } from "../utils";
 import { query } from "./mysql";
-import { RowDataPacket } from "mysql2";
+import { ResultSetHeader, RowDataPacket } from "mysql2";
 
 const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_utente, id_aula, data, status, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?, ?)";
 const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
@@ -15,7 +15,8 @@ const QUERY_UPDATE_PRE_STATUS = "UPDATE AM_Prenotazioni SET status = ? WHERE id 
 const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fine = ? WHERE id = ?"
 const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
 const QUERY_NUMBER_PRE_AFTER = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
-const QUERY_SELECT_UTENTE_EMAIL_LIKE = "SELECT * FROM AM_Utenti WHERE email LIKE CONCAT('%', ?, '%')"
+const QUERY_SELECT_UTENTE_EMAIL_LIKE = "SELECT * FROM AM_Utenti WHERE email LIKE CONCAT('%', ?, '%')";
+const QUERY_INSERT_PARTECIPAZIONE = "INSERT INTO AM_Partecipazioni(id_prenotazione, id_utente) VALUES (?, ?)";
 
 function createDescription(nome: string, ora_inizio: string, ora_fine: string, aula: number) {
   let description = nome + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5);
@@ -81,12 +82,23 @@ export async function insertPrenotazione(pren: Prenotazione) {
   const ora_inizio_string = formatHour(pren.ora_inizio);
   const ora_fine_string = formatHour(pren.ora_fine);
 
-  const res = await query(
+  const res = await query<ResultSetHeader>(
     QUERY_INSERT_PRE,
     [formattedDateInsertion, pren.id_utente, pren.id_aula, formattedDate, pren.status, ora_inizio_string, ora_fine_string]
   );
 
-  return res;
+  return res!.insertId;
+}
+
+export async function insertPartecipazioni(id: number, partecipazioni: number[]) {
+  partecipazioni.forEach((p) => {
+    const ret = query(
+      QUERY_INSERT_PARTECIPAZIONE,
+      [id, p]
+    );
+  })
+  
+  return 0;
 }
 
 // Implement paramter-specific SELECT (e.g. SELECTing a user while only knowing the email)

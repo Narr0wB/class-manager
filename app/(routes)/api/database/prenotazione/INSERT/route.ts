@@ -1,4 +1,4 @@
-import { IDfromEmail, PRENOTAZIONE_PENDING, Prenotazione, TimeFrame, insertPrenotazione, numberPrenotazioniUtente, selectPrenotazioneRange } from "@/lib/backend/database";
+import { IDfromEmail, PRENOTAZIONE_PENDING, Prenotazione, TimeFrame, insertPartecipazioni, insertPrenotazione, numberPrenotazioniUtente, selectPrenotazioneRange } from "@/lib/backend/database";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/app/(routes)/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
@@ -29,12 +29,10 @@ export async function POST(req: NextRequest) {
     ora_fine: timeframe.fine
   }
   
-  try {
-    const res = await insertPrenotazione(prenotazione) as any;
+  
+  const id_prenotazione = await insertPrenotazione(prenotazione);
 
-    return NextResponse.json({ id: res.insertId });
-  } catch (err: any) {
-    console.error(`Database api error: ${err}`);
-    return NextResponse.error();
-  }
+  await insertPartecipazioni(id_prenotazione, obj.partecipazioni);
+
+  return NextResponse.json({ id: id_prenotazione });
 }
