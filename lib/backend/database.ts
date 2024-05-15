@@ -7,7 +7,7 @@ const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_
 const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
 const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? and ora_inizio >= ? and ora_inizio <= ? and id_aula = ?";
 const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
-const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
+const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome, AM_Utenti.classe FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
 const QUERY_SELECT_UTENTE_PRE = "SELECT AM_Utenti.* FROM AM_Prenotazioni JOIN AM_Utenti on AM_Prenotazioni.id_utente = AM_Utenti.id WHERE AM_Prenotazioni.id = ?"
 const QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id = ?"
 const QUERY_SELECT_PRE = "SELECT * FROM AM_Prenotazioni WHERE id = ?"
@@ -17,9 +17,14 @@ const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
 const QUERY_NUMBER_PRE_AFTER = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
 const QUERY_SELECT_UTENTE_EMAIL_LIKE = "SELECT * FROM AM_Utenti WHERE email LIKE CONCAT('%', ?, '%')";
 const QUERY_INSERT_PARTECIPAZIONE = "INSERT INTO AM_Partecipazioni(id_prenotazione, id_utente) VALUES (?, ?)";
+const QUERY_SELECT_UTENTI_PARTECIPAZIONI = "SELECT AM_Utenti.* FROM AM_Partecipazioni JOIN AM_Utenti on AM_Partecipazioni.id_utente = AM_Utenti.id WHERE id_prenotazione = ?";
 
-function createDescription(nome: string, ora_inizio: string, ora_fine: string, aula: number) {
-  let description = nome + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5);
+function createDescription(partecipazioni: Utente[], classe: string, id_pren: number, nome: string, ora_inizio: string, ora_fine: string, aula: number) {
+  let description = nome + " della " + classe + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5) + " assieme con: \n\n";
+
+  for (let i = 0; i < partecipazioni.length; i++) {
+    description += "  • " + partecipazioni[i].nome + " " + partecipazioni[i].classe + "\n";
+  }
 
   return description;
 }
@@ -40,6 +45,7 @@ export type Utente = {
   nome: string;
   email: string;
   type: string;
+  classe: string;
 }
 
 export const ADMIN_USER = "Amministratore";
@@ -85,7 +91,7 @@ export async function insertPrenotazione(pren: Prenotazione) {
   const res = await query<ResultSetHeader>(
     QUERY_INSERT_PRE,
     [formattedDateInsertion, pren.id_utente, pren.id_aula, formattedDate, pren.status, ora_inizio_string, ora_fine_string]
-  );
+  ) as unknown as ResultSetHeader;
 
   return res!.insertId;
 }
@@ -190,7 +196,15 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
 
   var result: PrenotazioneInfo[] = [];
 
-  ret?.forEach((pren: RowDataPacket) => {
+  
+  for (let i = 0; i < ret?.length!; i++) {
+    const pren = ret![i];
+
+    const partecipazioni = await query<Utente>(
+      QUERY_SELECT_UTENTI_PARTECIPAZIONI, 
+      [pren.id]
+    );
+
     result.push({
       id: pren.id,
       data_ora_prenotazione: pren.data_ora_prenotazione,
@@ -201,12 +215,14 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
       ora_inizio: pren.ora_inizio.substring(0, 5),
       ora_fine: pren.ora_fine.substring(0, 5),
       name: pren.nome,
-      desc: createDescription(pren.nome, pren.ora_inizio, pren.ora_fine, pren.id_aula),
+      desc: createDescription(partecipazioni!, pren.classe, pren.id, pren.nome, pren.ora_inizio, pren.ora_fine, pren.id_aula),
       subject: "Prenotazione",
       read: false,
       label: "Aula " + pren.id_aula
     })
-  })
+  }
+
+
 
   return result;
 }
