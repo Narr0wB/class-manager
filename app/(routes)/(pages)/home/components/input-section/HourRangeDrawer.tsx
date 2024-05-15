@@ -9,12 +9,12 @@ import CustomTooltip from '@/components/custom/CustomTooltip';
 import { useTimeframe } from '../HomeProvider';
 import { TimeFrame } from '@/lib/backend/database';
 import { useEndMinutes, useStartMinutes } from '@/app/components/LayoutProvider';
+import { cn } from '@/lib/utils';
 
 type HourRangeDrawerProps = {
-  className?: string;
-}
+} & React.HTMLAttributes<HTMLButtonElement>
 
-const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
+const HourRangeDrawer: React.FC<HourRangeDrawerProps> = (props) => {
   const [timeframe, setTimeframe] = useTimeframe();
   const [startMinutes, setStartMinutes] = useStartMinutes();
   const [endMinutes, setEndMinutes] = useEndMinutes();
@@ -71,46 +71,46 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = ({ className }) => {
     }
   }, [startMinutes, endMinutes]);
 
+  const { className, ...others } = props;
+
   return (
-    <div id="hour-range-drawer" className={className}>
-      <Drawer>
-        <CustomTooltip content="Seleziona l'ora" side="bottom">
-          <DrawerTrigger asChild>
-            <Button className="w-full aspect-square p-2">
-              <Clock10Icon className="h-10 w-10" />
-            </Button>
-          </DrawerTrigger>
-        </CustomTooltip>
-        <DrawerContent id="drawer-content" className="fixed bottom-0 mx-[10%] md:mx-[15%] lg:mx-[20%] flex items-center lg:xl:2xl">
-          <DrawerHeader id="drawer-header">
-            <DrawerDescription>Seleziona l'ora della prenotazione</DrawerDescription>
-          </DrawerHeader>
-          <HourRangeSelector className="w-fit md:w-[75%] h-max flex flex-col justify-center space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:lg:xl:2xl" />
-          <DrawerFooter id="drawer-footer" className="flex items-center w-full h-full">
-            <div className="w-[75%] flex flex-col gap-2 justify-center">
-              <DrawerClose asChild>
-                <Button onClick={
-                  () => {
-                    setTimeframe(prev => {
-                      const t: TimeFrame = {
-                        inizio: startMinutes,
-                        fine: endMinutes,
-                        data: prev.data
-                      };
-                      return t;
-                    });
-                  }}>
-                  Salva
-                </Button>
-              </DrawerClose>
-              <DrawerClose asChild>
-                <Button variant="secondary">Chiudi</Button>
-              </DrawerClose>
-            </div>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer >
-    </div >
+    <Drawer>
+      <CustomTooltip content="Seleziona l'ora" side="bottom">
+        <DrawerTrigger asChild>
+          <Button id="hour-range-drawer-open" className={cn("grow-0 aspect-square p-2", className)} {...others}>
+            <Clock10Icon className="size-full" />
+          </Button>
+        </DrawerTrigger>
+      </CustomTooltip>
+      <DrawerContent id="drawer-content" className="fixed bottom-0 mx-[10%] md:mx-[15%] lg:mx-[20%] flex items-center lg:xl:2xl">
+        <DrawerHeader id="drawer-header">
+          <DrawerDescription>Seleziona l'ora della prenotazione</DrawerDescription>
+        </DrawerHeader>
+        <HourRangeSelector className="w-fit md:w-3/4 h-max flex flex-col justify-center space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:lg:xl:2xl" />
+        <DrawerFooter id="drawer-footer" className="flex items-center w-full h-full">
+          <div className="w-3/4 flex flex-col gap-2 justify-center">
+            <DrawerClose asChild>
+              <Button onClick={
+                () => {
+                  setTimeframe(prev => {
+                    const t: TimeFrame = {
+                      inizio: startMinutes,
+                      fine: endMinutes,
+                      data: prev.data
+                    };
+                    return t;
+                  });
+                }}>
+                Salva
+              </Button>
+            </DrawerClose>
+            <DrawerClose asChild>
+              <Button variant="secondary">Chiudi</Button>
+            </DrawerClose>
+          </div>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer >
   )
 }
 
