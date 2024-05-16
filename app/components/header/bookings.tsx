@@ -1,7 +1,7 @@
 "use client"
 
 import { useTimeframe } from '@/app/(routes)/(pages)/home/components/HomeProvider';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Prenotazione } from '@/lib/backend/database';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
@@ -13,7 +13,7 @@ type BookingsProps = {
 }
 
 const Bookings: React.FC<BookingsProps> = () => {
-  const [timeframe, setTimeframe] = useTimeframe();
+  const [timeframe, _] = useTimeframe();
   const session = useSession();
   const [prenotazioni, setPrenotazioni] = useState<Prenotazione[] | null>(null);
   const [sheetOpen, setSheetOpen] = useSheet();
@@ -38,7 +38,7 @@ const Bookings: React.FC<BookingsProps> = () => {
     // Do not give a key based on the "sheetOpen" state, because this will cause a re-render
     // while the sheet is closing, causing the animation to work improperly
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-      <SheetContent className="w-60 md:w-72 lg:w-[500px] lg:max-w-[500px] overflow-y-auto">
+      <SheetContent side="left" className="w-60 md:w-72 lg:w-[500px] lg:max-w-[500px] overflow-y-auto">
         <SheetHeader className="space-y-1 mb-4">
           <SheetTitle className="text-center text-lg md:text-2xl mb-4 md:lg:xl">Le mie prenotazioni</SheetTitle>
         </SheetHeader>
