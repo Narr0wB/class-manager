@@ -9,41 +9,35 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Moon, Sun } from "lucide-react"
-import { cn } from "@/lib/utils"
 import CustomTooltip from "@/components/custom/CustomTooltip"
-import { Button } from "@/components/ui/button"
 
-type ThemeButtonProps = {
-  className?: string;
+type ThemeDropdownProps = {
+  children: React.ReactNode;
 }
 
-const ThemeButton: React.FC<ThemeButtonProps> = ({ className }) => {
-  const { setTheme } = useTheme()
+const ThemeDropdown: React.FC<ThemeDropdownProps> = ({ children }) => {
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
       <CustomTooltip content="Tema" side="bottom">
         <DropdownMenuTrigger asChild>
-          <Button id="theme-button" variant="ghost" className={cn(className, "")}>
-            <Sun className="block dark:hidden" />
-            <Moon className="hidden dark:block" />
-          </Button>
+          {children}
         </DropdownMenuTrigger>
       </CustomTooltip>
       <DropdownMenuContent align="center">
         <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
+          Chiaro
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
+          Scuro
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
+          Sistema
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu >
   )
 }
 
-export default ThemeButton;
+export default ThemeDropdown;

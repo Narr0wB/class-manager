@@ -9,10 +9,10 @@ import FloorsContainer from './map-section/FloorsContainer';
 import Floor from './map-section/Floor';
 import { useTimeframe } from './HomeProvider';
 import { useState } from 'react';
-import Bookings from '@/app/components/header/bookings';
 import UsersCombobox from './input-section/UsersCombobox';
 import UsersList from './input-section/UsersList';
 import HourRangeText from './input-section/HourRangeText';
+import Bookings from '@/app/components/header/Bookings';
 
 export const FLOORS = {
   FLOOR_1: 1,
