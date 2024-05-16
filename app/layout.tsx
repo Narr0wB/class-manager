@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "@/app/globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/app/components/ThemeProvider";
@@ -9,7 +9,7 @@ import SessionProvider from "./components/SessionProvider";
 import { Toaster } from "@/components/ui/toaster";
 import LayoutProvider from "./components/LayoutProvider";
 
-const font = Inter({ subsets: ["latin"] });
+const font = Poppins({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Class manager",
