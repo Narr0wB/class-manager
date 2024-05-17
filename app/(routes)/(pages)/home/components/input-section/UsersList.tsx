@@ -7,7 +7,7 @@ import { usePartecipanti } from "../HomeProvider";
 import { UsersUtility } from "./UsersContainer";
 
 type UsersListProps = {
-} & UsersUtility & React.HTMLAttributes<HTMLUListElement>
+} & Partial<UsersUtility> & React.HTMLAttributes<HTMLUListElement>
 
 const UsersList: React.FC<UsersListProps> = (props) => {
   const { className, removePartecipante, addPartecipante, ...others } = props;
