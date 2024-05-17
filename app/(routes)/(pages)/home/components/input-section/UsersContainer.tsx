@@ -6,8 +6,8 @@ type UsersContainerProps = {
 } & React.HTMLAttributes<HTMLDivElement>
 
 export type UsersUtility = {
-  addPartecipante?: (partecipante: User) => void;
-  removePartecipante?: (partecipante: User) => void;
+  addPartecipante: (partecipante: User) => void;
+  removePartecipante: (partecipante: User) => void;
 }
 
 const UsersContainer: React.FC<UsersContainerProps> = (props) => {
