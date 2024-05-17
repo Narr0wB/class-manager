@@ -6,13 +6,12 @@ import { Button } from "../../../../../../components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "../../../../../../components/ui/command";
 import { cn } from "@/lib/utils";
-import Loading from "@/app/components/Loading";
 import { useToast } from "@/components/ui/use-toast";
 import { User, usePartecipanti } from "../HomeProvider";
+import { UsersUtility } from "./UsersContainer";
 
 type UsersComboboxProps = {
-  className?: string;
-}
+} & UsersUtility & React.HTMLAttributes<HTMLDivElement>
 
 async function getUsers(email: string) {
   const res = await fetch(
@@ -22,18 +21,20 @@ async function getUsers(email: string) {
   return await res.json() as User[];
 }
 
-const UsersCombobox: React.FC<UsersComboboxProps> = ({ className }) => {
+const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
   const { toast } = useToast();
 
   const [partecipanti, setPartecipanti] = usePartecipanti();
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
 
+  const { className, removePartecipante, addPartecipante, ...others } = props;
+
   // Don't use the "includes" method because it doesn't necessarily work with objects
   const isUserPartecipante = (user: User) => partecipanti.some(partecipante => partecipante.id === user.id);
 
   return (
-    <div id="users-combobox" className={cn("", className)}>
+    <div id="users-combobox" className={cn("", className)} {...others}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -52,8 +53,16 @@ const UsersCombobox: React.FC<UsersComboboxProps> = ({ className }) => {
               placeholder="Cerca utenti..."
               onValueChange={async value => value ? setUsers(await getUsers(value)) : setUsers([])}
             />
-            <CommandEmpty>
-              Nessun utente trovato.
+            <CommandEmpty className="py-2">
+              {
+                partecipanti.length != 0
+                  ? partecipanti.map(partecipante => (
+                    <div key={partecipante.id} className="text-start px-4">
+                      {partecipante.email.trim()}
+                    </div>
+                  ))
+                  : <div className="text-center">Nessun partecipante aggiunto</div>
+              }
             </CommandEmpty>
             <CommandList>
               {
@@ -62,24 +71,11 @@ const UsersCombobox: React.FC<UsersComboboxProps> = ({ className }) => {
                     <CommandItem
                       key={user.id}
                       value={user.email.trim()}
-                      disabled={isUserPartecipante(user)}
                       onSelect={async email => {
                         // There will always be a user since I'm able to select the email item
                         const user = users.find(user => user.email === email.trim())!;
-                        setPartecipanti(prev => [...prev, user]);
-                        toast({
-                          title: "Successo!",
-                          description: (
-                            // Don't change whitespaces
-                            <>
-                              Il partecipante
-                              <span className="font-semibold"> {email} </span>
-                              è stato
-                              <span className="text-green-500"> aggiunto </span>
-                              alla prenotazione.
-                            </>
-                          )
-                        });
+
+                        isUserPartecipante(user) ? removePartecipante!(user) : addPartecipante!(user);
                       }}
                     >
                       <Check
