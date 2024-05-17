@@ -12,7 +12,8 @@ import { useState } from 'react';
 import UsersCombobox from './input-section/UsersCombobox';
 import UsersList from './input-section/UsersList';
 import HourRangeText from './input-section/HourRangeText';
-import Bookings from '@/app/components/header/Bookings';
+import Bookings from '@/app/components/header/bookings';
+import UsersContainer from './input-section/UsersContainer';
 
 export const FLOORS = {
   FLOOR_1: 1,
@@ -31,8 +32,10 @@ const HomeClient: React.FC = () => {
     <div id="content" className="w-screen h-fit lg:h-[calc(100vh-5rem)] box-border flex flex-col lg:flex-row gap-4 p-2 lg:xl:2xl">
       <aside id="input-panel" className="max-w-full lg:max-w-min panel flex-col md:grid md:grid-cols-2 lg:flex lg:flex-col gap-8 lg:xl:2xl">
         <section id="users-section" className="grow flex flex-col gap-2">
-          <UsersCombobox />
-          <UsersList className="overflow-y-scroll" />
+          <UsersContainer>
+            <UsersCombobox />
+            <UsersList className="overflow-y-auto" />
+          </UsersContainer>
         </section>
         {/* TODO: Fix shrinking problems when there are too many users */}
         <section id="datetime-section" className="shrink min-h-min flex flex-col gap-4">
