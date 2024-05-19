@@ -3,16 +3,18 @@ import { User, usePartecipanti } from "../HomeProvider";
 import React from "react";
 
 type UsersContainerProps = {
-} & React.ComponentProps<typeof React.Fragment>
+} & React.HTMLAttributes<HTMLDivElement>
 
 export type UsersUtility = {
   addPartecipante: (partecipante: User) => void;
   removePartecipante: (partecipante: User) => void;
 }
 
-const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
+const UsersContainer: React.FC<UsersContainerProps> = (props) => {
   const { toast } = useToast();
   const [partecipanti, setPartecipanti] = usePartecipanti();
+
+  const { children, ...others } = props;
 
   function addPartecipante(partecipante: User) {
     setPartecipanti(prev => [...prev, partecipante]);
@@ -51,7 +53,7 @@ const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
 
 
   return (
-    <>
+    <div id="users-container" className="space-y-3" {...others}>
       {
         React.Children.map(children, (child) =>
           React.isValidElement(child)
@@ -62,7 +64,7 @@ const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
             : child
         )
       }
-    </>
+    </div>
   )
 }
 

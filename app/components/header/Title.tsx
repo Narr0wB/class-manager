@@ -16,6 +16,9 @@ const Title: React.FC<TitleProps> = (props) => {
       <h1 className={cn("text-2xl sm:text-4xl whitespace-nowrap text-primary text-center font-semibold", font.className)}>
         Class manager
       </h1>
+      {/* <h2 className="text-sm">
+        Sistema di prenotazione delle classi
+      </h2> */}
     </div>
   )
 }
