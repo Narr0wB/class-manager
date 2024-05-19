@@ -4,11 +4,13 @@ import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../../../../components/ui/popover";
 import { Button } from "../../../../../../components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "../../../../../../components/ui/command";
+import { Command, CommandInput, CommandItem, CommandList } from "../../../../../../components/ui/command";
 import { cn } from "@/lib/utils";
 import { User, usePartecipanti } from "../HomeProvider";
 import { UsersUtility } from "./UsersContainer";
 import Spinner from "./Spinner";
+import { CommandEmpty } from "cmdk";
+
 
 type UsersComboboxProps = {
 } & Partial<UsersUtility> & React.HTMLAttributes<HTMLDivElement>
@@ -24,9 +26,10 @@ async function getUsers(email: string) {
 // Don't use the "includes" method because it doesn't necessarily work with objects
 const isUserPartecipante = (user: User, partecipanti: User[]) => partecipanti.some(partecipante => partecipante.id === user.id);
 
+type CommandItemProps = React.ComponentProps<typeof CommandItem>;
 type UserItemProps = {
   user: User,
-} & typeof CommandItem
+} & CommandItemProps
 
 const UserItem: React.FC<UserItemProps> = (props) => {
   const { user, ...others } = props;
@@ -56,6 +59,7 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
   const [users, setUsers] = useState<User[]>([]);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [loading, setLoading] = useState(false);
+  const [inputEmpty, setInputEmpty] = useState(true);
 
   const { className, removePartecipante, addPartecipante, ...others } = props;
 
@@ -64,6 +68,7 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
   // Make the api call only if some time as passed since the last input by the user
   const handleSearch = async (value: string) => {
     setLoading(true);
+    setInputEmpty(value === "");
     // If the user types something before the timer has finished, prevent this
     // timer from making an api call
     if (timer) clearTimeout(timer);
@@ -77,11 +82,51 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
     setTimer(newTimer);
   };
 
+  const listUsers = () => (
+    users.map(user => (
+      <UserItem user={user} onSelect={async email => {
+        // There will always be a user since I'm able to select the email item
+        const user = users.find(user => user.email === email.trim())!;
+        isUserPartecipante(user, partecipanti) ? removePartecipante!(user) : addPartecipante!(user);
+      }} />
+    ))
+  )
 
+  const listPartecipanti = () => (
+    partecipanti.map(partecipante => (
+      <UserItem user={partecipante} onSelect={async () => removePartecipante!(partecipante)} />
+    ))
+  )
+
+  const commandListContent = () => {
+    if (loading) return (
+      <div className="p-2">
+        <Spinner content="Ricerca..." className="p-1 fill-primary" />
+      </div>
+    )
+
+    if (users.length != 0) return listUsers();
+
+    if (partecipanti.length != 0 && inputEmpty) return (
+      <>
+        <p className="p-2">Partecipanti aggiunti</p>
+        {listPartecipanti()}
+      </>
+    );
+  }
 
   return (
     <div id="users-combobox" className={cn("", className)} {...others}>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={open => {
+        setOpen(open);
+        // Reset the list of searched users so that the next
+        // time the popup will be open, there will be no user
+        // displayed. (Especially if the popup is closed by clicking out of it)
+        if (!open) {
+          setUsers([]);
+          setInputEmpty(true);
+        }
+      }}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -95,31 +140,22 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
         </PopoverTrigger>
         <PopoverContent className="w-fit p-0">
           <Command>
-            <div className="flex flex-row justify-between items-center">
-              <CommandInput placeholder="Cerca utenti..." onValueChange={handleSearch} />
-              {loading && <Spinner content="Ricerca..." />}
-            </div>
-            <CommandList>
+            <CommandInput placeholder="Cerca utenti..." onValueChange={handleSearch} />
+            <CommandEmpty>
               {
-                users.length != 0
-                  ? users.map(user => (
-                    <UserItem user={user} onSelect={async email => {
-                      // There will always be a user since I'm able to select the email item
-                      const user = users.find(user => user.email === email.trim())!;
-                      isUserPartecipante(user, partecipanti) ? removePartecipante!(user) : addPartecipante!(user);
-                    }} />
-                  ))
-                  : partecipanti.length != 0
-                    ? partecipanti.map(partecipante => (
-                      <UserItem user={partecipante} onSelect={async email => removePartecipante!(partecipante)} />
-                    ))
-                    : <>Nessun utente o partecipante trovato</>
+                !loading &&
+                <p className="p-2">
+                  {inputEmpty ? "Nessun partecipante aggiunto." : "Nessun utente trovato"}
+                </p>
               }
+            </CommandEmpty>
+            <CommandList>
+              {commandListContent()}
             </CommandList>
           </Command>
         </PopoverContent>
       </Popover>
-    </div>
+    </div >
   )
 }
 
