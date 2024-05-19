@@ -10,6 +10,7 @@ const HeaderBar: React.FC = async () => {
   const admin = await checkIfAdmin(session?.user?.email!);
 
   return (
+    session &&
     <header className="sticky top-0 w-screen h-20 flex justify-between items-center px-4 z-10 bg-secondary shadow-md">
       <div className="w-fit h-full flex flex-row gap-4 items-center select-none">
         <Link href="https://liceocuneo.it/" target="_blank" rel="noopener noreferrer" className="z-10">
