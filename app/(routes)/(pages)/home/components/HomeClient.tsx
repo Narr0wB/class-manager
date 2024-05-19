@@ -30,14 +30,15 @@ const HomeClient: React.FC = () => {
 
   return (
     <div id="content" className="w-screen h-fit lg:h-[calc(100vh-5rem)] box-border flex flex-col lg:flex-row gap-4 p-2 lg:xl:2xl">
-      <aside id="input-panel" className="max-w-full lg:max-w-min lg:h-full panel flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col gap-8 lg:xl:2xl">
-        <section id="users-section" className="grow overflow-hidden flex flex-col gap-2">
+      <aside id="input-panel" className="max-w-full lg:max-w-min panel flex-col md:grid md:grid-cols-2 lg:flex lg:flex-col gap-8 lg:xl:2xl">
+        <section id="users-section" className="grow flex flex-col gap-2">
           <UsersContainer>
             <UsersCombobox />
             <UsersList className="overflow-y-auto" />
           </UsersContainer>
         </section>
-        <section id="datetime-section" className="flex-none h-fit min-h-fit flex flex-col gap-4">
+        {/* TODO: Fix shrinking problems when there are too many users */}
+        <section id="datetime-section" className="shrink min-h-min flex flex-col gap-4">
           <div id="hour-range" className="flex flex-row justify-center items-center gap-4">
             <HourRangeText
               start={timeframe.inizio}
