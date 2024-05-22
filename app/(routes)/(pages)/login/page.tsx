@@ -13,6 +13,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import Link from 'next/link';
+import Title from '@/app/components/header/Title';
+import Image from 'next/image';
 
 const Login: React.FC = () => {
   const session = useSession();
@@ -20,23 +23,23 @@ const Login: React.FC = () => {
   if (session.data) redirect("home");
 
   return (
-    <main className="w-full h-screen flex justify-center items-center lg:grid lg:grid-cols-2">
+    <main className="w-full h-screen relative flex justify-center items-center lg:grid lg:grid-cols-2 overflow-hidden">
+      <Image src="/Logo-Liceo-Cuneo.png" alt="Logo liceo" width={100} height={50} className="absolute top-5 right-5 m-auto" />
       <div
         className="h-screen bg-cover bg-center hidden justify-center items-center lg:flex"
         style={{ backgroundImage: "url('https://liceocuneo.it/wp-content/uploads/2022/09/Liceo-Pellico-Peano-Cuneo.jpg')" }}
       />
-      <div className="relative size-full flex flex-col justify-center items-center">
-        <div className="absolute top-0 space-y-4 p-10 text-3xl">
-          Liceo Classico e Scientifico Statale<br />
-          <span className="text-4xl font-bold">Pellico-Peano</span><br />
-          Cuneo<br />
-          <Button variant="link" className="p-0" onClick={() => redirect("https://liceocuneo.it/")}>
-            Visita il sito
-          </Button>
+      <div className="size-full flex flex-col gap-10 justify-center items-center">
+        <div className="space-y-4 text-3xl text-center">
+          Liceo Classico e Scientifico<br />
+          <Link href="https://liceocuneo.it/" target="_blank" className="text-primary text-4xl font-bold underline">
+            Pellico-Peano
+          </Link>
+          <br />
         </div>
         <Card className="w-max border-0 shadow-none">
           <CardHeader className="text-center">
-            <CardTitle>Accedi</CardTitle>
+            <CardTitle className="text-primary text-3xl">Class manager</CardTitle>
             <CardDescription>Utilizza l'account Google dell'Istituto</CardDescription>
           </CardHeader>
           <CardContent>

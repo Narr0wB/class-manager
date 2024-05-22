@@ -51,18 +51,14 @@ const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
 
 
   return (
-    <>
-      {
-        React.Children.map(children, (child) =>
-          React.isValidElement(child)
-            ? React.cloneElement(child, {
-              addPartecipante: addPartecipante,
-              removePartecipante: removePartecipante
-            } as UsersUtility)
-            : child
-        )
-      }
-    </>
+    React.Children.map(children, (child) =>
+      React.isValidElement(child)
+        ? React.cloneElement(child, {
+          addPartecipante: addPartecipante,
+          removePartecipante: removePartecipante
+        } as UsersUtility)
+        : child
+    )
   )
 }
 
