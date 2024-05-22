@@ -2,6 +2,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { User, usePartecipanti } from "../HomeProvider";
 import React from "react";
 
+import config from "@/public/config.json";
+
 type UsersContainerProps = {
 } & React.ComponentProps<typeof React.Fragment>
 
@@ -15,6 +17,16 @@ const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
   const [partecipanti, setPartecipanti] = usePartecipanti();
 
   function addPartecipante(partecipante: User) {
+    const max_partecipanti = config.max.num_partecipanti;
+    if (partecipanti.length == max_partecipanti) {
+      toast({
+        title: "Errore!",
+        description: `Numero massimo di partecipanti raggiunti (${max_partecipanti})`,
+        variant: "destructive"
+      });
+      return;
+    }
+
     setPartecipanti(prev => [...prev, partecipante]);
     toast({
       title: "Successo!",

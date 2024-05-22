@@ -1,27 +1,43 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED } from "@/lib/backend/admin";
-import { Prenotazione } from "@/lib/backend/database";
+import { Prenotazione, Utente } from "@/lib/backend/database";
 import { formatDate, formatHour, stringToMinutes } from "@/lib/utils";
 import { CalendarIcon, Clock3Icon, DoorOpenIcon, TrashIcon } from "lucide-react";
 import Pulse from "./Pulse";
 import ConfirmDeletionDialog from "@/app/(routes)/(pages)/home/components/ConfirmDeletionDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import CustomTooltip from "@/components/custom/CustomTooltip";
 
 type BookingProps = {
   prenotazione: Prenotazione;
+  partecipanti?: Utente[];
   n: number;
 } & React.HTMLAttributes<HTMLDivElement>
+
+async function fetchPartecipanti(prenotazioneId: number) {
+  const res = await fetch(
+    `/api/database/partecipazione/SELECT?prenotazioneId=${prenotazioneId}`,
+    { method: "GET" }
+  );
+
+  const partecipanti = await res.json() as Utente[];
+
+  return partecipanti;
+}
 
 type Status = "In approvazione" | "Approvata" | "Rifiutata";
 type Color = "bg-yellow-500" | "bg-green-500" | "bg-red-500";
 
 const Booking: React.FC<BookingProps> = (props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [partecipanti, setPartecipanti] = useState<Utente[]>([]);
 
   const { prenotazione, n, ...others } = props;
+
+  useEffect(() => {
+    fetchPartecipanti(prenotazione.id!).then(partecipanti => setPartecipanti(partecipanti));
+  }, []);
 
   let statusString: Status = "In approvazione";
   let colorString: Color = "bg-yellow-500";
@@ -81,6 +97,21 @@ const Booking: React.FC<BookingProps> = (props) => {
               <DoorOpenIcon />
               Aula {prenotazione.id_aula}
             </span>
+            {
+              partecipanti.length != 0 &&
+              <div>
+                <h1>Partecipanti</h1>
+                <ul>
+                  {
+                    partecipanti.map((partecipante, i) => (
+                      <ul key={i} className="text-xs">
+                        {partecipante.nome + " " + partecipante.classe}
+                      </ul>
+                    ))
+                  }
+                </ul>
+              </div>
+            }
           </div>
         </CardContent>
       </Card>

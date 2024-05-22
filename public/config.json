@@ -1,0 +1,11 @@
+{
+  "max": {
+    "num_partecipanti": 5,
+    "ore_durata_prenotazione": 4,
+    "num_prenotazioni_utente": 3,
+    "ore_durata_stato_accettazione": 0.5
+  },
+  "min": {
+    "ore_durata_prenotazione": 1
+  }
+}

@@ -44,6 +44,7 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
   const handleInsert = async () => {
     // Get only the id of every partecipante
     const partecipazioni = partecipanti.map(partecipante => partecipante.id);
+    setPartecipanti([]);
 
     // Insert the array of prenotazioni
     const res = await fetch(

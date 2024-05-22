@@ -11,13 +11,12 @@ import { UsersUtility } from "./UsersContainer";
 import Spinner from "./Spinner";
 import { CommandEmpty } from "cmdk";
 
-
 type UsersComboboxProps = {
 } & Partial<UsersUtility> & React.HTMLAttributes<HTMLDivElement>
 
 async function getUsers(email: string) {
   const res = await fetch(
-    `/api/database/utente/SELECT?email=${email}`, {
+    `/api/database/utente/SELECT_EMAIL?email=${email}`, {
     method: "GET",
   });
   return await res.json() as User[];
@@ -30,7 +29,6 @@ type CommandItemProps = React.ComponentProps<typeof CommandItem>;
 type UserItemProps = {
   user: User,
 } & CommandItemProps
-
 const UserItem: React.FC<UserItemProps> = (props) => {
   const { user, ...others } = props;
 
@@ -83,8 +81,8 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
   };
 
   const listUsers = () => (
-    users.map(user => (
-      <UserItem user={user} onSelect={async email => {
+    users.map((user, i) => (
+      <UserItem key={i} user={user} onSelect={async email => {
         // There will always be a user since I'm able to select the email item
         const user = users.find(user => user.email === email.trim())!;
         isUserPartecipante(user, partecipanti) ? removePartecipante!(user) : addPartecipante!(user);
@@ -93,8 +91,8 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
   )
 
   const listPartecipanti = () => (
-    partecipanti.map(partecipante => (
-      <UserItem user={partecipante} onSelect={async () => removePartecipante!(partecipante)} />
+    partecipanti.map((partecipante, i) => (
+      <UserItem key={i} user={partecipante} onSelect={async () => removePartecipante!(partecipante)} />
     ))
   )
 

@@ -2,7 +2,7 @@
 
 import { useTimeframe } from '@/app/(routes)/(pages)/home/components/HomeProvider';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Prenotazione } from '@/lib/backend/database';
+import { Prenotazione, Utente } from '@/lib/backend/database';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
 import Booking from './Booking';
@@ -51,7 +51,10 @@ const Bookings: React.FC<BookingsProps> = () => {
                   prenotazioni.map((prenotazione, i) => {
                     return (
                       <li key={i} className="w-full flex flex-row justify-center">
-                        <Booking prenotazione={prenotazione} n={i} />
+                        <Booking
+                          prenotazione={prenotazione}
+                          n={i}
+                        />
                       </li>
                     )
                   })

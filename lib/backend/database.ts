@@ -1,7 +1,7 @@
 import { PrenotazioneInfo, Ruleset } from "@/lib/backend/admin";
 import { formatHour } from "../utils";
 import { query } from "./mysql";
-import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { ResultSetHeader } from "mysql2";
 
 const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_utente, id_aula, data, status, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?, ?)";
 const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
@@ -85,7 +85,6 @@ export async function insertPrenotazione(pren: Prenotazione) {
   const formattedDate = pren.data.toISOString().slice(0, 19).replace('T', ' ');
   const formattedDateInsertion = pren.data_ora_prenotazione.toISOString().slice(0, 19).replace('T', ' ');
 
-
   const ora_inizio_string = formatHour(pren.ora_inizio);
   const ora_fine_string = formatHour(pren.ora_fine);
 
@@ -94,18 +93,16 @@ export async function insertPrenotazione(pren: Prenotazione) {
     [formattedDateInsertion, pren.id_utente, pren.id_aula, formattedDate, pren.status, ora_inizio_string, ora_fine_string]
   ) as unknown as ResultSetHeader;
 
-  return res![0].insertId;
+  return res!.insertId;
 }
 
 export async function insertPartecipazioni(id: number, partecipazioni: number[]) {
-  partecipazioni.forEach((p) => {
-    const ret = query(
+  partecipazioni.forEach(async p => {
+    await query(
       QUERY_INSERT_PARTECIPAZIONE,
       [id, p]
     );
   })
-
-  return 0;
 }
 
 export async function selectUtenteId(id: number) {
@@ -182,6 +179,15 @@ export async function statusPrenotazione(id_pren: number) {
   return ret![0].status;
 }
 
+export async function selectPartecipazioni(prenotazione_id: number) {
+  const res = await query<Utente>(
+    QUERY_SELECT_UTENTI_PARTECIPAZIONI,
+    [prenotazione_id]
+  );
+
+  return res;
+}
+
 export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, before: Date) {
   let query_string: string = QUERY_SELECT_PRE_RULESET + ruleset.dashRule.sqlRule;
   let query_values: any[] = [...ruleset.dashRule.values];
@@ -210,14 +216,10 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
 
   var result: PrenotazioneInfo[] = [];
 
-  
   for (let i = 0; i < ret?.length!; i++) {
     const pren = ret![i];
 
-    const partecipazioni = await query<Utente>(
-      QUERY_SELECT_UTENTI_PARTECIPAZIONI, 
-      [pren.id]
-    );
+    const partecipazioni = await selectPartecipazioni(pren.id);
 
     result.push({
       id: pren.id,
@@ -235,8 +237,6 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
       label: "Aula " + pren.id_aula
     })
   }
-
-
 
   return result;
 }
@@ -286,11 +286,13 @@ export async function updatePrenotazione(ora_inizio: number, ora_fine: number, i
 }
 
 export async function deletePrenotazione(id_prenotazione: number) {
-  const ret = query<Prenotazione>(
+  const res = await query(
     QUERY_DELETE_PRE,
     [id_prenotazione]
-  );
+  ) as unknown as ResultSetHeader;
 
-  return ret;
+  if (!res) return false;
+
+  // affectedRows != 0 => the query affected some rows (the deletion went through)
+  return res.affectedRows != 0;
 }
-

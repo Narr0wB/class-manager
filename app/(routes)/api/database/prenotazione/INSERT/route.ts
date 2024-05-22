@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (!user_id) return NextResponse.error();
 
   const pren_user = await numberPrenotazioniUtente(user_id, new Date());
-  if (pren_user > 2) return NextResponse.error(); 
+  if (pren_user > 2) return NextResponse.error();
 
   const prenotazione: Prenotazione = {
     id_utente: user_id,
@@ -28,8 +28,7 @@ export async function POST(req: NextRequest) {
     ora_inizio: timeframe.inizio,
     ora_fine: timeframe.fine
   }
-  
-  
+
   const id_prenotazione = await insertPrenotazione(prenotazione);
 
   await insertPartecipazioni(id_prenotazione, obj.partecipazioni);

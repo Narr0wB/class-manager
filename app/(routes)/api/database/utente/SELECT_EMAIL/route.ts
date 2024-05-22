@@ -6,11 +6,11 @@ import { getServerSession } from "next-auth";
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.error();
-  
+
   const { searchParams } = new URL(req.url);
   const emailParam = searchParams.get("email") as string;
 
-  if (!emailParam) NextResponse.error();
+  if (!emailParam) return NextResponse.error();
 
   const res = await selectUtentiEmailLike(emailParam);
 
