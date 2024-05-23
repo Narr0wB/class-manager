@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../../../../components/ui/popover";
 import { Button } from "../../../../../../components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -10,17 +10,10 @@ import { User, usePartecipanti } from "../HomeProvider";
 import { UsersUtility } from "./UsersContainer";
 import Spinner from "./Spinner";
 import { CommandEmpty } from "cmdk";
+import { useSession } from "next-auth/react";
 
 type UsersComboboxProps = {
 } & Partial<UsersUtility> & React.HTMLAttributes<HTMLDivElement>
-
-async function getUsers(email: string) {
-  const res = await fetch(
-    `/api/database/utente/SELECT_EMAIL?email=${email}`, {
-    method: "GET",
-  });
-  return await res.json() as User[];
-}
 
 // Don't use the "includes" method because it doesn't necessarily work with objects
 const isUserPartecipante = (user: User, partecipanti: User[]) => partecipanti.some(partecipante => partecipante.id === user.id);
@@ -58,8 +51,19 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [loading, setLoading] = useState(false);
   const [inputEmpty, setInputEmpty] = useState(true);
+  const session = useSession();
 
   const { className, removePartecipante, addPartecipante, ...others } = props;
+
+  const getUsers = useCallback(async (email: string) => {
+    const res = await fetch(
+      `/api/database/utente/SELECT_EMAIL?email=${email}`, {
+      method: "GET",
+    });
+    const users = await res.json() as User[];
+    const withoutCurrent = users.filter(user => user.email != session.data?.user?.email);
+    return withoutCurrent;
+  }, [session.data?.user?.email]);
 
   // Create a new timeout every time the user types something to avoid making unecessary
   // api calls that are overwritten shortly after.
