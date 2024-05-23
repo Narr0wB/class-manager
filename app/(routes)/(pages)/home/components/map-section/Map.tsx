@@ -8,10 +8,9 @@ type MapProps = {
   floor: number
 } & React.SVGProps<SVGSVGElement>
 
-// Increase the first parameter to “pan” right, decrease it to “pan” left.
-// Increase the second parameter to “pan” down, decrease it to “pan” up.
-// Other two are for zooming
-const [sm, md, lg] = ["275 0 800 1500", "300 0 800 1400", "300 0 800 1400"];
+// Those 4 values represent the coordinates of the svg vertices.
+// See more at: https://www.html.it/pag/31775/disegnare-larea-di-lavoro/
+const [sm, md, lg] = ["0 0 1400 1400", "0 0 1400 1400", "-500 0 1400 1400"];
 
 const Map: React.FC<MapProps> = (props) => {
   const { floor, ...others } = props;
@@ -21,24 +20,28 @@ const Map: React.FC<MapProps> = (props) => {
   const session = useSession();
   const [viewBox, setViewBox] = useState(sm);
 
+  const res = () => {
+    const width = window.visualViewport?.width!;
+
+    // Breakpoints
+    if (width <= 767) {
+      setViewBox(sm);
+    } else if (width > 767 && width <= 1023) {
+      setViewBox(md);
+    } else {
+      setViewBox(lg);
+    }
+  };
+
   useEffect(() => {
     if (!window) return;
-    const res = () => {
-      const width = window.visualViewport?.width!;
-
-      // Breakpoints
-      if (width <= 767) {
-        setViewBox(sm);
-      } else if (width > 767 && width <= 1023) {
-        setViewBox(md);
-      } else if (width > 1023) {
-        setViewBox(lg);
-      }
-    };
-
     window.addEventListener("load", res);
     window.addEventListener("resize", res);
-  });
+  }, []);
+
+  useEffect(() => {
+    res();
+  }, [floor]);
 
   const fetchData = useCallback(async () => {
     const res = await fetch(
@@ -68,6 +71,7 @@ const Map: React.FC<MapProps> = (props) => {
         {...others}
         key={theme}
         viewBox={viewBox}
+        preserveAspectRatio="xMinYMin"
         dangerouslySetInnerHTML={{ __html: svgInnerHtml }}
         className="size-full fade-in"
       />

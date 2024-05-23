@@ -24,7 +24,7 @@ type SavePrenotazioneDialogProps = {
 const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, aula }) => {
   const [isOpen, setIsOpen] = open;
   const { toast } = useToast();
-  const [timeframe, setTimeframe] = useTimeframe();
+  const [timeframe, _] = useTimeframe();
   const [partecipanti, setPartecipanti] = usePartecipanti();
   const session = useSession();
   const rerenderMap = useRerender();
@@ -33,12 +33,14 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
 
   // Do not change whitespaces
   const prenotazioneInfo = <>
+    aula
+    <span className="text-primary"> {aula} </span>
     il giorno
-    <span className="text-primary"> {`${date}`} </span>
+    <span className="text-primary"> {date} </span>
     dalle
-    <span className="text-primary"> {`${formatHour(timeframe.inizio)}`} </span>
+    <span className="text-primary"> {formatHour(timeframe.inizio)} </span>
     alle
-    <span className="text-primary"> {`${formatHour(timeframe.fine)}`} </span>
+    <span className="text-primary"> {formatHour(timeframe.fine)} </span>
   </>
 
   const handleInsert = async () => {
