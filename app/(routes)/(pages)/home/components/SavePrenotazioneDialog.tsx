@@ -60,7 +60,9 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
       })
     });
 
-    if (res.ok) {
+    const message = (await res.json()).error;
+
+    if (res.status == 200) {
       rerenderMap();
       toast({
         title: "Aggiunta prenotazione",
@@ -69,7 +71,7 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
     } else {
       toast({
         title: "Errore...",
-        description: "Errore nell'inserire la prenotazione.",
+        description: message,
         action: <Button variant={"ghost"} onClick={handleInsert}>Riprova</Button>,
         variant: "destructive"
       });

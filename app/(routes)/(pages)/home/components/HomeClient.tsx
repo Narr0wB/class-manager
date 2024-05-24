@@ -29,7 +29,7 @@ const HomeClient: React.FC = () => {
   const [floor, setFloor] = useState(FLOORS.FLOOR_1);
 
   return (
-    <div id="content" className="w-screen h-fit lg:h-[calc(100vh-5rem)] box-border flex flex-col lg:flex-row gap-4 p-2 lg:xl:2xl">
+    <div id="content" className="w-screen overflow-y-auto overflow-x-auto h-fit lg:h-[calc(100vh-5rem)] box-border flex flex-col lg:flex-row gap-4 p-2 lg:xl:2xl">
       <aside id="input-panel" className="max-w-full lg:max-w-min lg:h-full overflow-auto panel flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col gap-6 lg:xl:2xl">
         <section id="users-section" className="grow min-h-20 overflow-hidden flex flex-col gap-2">
           <UsersContainer>

@@ -10,7 +10,7 @@ type MapProps = {
 
 // Those 4 values represent the coordinates of the svg vertices.
 // See more at: https://www.html.it/pag/31775/disegnare-larea-di-lavoro/
-const [sm, md, lg] = ["0 0 1400 1400", "0 0 1400 1400", "-500 0 1400 1400"];
+const [sm, md, lg] = ["0 0 1400 1400", "0 0 1400 1400", "0 0 1400 1400"];
 
 const Map: React.FC<MapProps> = (props) => {
   const { floor, ...others } = props;
