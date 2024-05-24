@@ -12,15 +12,15 @@ export async function POST(req: NextRequest) {
 
   const prenotazioni = await selectPrenotazioneRange(new Date(timeframe.data), timeframe.inizio, timeframe.fine, obj.id_aula)
   if (prenotazioni?.length != 0) return NextResponse.error();
-  
+
   const user_id = await IDfromEmail(obj.user_email);
   if (!user_id) return NextResponse.error();
 
   const pren_user = await numberPrenotazioniUtente(user_id, new Date());
   if (pren_user > 2) return NextResponse.json(
-    {error: "Hai già 3 prenotazioni attive! Se vuoi crearne una nuova prima eliminane una."},
-    {status:500}
-  ); 
+    { error: "Hai già 3 prenotazioni attive! Se vuoi crearne una nuova prima eliminane una." },
+    { status: 500 }
+  );
 
   const prenotazione: Prenotazione = {
     id_utente: user_id,
@@ -32,9 +32,11 @@ export async function POST(req: NextRequest) {
     ora_fine: timeframe.fine
   }
 
-  const id_prenotazione = await insertPrenotazione(prenotazione);
+  const res = await insertPrenotazione(prenotazione);
+  if (res.ok) {
+    await insertPartecipazioni(res.body.data, obj.partecipazioni);
 
-  await insertPartecipazioni(id_prenotazione, obj.partecipazioni);
+    return NextResponse.json({ id: id_prenotazione });
+  }
 
-  return NextResponse.json({ id: id_prenotazione });
 }

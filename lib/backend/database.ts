@@ -1,7 +1,36 @@
 import { PrenotazioneInfo, Ruleset } from "@/lib/backend/admin";
 import { formatHour } from "../utils";
-import { query } from "./mysql";
-import { ResultSetHeader } from "mysql2";
+import { DatabaseResponse, INSERT, SELECT, UPDATE } from "./mysql";
+
+export type TimeFrame = {
+  data: Date,
+  inizio: number,
+  fine: number,
+}
+
+export type Aula = {
+  id: number;
+  type: string;
+}
+
+export type Prenotazione = {
+  id?: number;
+  data_ora_prenotazione: Date;
+  id_utente: number;
+  id_aula: number;
+  data: Date;
+  status: number;
+  ora_inizio: number,
+  ora_fine: number
+}
+
+export type Utente = {
+  id?: number;
+  nome: string;
+  email: string;
+  type: "Amministratore" | "Studente";
+  classe: string;
+}
 
 const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_utente, id_aula, data, status, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?, ?)";
 const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
@@ -20,6 +49,16 @@ const QUERY_SELECT_UTENTE_EMAIL_LIKE = "SELECT * FROM AM_Utenti WHERE email LIKE
 const QUERY_INSERT_PARTECIPAZIONE = "INSERT INTO AM_Partecipazioni(id_prenotazione, id_utente) VALUES (?, ?)";
 const QUERY_SELECT_UTENTI_PARTECIPAZIONI = "SELECT AM_Utenti.* FROM AM_Partecipazioni JOIN AM_Utenti on AM_Partecipazioni.id_utente = AM_Utenti.id WHERE id_prenotazione = ?";
 
+export const ADMIN_USER = "Amministratore";
+export const REGULAR_USER = "Studente";
+export const PRENOTAZIONE_PENDING = 0;
+export const PRENOTAZIONE_APPROVED = 1;
+export const PRENOTAZIONE_REJECTED = 2;
+
+export function timeToString(time: number) {
+  return Math.floor(time / 60).toString().padStart(2, "0") + ":" + (time % 60).toString().padStart(2, "0") + ":" + "00";
+}
+
 function createDescription(partecipazioni: Utente[], classe: string, id_pren: number, nome: string, ora_inizio: string, ora_fine: string, aula: number) {
   let description = nome + " della " + classe + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5) + " assieme con: \n\n";
 
@@ -30,106 +69,69 @@ function createDescription(partecipazioni: Utente[], classe: string, id_pren: nu
   return description;
 }
 
-export type TimeFrame = {
-  data: Date,
-  inizio: number,
-  fine: number,
-}
+export async function updateStatusPrenotazione(id: number, status: number) {
+  try {
+    return await UPDATE(
+      QUERY_UPDATE_PRE_STATUS,
+      [status, id]
+    );
 
-export type Aula = {
-  id: number;
-  type: string;
-}
-
-export type Utente = {
-  id: number;
-  nome: string;
-  email: string;
-  type: string;
-  classe: string;
-}
-
-export const ADMIN_USER = "Amministratore";
-export const REGULAR_USER = "Studente";
-
-export type Prenotazione = {
-  id?: number;
-  data_ora_prenotazione: Date;
-  id_utente: number;
-  id_aula: number;
-  data: Date;
-  status: number;
-  ora_inizio: number,
-  ora_fine: number
-}
-
-export const PRENOTAZIONE_PENDING = 0;
-export const PRENOTAZIONE_APPROVED = 1;
-export const PRENOTAZIONE_REJECTED = 2;
-
-export function timeToString(time: number) {
-  return Math.floor(time / 60).toString().padStart(2, "0") + ":" + (time % 60).toString().padStart(2, "0") + ":" + "00";
-}
-
-export async function changeStatusPrenotazione(id: number, status: number) {
-
-  const res = await query(
-    QUERY_UPDATE_PRE_STATUS,
-    [status, id]
-  );
-
-  return res;
+  } catch (err: any) {
+    return DatabaseResponse.error("Impossibile aggiornare lo stato della prenotazione");
+  }
 }
 
 export async function insertPrenotazione(pren: Prenotazione) {
-  const formattedDate = pren.data.toISOString().slice(0, 19).replace('T', ' ');
-  const formattedDateInsertion = pren.data_ora_prenotazione.toISOString().slice(0, 19).replace('T', ' ');
+  try {
+    const formattedDate = pren.data.toISOString().slice(0, 19).replace('T', ' ');
+    const formattedDateInsertion = pren.data_ora_prenotazione.toISOString().slice(0, 19).replace('T', ' ');
 
-  const ora_inizio_string = formatHour(pren.ora_inizio);
-  const ora_fine_string = formatHour(pren.ora_fine);
+    const ora_inizio_string = formatHour(pren.ora_inizio);
+    const ora_fine_string = formatHour(pren.ora_fine);
 
-  const res = await query<ResultSetHeader>(
-    QUERY_INSERT_PRE,
-    [formattedDateInsertion, pren.id_utente, pren.id_aula, formattedDate, pren.status, ora_inizio_string, ora_fine_string]
-  ) as unknown as ResultSetHeader;
-
-  return res!.insertId;
+    return await INSERT(
+      QUERY_INSERT_PRE,
+      [formattedDateInsertion, pren.id_utente, pren.id_aula, formattedDate, pren.status, ora_inizio_string, ora_fine_string]
+    );
+  } catch (error: any) {
+    return DatabaseResponse.error("Impossibile aggiungere la prenotazione");
+  }
 }
 
 export async function insertPartecipazioni(id: number, partecipazioni: number[]) {
-  partecipazioni.forEach(async p => {
-    await query(
-      QUERY_INSERT_PARTECIPAZIONE,
-      [id, p]
-    );
-  })
+  try {
+    partecipazioni.forEach(async p => {
+      await INSERT(
+        QUERY_INSERT_PARTECIPAZIONE,
+        [id, p]
+      );
+    })
+    return DatabaseResponse.ok({ data: true });
+  } catch (error: any) {
+    return DatabaseResponse.error("Impossibile aggiungere le partecipazioni");
+  }
 }
 
 export async function selectUtenteId(id: number) {
-  const ret = await query<Utente>(
-    QUERY_SELECT_UTENTE_ID,
-    [id]
-  );
-
-  if (ret) {
-    return ret[0];
+  try {
+    return await SELECT<Utente>(
+      QUERY_SELECT_UTENTE_ID,
+      [id]
+    );
+  } catch (err: any) {
+    return DatabaseResponse.error(`Impossibile trovare l'utente con l'id: ${id} `);
   }
-
-  return undefined;
 }
 
-// Implement paramter-specific SELECT (e.g. SELECTing a user while only knowing the email)
 export async function selectUtenteEmail(email: string) {
-  const ret = await query<Utente>(
-    QUERY_SELECT_UTENTE_EMAIL,
-    [email]
-  );
-
-  if (ret) {
-    return ret[0];
+  try {
+    return await SELECT<Utente>(
+      QUERY_SELECT_UTENTE_EMAIL,
+      [email]
+    );
+  } catch (err: any) {
+    return DatabaseResponse.error(`Impossibile trovare l'utente con l'email: ${email} `);
   }
-
-  return undefined;
 }
 
 export async function selectUtentiEmailLike(email_like: string) {

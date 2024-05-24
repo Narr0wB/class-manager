@@ -13,7 +13,5 @@ export async function GET(req: NextRequest) {
   if (!idParam) return NextResponse.error();
 
   const res = await selectUtenteId(Number(idParam));
-  if (!res) return NextResponse.error();
-
   return NextResponse.json(res);
 }
