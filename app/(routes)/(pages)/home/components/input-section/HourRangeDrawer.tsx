@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTrigger } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import HourRangeSelector from './HourRangeSelector';
@@ -15,61 +15,9 @@ type HourRangeDrawerProps = {
 } & React.HTMLAttributes<HTMLButtonElement>
 
 const HourRangeDrawer: React.FC<HourRangeDrawerProps> = (props) => {
-  const [timeframe, setTimeframe] = useTimeframe();
+  const [_, setTimeframe] = useTimeframe();
   const [startMinutes, setStartMinutes] = useStartMinutes();
   const [endMinutes, setEndMinutes] = useEndMinutes();
-
-  function inStartBounds(minutes: number) {
-    let hours = Math.floor(minutes / 60);
-    let min = minutes % 60;
-
-    if (hours < 13) {
-      return 13 * 60;
-    }
-    if (hours >= 17) {
-      return 17 * 60;
-    }
-    if ((min % 10) != 0) {
-      min -= min % 10;
-      return hours * 60 + min;
-    }
-
-    return 0;
-  }
-
-  function inEndBounds(minutes: number) {
-    let hours = Math.floor(minutes / 60);
-    let min = minutes % 60;
-
-    if ((min % 10) != 0) {
-      min -= min % 10;
-      return hours * 60 + min;
-    }
-    if ((minutes - startMinutes) < 60) {
-      hours = Math.floor(startMinutes / 60) + 1;
-      min = startMinutes % 60;
-
-      return hours * 60 + min;
-    } else if (hours >= 18) {
-      return 18 * 60;
-    }
-
-    return 0;
-  }
-
-  useEffect(() => {
-    let b = inStartBounds(startMinutes);
-
-    if (b != 0) {
-      setStartMinutes(b);
-    }
-
-    b = inEndBounds(endMinutes);
-
-    if (b != 0) {
-      setEndMinutes(b);
-    }
-  }, [startMinutes, endMinutes]);
 
   const { className, ...others } = props;
 

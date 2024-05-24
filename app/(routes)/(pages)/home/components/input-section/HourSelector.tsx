@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { cn, minutesToHourString } from '@/lib/utils';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import config from "@/public/config.json";
 
 type HourSelectorProps = {
   id?: string;
