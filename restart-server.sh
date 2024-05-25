@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if (pm2 status manager | grep "online")
+if (pm2 status manager | grep "online") > /dev/null
 then 
   pm2 stop manager
 else
