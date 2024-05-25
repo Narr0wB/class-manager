@@ -1,14 +1,10 @@
 import mysql, { ResultSetHeader } from "mysql2";
 
-type OkBody = {
-  data: any;
-};
-
 type ErrorBody = {
   message: string;
 };
 
-export class DatabaseResponse<T extends boolean> {
+export class DatabaseResponse<T = boolean, OkBody = any> {
   ok: T;
   body: T extends true ? OkBody : ErrorBody;
 
@@ -17,17 +13,14 @@ export class DatabaseResponse<T extends boolean> {
     this.body = body;
   }
 
-  static ok(body: OkBody): DatabaseResponse<true> {
-    return new DatabaseResponse(true, body);
+  static ok<OkBody>(body: OkBody): DatabaseResponse<true, OkBody> {
+    return new DatabaseResponse<true, OkBody>(true, body);
   }
 
   static error(message: string): DatabaseResponse<false> {
-    return new DatabaseResponse(false, { message: message });
+    return new DatabaseResponse<false>(false, { message: message });
   }
 }
-
-type QueryType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
-
 
 const pool = mysql
   .createPool({
@@ -38,32 +31,48 @@ const pool = mysql
     database: process.env.DB_DATABASE
   }).promise();
 
-export async function query<T>(sql: string, values: any, type: QueryType) {
+async function query(sql: string, values: any) {
   try {
     const [result, fields] = await pool.query(sql, values);
-    if (type === 'SELECT') {
-      return DatabaseResponse.ok({ data: result as T[] });
-    } else {
-      return DatabaseResponse.ok({ data: (result as ResultSetHeader).insertId });
-    }
+    return DatabaseResponse.ok({ data: result });
   } catch (error: any) {
     return DatabaseResponse.error(`Error while executing the query: "${sql}"`);
   }
 }
 
-// Usage examples
 export async function INSERT(sql: string, values: any) {
-  return query(sql, values, 'INSERT');
+  const res = await query(sql, values);
+  if (res.ok) {
+    const resulSet = res.body.data as ResultSetHeader;
+    return DatabaseResponse.ok(resulSet.insertId);
+  } else {
+    return res;
+  }
 }
 
 export async function SELECT<T>(sql: string, values: any) {
-  return query<T>(sql, values, 'SELECT');
+  const res = await query(sql, values);
+  return res.ok
+    ? DatabaseResponse.ok(res.body.data as T)
+    : res;
 }
 
 export async function UPDATE(sql: string, values: any) {
-  return query(sql, values, 'UPDATE');
+  const res = await query(sql, values);
+  if (res.ok) {
+    const resulSet = res.body.data as ResultSetHeader;
+    return DatabaseResponse.ok(resulSet.affectedRows != 0);
+  } else {
+    return res;
+  }
 }
 
 export async function DELETE(sql: string, values: any) {
-  return query(sql, values, 'DELETE');
+  const res = await query(sql, values);
+  if (res.ok) {
+    const resulSet = res.body.data as ResultSetHeader;
+    return DatabaseResponse.ok(resulSet.affectedRows != 0);
+  } else {
+    return res;
+  }
 }

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../../auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
 import { PRENOTAZIONE_REJECTED } from "@/lib/backend/admin";
+import config from "@/public/config.json";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -10,7 +11,7 @@ export async function POST(req: NextRequest) {
 
   const post = await req.json();
 
-  const ret = await updateStatusPrenotazione(post.id, post.status);
+  const res = await updateStatusPrenotazione(post.id, post.status);
 
   if (post.status == PRENOTAZIONE_REJECTED) {
     setTimeout(async () => {
@@ -19,8 +20,8 @@ export async function POST(req: NextRequest) {
       if (current_status == PRENOTAZIONE_REJECTED) {
         await deletePrenotazione(post.id);
       }
-    }, 30 * 60 * 1000);
+    }, config.max.ore_durata_stato_rifiutata * 60 * 1000);
   }
 
-  return NextResponse.json(ret);
+  return NextResponse.json(res);
 }

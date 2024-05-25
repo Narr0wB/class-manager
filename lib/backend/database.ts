@@ -1,6 +1,6 @@
 import { PrenotazioneInfo, Ruleset } from "@/lib/backend/admin";
 import { formatHour } from "../utils";
-import { DatabaseResponse, INSERT, SELECT, UPDATE } from "./mysql";
+import { DELETE, DatabaseResponse, INSERT, SELECT, UPDATE } from "./mysql";
 
 export type TimeFrame = {
   data: Date,
@@ -59,138 +59,112 @@ export function timeToString(time: number) {
   return Math.floor(time / 60).toString().padStart(2, "0") + ":" + (time % 60).toString().padStart(2, "0") + ":" + "00";
 }
 
-function createDescription(partecipazioni: Utente[], classe: string, id_pren: number, nome: string, ora_inizio: string, ora_fine: string, aula: number) {
-  let description = nome + " della " + classe + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5) + " assieme con: \n\n";
-
-  for (let i = 0; i < partecipazioni.length; i++) {
-    description += "  • " + partecipazioni[i].nome + " " + partecipazioni[i].classe + "\n";
-  }
-
-  return description;
-}
-
 export async function updateStatusPrenotazione(id: number, status: number) {
-  try {
-    return await UPDATE(
-      QUERY_UPDATE_PRE_STATUS,
-      [status, id]
-    );
-
-  } catch (err: any) {
-    return DatabaseResponse.error("Impossibile aggiornare lo stato della prenotazione");
-  }
+  return await UPDATE(
+    QUERY_UPDATE_PRE_STATUS,
+    [status, id]
+  );
 }
 
 export async function insertPrenotazione(pren: Prenotazione) {
-  try {
-    const formattedDate = pren.data.toISOString().slice(0, 19).replace('T', ' ');
-    const formattedDateInsertion = pren.data_ora_prenotazione.toISOString().slice(0, 19).replace('T', ' ');
+  const formattedDate = pren.data.toISOString().slice(0, 19).replace('T', ' ');
+  const formattedDateInsertion = pren.data_ora_prenotazione.toISOString().slice(0, 19).replace('T', ' ');
 
-    const ora_inizio_string = formatHour(pren.ora_inizio);
-    const ora_fine_string = formatHour(pren.ora_fine);
+  const ora_inizio_string = formatHour(pren.ora_inizio);
+  const ora_fine_string = formatHour(pren.ora_fine);
 
-    return await INSERT(
-      QUERY_INSERT_PRE,
-      [formattedDateInsertion, pren.id_utente, pren.id_aula, formattedDate, pren.status, ora_inizio_string, ora_fine_string]
-    );
-  } catch (error: any) {
-    return DatabaseResponse.error("Impossibile aggiungere la prenotazione");
-  }
+  return await INSERT(
+    QUERY_INSERT_PRE,
+    [formattedDateInsertion, pren.id_utente, pren.id_aula, formattedDate, pren.status, ora_inizio_string, ora_fine_string]
+  );
 }
 
 export async function insertPartecipazioni(id: number, partecipazioni: number[]) {
-  try {
-    partecipazioni.forEach(async p => {
-      await INSERT(
-        QUERY_INSERT_PARTECIPAZIONE,
-        [id, p]
-      );
-    })
-    return DatabaseResponse.ok({ data: true });
-  } catch (error: any) {
-    return DatabaseResponse.error("Impossibile aggiungere le partecipazioni");
-  }
+  let ok = true;
+
+  partecipazioni.forEach(async p => {
+    const res = await INSERT(
+      QUERY_INSERT_PARTECIPAZIONE,
+      [id, p]
+    );
+    ok = res.ok;
+  })
+  return ok
+    ? DatabaseResponse.ok(true)
+    : DatabaseResponse.error("Impossibile inserire le partecipazioni");
 }
 
 export async function selectUtenteId(id: number) {
-  try {
-    return await SELECT<Utente>(
-      QUERY_SELECT_UTENTE_ID,
-      [id]
-    );
-  } catch (err: any) {
-    return DatabaseResponse.error(`Impossibile trovare l'utente con l'id: ${id} `);
-  }
+  return await SELECT<Utente>(
+    QUERY_SELECT_UTENTE_ID,
+    [id]
+  );
 }
 
 export async function selectUtenteEmail(email: string) {
-  try {
-    return await SELECT<Utente>(
-      QUERY_SELECT_UTENTE_EMAIL,
-      [email]
-    );
-  } catch (err: any) {
-    return DatabaseResponse.error(`Impossibile trovare l'utente con l'email: ${email} `);
-  }
+  return await SELECT<Utente>(
+    QUERY_SELECT_UTENTE_EMAIL,
+    [email]
+  );
 }
 
 export async function selectUtentiEmailLike(email_like: string) {
-  const ret = await query<Utente>(
+  return await SELECT<Utente[]>(
     QUERY_SELECT_UTENTE_EMAIL_LIKE,
     [email_like]
   );
-
-  return ret;
 }
 
 export async function IDfromEmail(email: string) {
-  const user = await selectUtenteEmail(email);
-  if (user) {
-    return user.id;
-  }
-
-  return undefined;
+  const res = await selectUtenteEmail(email);
+  return res.ok ? res.body.id : null;
 }
 
 export async function IDfromPrenotazione(pren_id: number) {
-  const user = await query<Utente>(
+  const res = await SELECT<Utente>(
     QUERY_SELECT_UTENTE_PRE,
     [pren_id]
   );
 
-  return user![0].id;
+  return res.ok ? res.body.id : null;
 }
 
 export async function numberPrenotazioniUtente(id_utente: number, after: Date) {
   const date_string = after.toISOString().slice(0, 10);
 
-  const number = await query(
+  return await SELECT<number>(
     QUERY_NUMBER_PRE_AFTER,
     [id_utente, date_string]
   );
-
-  return number![0]["COUNT(*)"];
 }
 
 export async function statusPrenotazione(id_pren: number) {
-  const ret = await query<Prenotazione>(
+  const res = await SELECT<Prenotazione>(
     QUERY_SELECT_PRE,
     [id_pren]
   );
 
-  return ret![0].status;
+  return res.ok ? res.body.status : null;
 }
 
 export async function selectPartecipazioni(prenotazione_id: number) {
-  const res = await query<Utente>(
+  return await SELECT<Utente[]>(
     QUERY_SELECT_UTENTI_PARTECIPAZIONI,
     [prenotazione_id]
   );
-
-  return res;
 }
 
 export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, before: Date) {
+  const createDescription = (partecipazioni: Utente[], classe: string, id_pren: number, nome: string, ora_inizio: string, ora_fine: string, aula: number) => {
+    let description = nome + " della " + classe + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5) + " assieme con: \n\n";
+
+    for (let i = 0; i < partecipazioni.length; i++) {
+      description += "  • " + partecipazioni[i].nome + " " + partecipazioni[i].classe + "\n";
+    }
+
+    return description;
+  }
+
   let query_string: string = QUERY_SELECT_PRE_RULESET + ruleset.dashRule.sqlRule;
   let query_values: any[] = [...ruleset.dashRule.values];
 
@@ -211,17 +185,22 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
 
   const date_string = before.toISOString().slice(0, 19).replace('T', ' ');
 
-  const ret = await query(
+  const res = await SELECT<any[]>(
     query_string,
     [...query_values, date_string, num]
   );
 
+  if (!res.ok) return null;
+
   var result: PrenotazioneInfo[] = [];
 
-  for (let i = 0; i < ret?.length!; i++) {
-    const pren = ret![i];
+  for (let i = 0; i < res.body.length; i++) {
+    const pren = res.body[i];
 
-    const partecipazioni = await selectPartecipazioni(pren.id);
+    const res2 = await selectPartecipazioni(pren.id);
+    if (!res2.ok) return null;
+
+    const partecipazioni = res2.body;
 
     result.push({
       id: pren.id,
@@ -233,7 +212,7 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
       ora_inizio: pren.ora_inizio.substring(0, 5),
       ora_fine: pren.ora_fine.substring(0, 5),
       name: pren.nome,
-      desc: createDescription(partecipazioni!, pren.classe, pren.id, pren.nome, pren.ora_inizio, pren.ora_fine, pren.id_aula),
+      desc: createDescription(partecipazioni, pren.classe, pren.id, pren.nome, pren.ora_inizio, pren.ora_fine, pren.id_aula),
       subject: "Prenotazione",
       read: false,
       label: "Aula " + pren.id_aula
@@ -248,12 +227,10 @@ export async function selectPrenotazioneRange(date: Date, time_start: number, ti
   const time_start_string = timeToString(time_start);
   const time_end_string = timeToString(time_end);
 
-  const ret = await query<Prenotazione>(
+  return await SELECT<Prenotazione[]>(
     QUERY_SELECT_PRE_RANGE,
     [date_string, time_start_string, time_end_string, aula]
-  )
-
-  return ret;
+  );
 }
 
 export async function selectPrenotazioniUser(email_utente: string, data: Date | null) {
@@ -262,39 +239,28 @@ export async function selectPrenotazioniUser(email_utente: string, data: Date | 
   if (data) {
     const date_start_string = data.toISOString().slice(0, 19).replace('T', ' ');
 
-    const ret = await query<Prenotazione>(
+    return await SELECT<Prenotazione[]>(
       QUERY_SELECT_PRE_UTENTE_AFTER,
       [id_utente, date_start_string]
     )
-
-    return ret;
   }
 
-  const ret = await query<Prenotazione>(
+  return await SELECT<Prenotazione>(
     QUERY_SELECT_PRE_UTENTE,
     [id_utente]
   );
-
-  return ret;
 }
 
 export async function updatePrenotazione(ora_inizio: number, ora_fine: number, id: number) {
-  const ret = await query<Prenotazione>(
+  return await UPDATE(
     QUERY_UPDATE_PRE_HOUR,
     [formatHour(ora_inizio), formatHour(ora_fine), id]
   );
-
-  return ret;
 }
 
 export async function deletePrenotazione(id_prenotazione: number) {
-  const res = await query(
+  return await DELETE(
     QUERY_DELETE_PRE,
     [id_prenotazione]
-  ) as unknown as ResultSetHeader;
-
-  if (!res) return false;
-
-  // affectedRows != 0 => the query affected some rows (the deletion went through)
-  return res.affectedRows != 0;
+  );
 }

@@ -2,6 +2,7 @@ import { selectUtentiEmailLike } from "@/lib/backend/database";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../../auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
+import { DatabaseResponse } from "@/lib/backend/mysql";
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -13,6 +14,10 @@ export async function GET(req: NextRequest) {
   if (!emailParam) return NextResponse.error();
 
   const res = await selectUtentiEmailLike(emailParam);
-
-  return NextResponse.json(res);
+  if (res.ok) {
+    return NextResponse.json(res);
+  } else {
+    console.error(res.body.message);
+    return NextResponse.json(DatabaseResponse.error(`Impossibile trovare utenti con email simile a "${emailParam}"`))
+  }
 }

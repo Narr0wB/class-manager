@@ -147,7 +147,11 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
 
       // Fetch all the prenotazioni for that specific aula that are in the same day
       // and which start time is in between the time range specified in the timeframe
-      const prenotazioni = await selectPrenotazioneRange(timeframe.data, timeframe.inizio, timeframe.fine, aula);
+      const res = await selectPrenotazioneRange(timeframe.data, timeframe.inizio, timeframe.fine, aula);
+      if (!res.ok) {
+        return null;
+      }
+      const prenotazioni = res.body;
 
       // Check if there are any prenotazioni in the specified timeframe and if so act accordingly
       if (prenotazioni && prenotazioni.length != 0) {

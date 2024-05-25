@@ -10,7 +10,7 @@ let FLOOR2: Map | undefined;
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.error();
-  
+
   const { searchParams } = new URL(req.url);
 
   // When the client requests a map, i.e. they are trying to render it, we should receive
@@ -21,15 +21,12 @@ export async function GET(req: NextRequest) {
   const timeframeParam = searchParams.get("timeframe") as string;
   const userEmailParam = searchParams.get("userEmail") as string;
 
-  // if (!floorParam || !themeParam || !timeframeParam || !userEmailParam) return NextResponse.error();
-
   let selectedFloor;
-
   // Lazy loading: if it is the first time that a user requests the loading of the asset
   // then load it once and keep it saved in memory, so that subsequent calls
   // do not trigger a re-read of the file, which could be expensive
 
-  // DO NOT USE Number(floorParam) BECAUSE IT DOES NOT WORK IN REACT!!!
+  // DO NOT USE Number(floorParam) BECAUSE IT DOES NOT WORK IN TYPESCRIPT!!!
   switch (floorParam) {
     case "1": {
       if (!FLOOR0) {
@@ -62,8 +59,6 @@ export async function GET(req: NextRequest) {
   timeframe.data = new Date(timeframe.data);
 
   const svgElement = await parseSVG(selectedFloor!, timeframe, userEmailParam, themeParam == "light");
-
-  // if (!svgElement) return NextResponse.error();
 
   return NextResponse.json(svgElement!.innerHTML);
 }

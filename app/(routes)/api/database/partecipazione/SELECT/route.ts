@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/app/(routes)/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
 import { selectPartecipazioni } from "@/lib/backend/database";
+import { DatabaseResponse } from "@/lib/backend/mysql";
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -12,8 +13,12 @@ export async function GET(req: NextRequest) {
 
   if (!prenotazioneId) return NextResponse.error();
 
-  const partecipazioni = await selectPartecipazioni(Number(prenotazioneId));
-  if (!partecipazioni) return NextResponse.error();
+  const res = await selectPartecipazioni(Number(prenotazioneId));
 
-  return NextResponse.json(partecipazioni);
+  if (res.ok) {
+    return NextResponse.json(res);
+  } else {
+    console.error(res.body.message);
+    return NextResponse.json(DatabaseResponse.error("Impossibile trovare le prenotazioni"));
+  }
 }
