@@ -14,8 +14,9 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import Link from 'next/link';
-import Title from '@/app/components/header/Title';
 import Image from 'next/image';
+import ThemeDropdown from '@/app/components/header/ThemeDropdown';
+import { Moon, Sun } from 'lucide-react';
 
 const Login: React.FC = () => {
   const session = useSession();
@@ -24,7 +25,15 @@ const Login: React.FC = () => {
 
   return (
     <main className="w-full h-screen relative flex justify-center items-center lg:grid lg:grid-cols-2 overflow-hidden">
-      <Image src="/Logo-Liceo-Cuneo.png" alt="Logo liceo" width={100} height={50} className="absolute top-5 right-5 m-auto" />
+      <div className="absolute top-0 right-0 m-auto flex flex-row items-center justify-center gap-2 p-2">
+        <ThemeDropdown>
+          <Button variant="ghost" className="size-fit p-2">
+            <Sun className="size-5 block dark:hidden" />
+            <Moon className="size-5 hidden dark:block" />
+          </Button>
+        </ThemeDropdown>
+        <Image src="/Logo-Liceo-Cuneo.png" alt="Logo liceo" width={100} height={50} />
+      </div>
       <div
         className="h-screen bg-cover bg-center hidden justify-center items-center lg:flex"
         style={{ backgroundImage: "url('https://liceocuneo.it/wp-content/uploads/2022/09/Liceo-Pellico-Peano-Cuneo.jpg')" }}

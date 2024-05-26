@@ -11,10 +11,10 @@ const HourRangeSelector: React.FC<HourRangeSelectorProps> = ({ className }) => {
   const [startMinutes, setStartMinutes] = useStartMinutes();
   const [endMinutes, setEndMinutes] = useEndMinutes();
 
-  const maxDurataPrenotazione = config.max.ore_durata_prenotazione * 60;
   const minDurataPrenotazione = config.min.ore_durata_prenotazione * 60;
   const minOra = config.min.ora_prenotazione * 60;
   const maxOra = config.max.ora_prenotazione * 60;
+  const step = config.minuti_step;
 
   function checkDuration() {
     const diff = endMinutes - startMinutes;
@@ -44,12 +44,12 @@ const HourRangeSelector: React.FC<HourRangeSelectorProps> = ({ className }) => {
     let endHours = Math.floor(endMinutes / 60);
     let endMin = endMinutes % 60;
 
-    if ((startMin % 10) != 0) {
-      startMin -= startMin % 10;
+    if ((startMin % step) != 0) {
+      startMin -= startMin % step;
       setStartMinutes(startHours * 60 + startMin);
     }
-    else if ((endMin % 10) != 0) {
-      endMin -= endMin % 10;
+    else if ((endMin % step) != 0) {
+      endMin -= endMin % step;
       setEndMinutes(endHours * 60 + endMin);
     }
 

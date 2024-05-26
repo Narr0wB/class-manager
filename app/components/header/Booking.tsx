@@ -15,29 +15,29 @@ type BookingProps = {
   n: number;
 } & React.HTMLAttributes<HTMLDivElement>
 
-async function fetchPartecipanti(prenotazioneId: number) {
-  const res = await fetch(
-    `/api/database/partecipazione/SELECT?prenotazioneId=${prenotazioneId}`,
-    { method: "GET" }
-  );
+// async function fetchPartecipanti(prenotazioneId: number) {
+//   const res = await fetch(
+//     `/api/database/partecipazione/SELECT?prenotazioneId=${prenotazioneId}`,
+//     { method: "GET" }
+//   );
 
-  const partecipanti = await res.json() as Utente[];
+//   const partecipanti = await res.json() as Utente[];
 
-  return partecipanti;
-}
+//   return partecipanti;
+// }
 
 type Status = "In approvazione" | "Approvata" | "Rifiutata";
 type Color = "bg-yellow-500" | "bg-green-500" | "bg-red-500";
 
 const Booking: React.FC<BookingProps> = (props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [partecipanti, setPartecipanti] = useState<Utente[]>([]);
+  // const [partecipanti, setPartecipanti] = useState<Utente[]>([]);
 
   const { prenotazione, n, ...others } = props;
 
-  useEffect(() => {
-    fetchPartecipanti(prenotazione.id!).then(partecipanti => setPartecipanti(partecipanti));
-  }, []);
+  // useEffect(() => {
+  //   fetchPartecipanti(prenotazione.id!).then(partecipanti => setPartecipanti(partecipanti));
+  // }, []);
 
   let statusString: Status = "In approvazione";
   let colorString: Color = "bg-yellow-500";
@@ -97,7 +97,7 @@ const Booking: React.FC<BookingProps> = (props) => {
               <DoorOpenIcon />
               Aula {prenotazione.id_aula}
             </span>
-            {
+            {/* {
               partecipanti.length != 0 &&
               <div>
                 <h1>Partecipanti</h1>
@@ -111,7 +111,7 @@ const Booking: React.FC<BookingProps> = (props) => {
                   }
                 </ul>
               </div>
-            }
+            } */}
           </div>
         </CardContent>
       </Card>

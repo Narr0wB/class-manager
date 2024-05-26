@@ -33,14 +33,14 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
 
   // Do not change whitespaces
   const prenotazioneInfo = <>
-    aula
-    <span className="text-primary"> {aula} </span>
-    il giorno
+    prenotazione per il il giorno
     <span className="text-primary"> {date} </span>
     dalle
     <span className="text-primary"> {formatHour(timeframe.inizio)} </span>
     alle
     <span className="text-primary"> {formatHour(timeframe.fine)} </span>
+    nell'aula
+    <span className="text-primary"> {aula} </span>
   </>
 
   const handleInsert = async () => {
@@ -84,13 +84,13 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
         <AlertDialogHeader>
           <AlertDialogTitle>Sei sicuro?</AlertDialogTitle>
           <AlertDialogDescription>
-            Prenotazione per {prenotazioneInfo}
+            Confermando aggiungerai una {prenotazioneInfo}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancella</AlertDialogCancel>
           <AlertDialogAction onClick={handleInsert}>
-            Salva
+            Conferma
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
