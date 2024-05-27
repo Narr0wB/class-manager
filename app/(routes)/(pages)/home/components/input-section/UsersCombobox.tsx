@@ -6,31 +6,31 @@ import { Button } from "../../../../../../components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Command, CommandInput, CommandItem, CommandList } from "../../../../../../components/ui/command";
 import { cn } from "@/lib/utils";
-import { User, usePartecipanti } from "../HomeProvider";
-import { UsersUtility } from "./UsersContainer";
+import { usePartecipanti } from "../HomeProvider";
+import { UsersUtility, getUserInfo } from "./UsersContainer";
 import Spinner from "./Spinner";
 import { CommandEmpty } from "cmdk";
 import { useSession } from "next-auth/react";
+import { Utente } from "@/lib/backend/database";
 
 type UsersComboboxProps = {
 } & Partial<UsersUtility> & React.HTMLAttributes<HTMLDivElement>
 
 // Don't use the "includes" method because it doesn't necessarily work with objects
-const isUserPartecipante = (user: User, partecipanti: User[]) => partecipanti.some(partecipante => partecipante.id === user.id);
+const isUserPartecipante = (user: Utente, partecipanti: Utente[]) => partecipanti.some(partecipante => partecipante.id === user.id);
+const parseInfo = (info: string) => info.trim().split(", ");
 
 type CommandItemProps = React.ComponentProps<typeof CommandItem>;
 type UserItemProps = {
-  user: User,
-} & CommandItemProps
+  user: Utente,
+} & Omit<CommandItemProps, "value">
 const UserItem: React.FC<UserItemProps> = (props) => {
   const { user, ...others } = props;
-
   const [partecipanti, _] = usePartecipanti();
 
   return (
     <CommandItem
-      key={user.id}
-      value={user.email.trim()}
+      value={getUserInfo(user)}
       {...others}
     >
       <Check
@@ -39,7 +39,7 @@ const UserItem: React.FC<UserItemProps> = (props) => {
           isUserPartecipante(user, partecipanti) ? "opacity-100" : "opacity-0"
         )}
       />
-      {user.email.trim()}
+      {getUserInfo(user)}
     </CommandItem>
   )
 }
@@ -47,7 +47,7 @@ const UserItem: React.FC<UserItemProps> = (props) => {
 const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
   const [partecipanti, _] = usePartecipanti();
   const [open, setOpen] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<Utente[]>([]);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [loading, setLoading] = useState(false);
   const [inputEmpty, setInputEmpty] = useState(true);
@@ -57,12 +57,12 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
 
   const getUsers = useCallback(async (email: string) => {
     const res = await fetch(
-      `/api/database/utente/SELECT_EMAIL?email=${email}`, {
+      `/api/database/utente/SELECT_EMAIL?email=${email}&sessionEmail=${session.data?.user?.email}`, {
       method: "GET",
     });
-    const users = await res.json() as User[];
-    const withoutCurrent = users.filter(user => user.email != session.data?.user?.email);
-    return withoutCurrent;
+    const users = await res.json() as Utente[];
+
+    return users;
   }, [session.data?.user?.email]);
 
   // Create a new timeout every time the user types something to avoid making unecessary
@@ -84,19 +84,20 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
     setTimer(newTimer);
   };
 
-  const listUsers = () => (
-    users.map((user, i) => (
-      <UserItem key={i} user={user} onSelect={async email => {
-        // There will always be a user since I'm able to select the email item
-        const user = users.find(user => user.email === email.trim())!;
+  const listUsers = () => {
+    return users.map(user => (
+      <UserItem key={user.id} user={user} onSelect={async info => {
+        // There will always be a user since I'm able to select the item
+        const [nome, _] = parseInfo(info);
+        const user = users.find(user => user.nome === nome)!;
         isUserPartecipante(user, partecipanti) ? removePartecipante!(user) : addPartecipante!(user);
       }} />
     ))
-  )
+  }
 
   const listPartecipanti = () => (
-    partecipanti.map((partecipante, i) => (
-      <UserItem key={i} user={partecipante} onSelect={async () => removePartecipante!(partecipante)} />
+    partecipanti.map(partecipante => (
+      <UserItem key={partecipante.id} user={partecipante} onSelect={async () => removePartecipante!(partecipante)} />
     ))
   )
 
@@ -141,7 +142,7 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-fit p-0">
-          <Command>
+          <Command shouldFilter={false}>
             <CommandInput placeholder="Cerca utenti..." onValueChange={handleSearch} />
             <CommandEmpty>
               {

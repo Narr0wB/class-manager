@@ -16,7 +16,18 @@ const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fi
 const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
 const QUERY_SELECT_UTENTE_ID = "SELECT * FROM AM_Utenti WHERE id = ?";
 const QUERY_NUMBER_PRE_AFTER = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
-const QUERY_SELECT_UTENTE_EMAIL_LIKE = "SELECT * FROM AM_Utenti WHERE email LIKE CONCAT('%', ?, '%')";
+const QUERY_SELECT_UTENTE_EMAIL_LIKE = `
+  SELECT * FROM AM_Utenti
+  WHERE
+    email LIKE CONCAT('%', ?, '%') AND
+    email != ? AND
+    classe != "" AND
+    type != "Amministratore"
+  ORDER BY
+    LEFT(classe, 1) ASC,
+    RIGHT(classe, 1) ASC,
+    nome ASC
+`;
 const QUERY_INSERT_PARTECIPAZIONE = "INSERT INTO AM_Partecipazioni(id_prenotazione, id_utente) VALUES (?, ?)";
 const QUERY_SELECT_UTENTI_PARTECIPAZIONI = "SELECT AM_Utenti.* FROM AM_Partecipazioni JOIN AM_Utenti on AM_Partecipazioni.id_utente = AM_Utenti.id WHERE id_prenotazione = ?";
 
@@ -132,10 +143,10 @@ export async function selectUtenteEmail(email: string) {
   return undefined;
 }
 
-export async function selectUtentiEmailLike(email_like: string) {
+export async function selectUtentiEmailLike(email_like: string, sessionEmail: string) {
   const ret = await query<Utente>(
     QUERY_SELECT_UTENTE_EMAIL_LIKE,
-    [email_like]
+    [email_like, sessionEmail]
   );
 
   return ret;

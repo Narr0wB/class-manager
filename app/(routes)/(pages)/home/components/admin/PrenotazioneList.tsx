@@ -13,8 +13,8 @@ export function PrenotazioneList({ items }: PrenotazioneListProps) {
     <ScrollArea>
       <div className="flex-grow flex flex-col gap-2 p-4 pt-0">
         {
-          items.map((item, i) =>
-            <PrenotazioneCard key={i} card={item} />
+          items.map(item =>
+            <PrenotazioneCard key={item.id} card={item} />
           )
         }
       </div>

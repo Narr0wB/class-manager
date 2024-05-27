@@ -1,22 +1,25 @@
 import { useToast } from "@/components/ui/use-toast";
-import { User, usePartecipanti } from "../HomeProvider";
+import { usePartecipanti } from "../HomeProvider";
 import React from "react";
 
 import config from "@/public/config.json";
+import { Utente } from "@/lib/backend/database";
 
 type UsersContainerProps = {
 } & React.ComponentProps<typeof React.Fragment>
 
 export type UsersUtility = {
-  addPartecipante: (partecipante: User) => void;
-  removePartecipante: (partecipante: User) => void;
+  addPartecipante: (partecipante: Utente) => void;
+  removePartecipante: (partecipante: Utente) => void;
 }
+
+export const getUserInfo = (user: Utente) => `${user.nome}, ${user.classe}`;
 
 const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
   const { toast } = useToast();
   const [partecipanti, setPartecipanti] = usePartecipanti();
 
-  function addPartecipante(partecipante: User) {
+  function addPartecipante(partecipante: Utente) {
     const max_partecipanti = config.max.num_partecipanti;
     if (partecipanti.length == max_partecipanti) {
       toast({
@@ -34,7 +37,9 @@ const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
         // Don't change whitespaces
         <>
           Il partecipante
-          <span className="font-semibold"> {partecipante.email} </span>
+          <span className="font-semibold"> {partecipante.nome} </span>
+          appartenente alla classe
+          <span className="font-semibold"> {partecipante.classe} </span>
           è stato
           <span className="text-green-500"> aggiunto </span>
           alla prenotazione.
@@ -43,7 +48,7 @@ const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
     });
   }
 
-  function removePartecipante(partecipante: User) {
+  function removePartecipante(partecipante: Utente) {
     const updatedPartecipanti = partecipanti.filter(p => p.id !== partecipante.id);
     setPartecipanti(updatedPartecipanti);
     toast({
@@ -52,7 +57,9 @@ const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
         // Don't change whitespaces
         <>
           Il partecipante
-          <span className="font-semibold"> {partecipante.email} </span>
+          <span className="font-semibold"> {partecipante.nome} </span>
+          appartenente alla classe
+          <span className="font-semibold"> {partecipante.classe} </span>
           è stato
           <span className="text-red-500"> rimosso </span>
           dalla prenotazione.

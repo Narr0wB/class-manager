@@ -1,18 +1,13 @@
-import { TimeFrame } from '@/lib/backend/database';
+import { TimeFrame, Utente } from '@/lib/backend/database';
 import { getValidDate } from '@/lib/utils';
 import React, { createContext, SetStateAction, useContext, useState } from 'react';
 import { dash_rules, Ruleset } from '../../../../../lib/backend/admin';
 
-export type User = {
-  id: number,
-  email: string
-};
-
 type HomeClientContextValue = {
   timeframe: TimeFrame,
   setTimeframe: React.Dispatch<SetStateAction<TimeFrame>>,
-  partecipanti: User[],
-  setPartecipanti: React.Dispatch<SetStateAction<User[]>>
+  partecipanti: Utente[],
+  setPartecipanti: React.Dispatch<SetStateAction<Utente[]>>
 }
 
 type HomeAdminContextValue = {
@@ -47,7 +42,7 @@ export function useTimeframe(): [TimeFrame, React.Dispatch<SetStateAction<TimeFr
   return [context.timeframe, context.setTimeframe];
 }
 
-export function usePartecipanti(): [User[], React.Dispatch<SetStateAction<User[]>>] {
+export function usePartecipanti(): [Utente[], React.Dispatch<SetStateAction<Utente[]>>] {
   let context = useContext(HomeContext);
   return [context.partecipanti, context.setPartecipanti];
 }
@@ -71,7 +66,7 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children }) => {
   const [timeframe, setTimeframe] = useState<TimeFrame>({ data: getValidDate(), inizio: 13 * 60 + 30, fine: 14 * 60 + 30 });
   const [ruleset, setRuleset] = useState<Ruleset>({ dashRule: dash_rules.in_arrivo });
   const [trigger, setTrigger] = useState<boolean>(false);
-  const [partecipanti, setPartecipanti] = useState<User[]>([]);
+  const [partecipanti, setPartecipanti] = useState<Utente[]>([]);
 
   const value = {
     timeframe: timeframe,

@@ -50,7 +50,7 @@ const Bookings: React.FC<BookingsProps> = () => {
                 {
                   prenotazioni.map((prenotazione, i) => {
                     return (
-                      <li key={i} className="w-full flex flex-row justify-center">
+                      <li key={prenotazione.id} className="w-full flex flex-row justify-center">
                         <Booking
                           prenotazione={prenotazione}
                           n={i}
