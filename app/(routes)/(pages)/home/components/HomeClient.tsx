@@ -15,6 +15,9 @@ import HourRangeText from './input-section/HourRangeText';
 import Bookings from '@/app/components/header/bookings';
 import UsersContainer from './input-section/UsersContainer';
 import DateTimeInfo from './map-section/DateTimeInfo';
+import { Button } from '@/components/ui/button';
+import { ChevronsUpDown } from 'lucide-react';
+import { HourRangeSlider } from './input-section/HourRangeSlider';
 
 export const FLOORS = {
   FLOOR_1: 1,
@@ -30,23 +33,20 @@ const HomeClient: React.FC = () => {
   const [floor, setFloor] = useState(FLOORS.FLOOR_1);
 
   return (
-    <div id="content" className="w-screen overflow-y-auto overflow-x-auto h-fit lg:h-[calc(100vh-5rem)] box-border flex flex-col lg:flex-row gap-4 p-2 lg:xl:2xl">
-      <aside id="input-panel" className="max-w-full lg:max-w-min lg:h-full overflow-auto panel flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col gap-6 lg:xl:2xl">
-        <section id="users-section" className="grow min-h-20 overflow-hidden flex flex-col gap-2">
+    <div id="content" className="w-screen overflow-y-auto overflow-x-auto h-fit lg:h-[calc(100vh-5rem)] box-border flex flex-col lg:flex-row gap-4 p-2">
+      <aside id="input-panel" className="max-w-full lg:max-w-min lg:h-full overflow-auto panel flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col">
+        <section id="users-section" className="shrink-0 grow h-max min-h-max overflow-hidden flex flex-col gap-2">
           <UsersContainer>
             <UsersCombobox />
             <UsersList className="overflow-y-auto" />
           </UsersContainer>
         </section>
-        <section id="datetime-section" className="flex-none h-fit min-h-fit flex flex-col gap-4">
-          <div id="hour-range" className="flex flex-row justify-center items-center gap-4">
-            <HourRangeText
-              start={timeframe.inizio}
-              end={timeframe.fine}
-              className="text-3xl lg:text-4xl lg:xl:2xl"
-            />
-            <HourRangeDrawer />
-          </div>
+        <section id="datetime-section" className="flex-none h-fit min-h-fit flex flex-col items-center gap-6 p-2">
+          {/* <HourRangeDrawer>
+            <HourRangeText start={timeframe.inizio} end={timeframe.fine} className="text-3xl" />
+            <ChevronsUpDown className="ml-5 size-6 shrink-0 opacity-50" />
+          </HourRangeDrawer> */}
+          <HourRangeSlider />
           <DatePicker />
         </section>
       </aside>

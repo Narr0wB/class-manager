@@ -30,7 +30,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ className }) => {
             return t;
           });
         }}
-        className="w-fit h-fit"
+        className="size-fit p-0"
       />
     </div>
   )

@@ -4,12 +4,12 @@ import React from 'react';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTrigger } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import HourRangeSelector from './HourRangeSelector';
-import { Clock10Icon } from 'lucide-react';
 import CustomTooltip from '@/components/custom/CustomTooltip';
 import { useTimeframe } from '../HomeProvider';
 import { TimeFrame } from '@/lib/backend/database';
 import { useEndMinutes, useStartMinutes } from '@/app/components/LayoutProvider';
 import { cn } from '@/lib/utils';
+import { HourRangeSlider } from './HourRangeSlider';
 
 type HourRangeDrawerProps = {
 } & React.HTMLAttributes<HTMLButtonElement>
@@ -19,14 +19,14 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = (props) => {
   const [startMinutes, setStartMinutes] = useStartMinutes();
   const [endMinutes, setEndMinutes] = useEndMinutes();
 
-  const { className, ...others } = props;
+  const { className, children, ...others } = props;
 
   return (
     <Drawer>
       <CustomTooltip content="Seleziona l'ora" side="bottom">
         <DrawerTrigger asChild>
-          <Button id="hour-range-drawer-open" className={cn("grow-0 aspect-square p-2", className)} {...others}>
-            <Clock10Icon className="size-full" />
+          <Button id="hour-range-drawer-open" variant="ghost" className={cn("size-max p-2", className)} {...others}>
+            {children}
           </Button>
         </DrawerTrigger>
       </CustomTooltip>
