@@ -32,8 +32,11 @@ const QUERY_INSERT_PARTECIPAZIONE = "INSERT INTO AM_Partecipazioni(id_prenotazio
 const QUERY_SELECT_UTENTI_PARTECIPAZIONI = "SELECT AM_Utenti.* FROM AM_Partecipazioni JOIN AM_Utenti on AM_Partecipazioni.id_utente = AM_Utenti.id WHERE id_prenotazione = ?";
 
 function createDescription(partecipazioni: Utente[], classe: string, id_pren: number, nome: string, ora_inizio: string, ora_fine: string, aula: number) {
-  let description = nome + " della " + classe + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5) + " assieme con: \n\n";
+  let description = nome + " della " + classe + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5);
 
+  if (partecipazioni.length != 0) {
+    description += " assieme con: \n\n"
+  }
   for (let i = 0; i < partecipazioni.length; i++) {
     description += "  • " + partecipazioni[i].nome + " " + partecipazioni[i].classe + "\n";
   }
