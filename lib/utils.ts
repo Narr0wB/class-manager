@@ -7,8 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 
 // After 13.00 it's not possible to book a classroom anymore
 export function getValidDate() {
-  const todayDate = new Date();
-  const tomorrowDate = new Date();
+  const todayDate = new Date(new Date().getTime() + Math.abs(new Date().getTimezoneOffset() * 60000));
+  const tomorrowDate = new Date(new Date().getTime() + Math.abs(new Date().getTimezoneOffset() * 60000));
   tomorrowDate.setDate(todayDate.getDate() + 1);
 
   return todayDate.getHours() > 13 ? tomorrowDate : todayDate;

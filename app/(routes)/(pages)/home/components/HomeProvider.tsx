@@ -21,7 +21,7 @@ type ControlContextValue = {
 }
 
 export const HomeContext = createContext<HomeClientContextValue>({
-  timeframe: { data: new Date(), inizio: 0, fine: 0 },
+  timeframe: { data: getValidDate(), inizio: 0, fine: 0 },
   setTimeframe: () => { },
   partecipanti: [],
   setPartecipanti: () => { }
