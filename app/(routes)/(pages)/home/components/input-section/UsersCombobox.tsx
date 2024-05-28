@@ -57,7 +57,7 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
 
   const getUsers = useCallback(async (email: string) => {
     const res = await fetch(
-      `/api/database/utente/SELECT_EMAIL?email=${email}&sessionEmail=${session.data?.user?.email}`, {
+      `/api/database/utente/SELECT_EMAIL?email=${email}`, {
       method: "GET",
     });
     const users = await res.json() as Utente[];

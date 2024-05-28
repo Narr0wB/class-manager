@@ -12,7 +12,7 @@ type FloorProps = {
 
 const Floor: React.FC<FloorProps> = ({ id }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedAula, setSelectedAula] = useState<string | null>(null);
+  const [selectedAula, setSelectedAula] = useState<string>("");
   const [renderMapFlag, _] = useMap();
 
   function getAulaStatus(rect: Element) {
@@ -108,13 +108,10 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
       />
-      {
-        selectedAula &&
-        <SavePrenotazioneDialog
-          open={[isDialogOpen, setIsDialogOpen]}
-          aula={parseInt(selectedAula)}
-        />
-      }
+      <SavePrenotazioneDialog
+        open={[isDialogOpen, setIsDialogOpen]}
+        aula={parseInt(selectedAula!)}
+      />
     </>
   )
 }

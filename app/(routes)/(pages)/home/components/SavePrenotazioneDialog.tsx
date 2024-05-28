@@ -11,7 +11,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
 import { usePartecipanti, useTimeframe } from "./HomeProvider";
-import { formatDate, formatHour } from "@/lib/utils";
+import { formatDate, minutesToString } from "@/lib/utils";
 import React from "react";
 import { useRerender } from "@/app/components/LayoutProvider";
 import { Button } from "@/components/ui/button";
@@ -36,9 +36,9 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
     prenotazione per il il giorno
     <span className="text-primary"> {date} </span>
     dalle
-    <span className="text-primary"> {formatHour(timeframe.inizio)} </span>
+    <span className="text-primary"> {minutesToString(timeframe.inizio)} </span>
     alle
-    <span className="text-primary"> {formatHour(timeframe.fine)} </span>
+    <span className="text-primary"> {minutesToString(timeframe.fine)} </span>
     nell'aula
     <span className="text-primary"> {aula} </span>
   </>

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED } from "@/lib/backend/admin";
 import { Prenotazione, Utente } from "@/lib/backend/database";
-import { formatDate, formatHour, stringToMinutes } from "@/lib/utils";
+import { formatDate, minutesToString, stringToMinutes } from "@/lib/utils";
 import { CalendarIcon, Clock3Icon, DoorOpenIcon, TrashIcon } from "lucide-react";
 import Pulse from "./Pulse";
 import ConfirmDeletionDialog from "@/app/(routes)/(pages)/home/components/ConfirmDeletionDialog";
@@ -89,9 +89,9 @@ const Booking: React.FC<BookingProps> = (props) => {
             <span className="flex flex-row gap-1">
               <Clock3Icon />
               {/* TODO reformat this mess */}
-              {formatHour(stringToMinutes(`${prenotazione.ora_inizio}`))}
+              {minutesToString(stringToMinutes(`${prenotazione.ora_inizio}`))}
               -
-              {formatHour(stringToMinutes(`${prenotazione.ora_fine}`))}
+              {minutesToString(stringToMinutes(`${prenotazione.ora_fine}`))}
             </span>
             <span className="flex flex-row gap-1">
               <DoorOpenIcon />

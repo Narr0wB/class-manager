@@ -5,16 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function minutesToHourString(minutes: number): string {
-  const date = new Date();
-  date.setHours(Math.floor(minutes / 60), minutes % 60);
-
-  const mins = date.getMinutes();
-  const minsString = mins.toString().length > 1 ? mins.toString() : "0" + mins;
-
-  return date.getHours() + ":" + minsString;
-}
-
 // After 13.00 it's not possible to book a classroom anymore
 export function getValidDate() {
   const todayDate = new Date();
@@ -24,7 +14,7 @@ export function getValidDate() {
   return todayDate.getHours() > 13 ? tomorrowDate : todayDate;
 }
 
-export function formatHour(minutes: number): string {
+export function minutesToString(minutes: number): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
   return `${h}:${m <= 9 ? "0" + m : m}`;

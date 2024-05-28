@@ -28,12 +28,7 @@ const HourRangeSelector: React.FC<HourRangeSelectorProps> = ({ className }) => {
       }
       else {
         const isStartProblem = startMinutes > (endMinutes - minDurataPrenotazione);
-
-        if (isStartProblem) {
-          setStartMinutes(endMinutes - minDurataPrenotazione)
-        } else {
-          setEndMinutes(startMinutes + minDurataPrenotazione);
-        }
+        isStartProblem ? setStartMinutes(endMinutes - minDurataPrenotazione) : setEndMinutes(startMinutes + minDurataPrenotazione);
       }
     }
   }
@@ -53,13 +48,6 @@ const HourRangeSelector: React.FC<HourRangeSelectorProps> = ({ className }) => {
       setEndMinutes(endHours * 60 + endMin);
     }
 
-    if (startHours < minOra / 60) {
-      setStartMinutes(minOra);
-    }
-    if (endHours >= maxOra / 60) {
-      setEndMinutes(maxOra);
-    }
-
     return 0;
   }
 
@@ -72,11 +60,15 @@ const HourRangeSelector: React.FC<HourRangeSelectorProps> = ({ className }) => {
     <div id="hour-range-selector" className={className}>
       <HourSelector
         id="start-selector"
+        min={minOra}
+        max={maxOra - minDurataPrenotazione}
         minutes={startMinutes}
         setMinutes={setStartMinutes}
       />
       <HourSelector
         id="end-selector"
+        min={minOra + minDurataPrenotazione}
+        max={maxOra}
         minutes={endMinutes}
         setMinutes={setEndMinutes}
       />

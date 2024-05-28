@@ -14,6 +14,7 @@ import UsersList from './input-section/UsersList';
 import HourRangeText from './input-section/HourRangeText';
 import Bookings from '@/app/components/header/bookings';
 import UsersContainer from './input-section/UsersContainer';
+import DateTimeInfo from './map-section/DateTimeInfo';
 
 export const FLOORS = {
   FLOOR_1: 1,
@@ -50,8 +51,10 @@ const HomeClient: React.FC = () => {
         </section>
       </aside>
       <main id="map-panel" className="grow panel flex-col">
-        {/* TODO: Fix map view problems */}
-        <FloorSelect items={["Primo piano", "Secondo piano", "Terzo piano"]} setFloor={setFloor} className="w-fit h-10" />
+        <div className="flex flex-row justify-between items-center">
+          <FloorSelect items={["Primo piano", "Secondo piano", "Terzo piano"]} setFloor={setFloor} className="w-fit h-10" />
+          <DateTimeInfo timeframe={timeframe} />
+        </div>
         <FloorsContainer floor={floor} className="w-full h-[calc(100%-1rem-2.5rem)]">
           <Floor id={FLOORS.FLOOR_1} />
           <Floor id={FLOORS.FLOOR_2} />

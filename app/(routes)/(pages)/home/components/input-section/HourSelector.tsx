@@ -1,24 +1,25 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { cn, minutesToHourString } from '@/lib/utils';
+import { cn, minutesToString } from '@/lib/utils';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import config from "@/public/config.json";
 
 type HourSelectorProps = {
   id?: string;
   className?: string;
   minutes: number;
   setMinutes: React.Dispatch<React.SetStateAction<number>>;
+  min: number;
+  max: number;
 }
 
-const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, setMinutes }) => {
+const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, setMinutes, min, max }) => {
   function handleBlur(event: React.ChangeEvent<HTMLInputElement>) {
     const targetValue = event.target.valueAsDate;
     if (targetValue) {
       const hours = targetValue.getHours() - 1;
       const minutes = targetValue.getMinutes();
-      setMinutes((hours * 60 + minutes));
+      setMinutes(hours * 60 + minutes);
     }
   }
 
@@ -27,12 +28,13 @@ const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, set
 
   useEffect(() => {
     if (input.current == null) return;
-    input.current.value = minutesToHourString(minutes);
+    input.current.value = minutesToString(minutes);
   }, [minutes]);
 
   return (
     <div id={id} className={cn("h-max flex items-center space-x-2", className)}>
       <Button
+        disabled={minutes == min}
         size="icon"
         className="h-8 w-8 shrink-0 rounded-full"
         onClick={() => setMinutes(prev => prev - 10)}
@@ -43,11 +45,12 @@ const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, set
       <Input
         type="time"
         onBlur={handleBlur}
-        defaultValue={minutesToHourString(minutes)}
+        defaultValue={minutesToString(minutes)}
         ref={input}
         className="h-max text-center text-2xl md:text-3xl lg:text-4xl 2xl:text-6xl"
       />
       <Button
+        disabled={minutes == max}
         size="icon"
         className="h-8 w-8 shrink-0 rounded-full"
         onClick={() => setMinutes(prev => prev + 10)}

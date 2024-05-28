@@ -1,5 +1,5 @@
 import { PrenotazioneInfo, Ruleset } from "@/lib/backend/admin";
-import { formatHour } from "../utils";
+import { minutesToString } from "../utils";
 import { query } from "./mysql";
 import { ResultSetHeader } from "mysql2";
 
@@ -96,8 +96,8 @@ export async function insertPrenotazione(pren: Prenotazione) {
   const formattedDate = pren.data.toISOString().slice(0, 19).replace('T', ' ');
   const formattedDateInsertion = pren.data_ora_prenotazione.toISOString().slice(0, 19).replace('T', ' ');
 
-  const ora_inizio_string = formatHour(pren.ora_inizio);
-  const ora_fine_string = formatHour(pren.ora_fine);
+  const ora_inizio_string = minutesToString(pren.ora_inizio);
+  const ora_fine_string = minutesToString(pren.ora_fine);
 
   const res = await query<ResultSetHeader>(
     QUERY_INSERT_PRE,
@@ -290,7 +290,7 @@ export async function selectPrenotazioniUser(email_utente: string, data: Date | 
 export async function updatePrenotazione(ora_inizio: number, ora_fine: number, id: number) {
   const ret = await query<Prenotazione>(
     QUERY_UPDATE_PRE_HOUR,
-    [formatHour(ora_inizio), formatHour(ora_fine), id]
+    [minutesToString(ora_inizio), minutesToString(ora_fine), id]
   );
 
   return ret;
