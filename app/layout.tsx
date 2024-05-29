@@ -26,7 +26,7 @@ const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(font.className, "absolute w-screen h-screen overflow-x-hidden lg:overflow-y-hidden lg:xl:2xl")}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light">
           <SessionProvider session={session}>
             <LayoutProvider>
               <HeaderBar />

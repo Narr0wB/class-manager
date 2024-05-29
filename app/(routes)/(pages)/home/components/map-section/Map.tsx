@@ -41,7 +41,7 @@ const Map: React.FC<MapProps> = (props) => {
     svgInnerHtml
       ? < svg
         // Necessary for this to work on safari
-        height="400px"
+        height="500px"
         {...others}
         key={theme}
         viewBox="0 0 1400 1400"

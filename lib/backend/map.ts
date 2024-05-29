@@ -117,7 +117,7 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, lightTheme: boole
 
       // Check if there are any prenotazioni in the specified timeframe and if so act accordingly
       if (prenotazioni && prenotazioni.length != 0) {
-        rect.style.filter = "brightness(0.5)";
+        rect.style.filter = "brightness(50%)";
         // btn.color = COLORS.BOOKED;
         btn.code = CODES.BOOKED + SEPARATOR + aula + SEPARATOR + timeframe.inizio + SEPARATOR + timeframe.fine;
       }

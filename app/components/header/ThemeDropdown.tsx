@@ -32,9 +32,6 @@ const ThemeDropdown: React.FC<ThemeDropdownProps> = ({ children }) => {
         <DropdownMenuItem onClick={() => setTheme("dark")}>
           Scuro
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          Sistema
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu >
   )
