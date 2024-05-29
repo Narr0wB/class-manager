@@ -6,6 +6,7 @@ import { ResultSetHeader } from "mysql2";
 const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_utente, id_aula, data, status, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?, ?)";
 const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
 const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? and ora_fine >= ? and ora_fine <= ? and id_aula = ?";
+const QUERY_SELECT_PRE_RANGE_COUNT = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE data = ? and ora_fine >= ? and ora_fine <= ? and id_aula = ?";
 const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
 const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome, AM_Utenti.classe FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
 const QUERY_SELECT_UTENTE_PRE = "SELECT AM_Utenti.* FROM AM_Prenotazioni JOIN AM_Utenti on AM_Prenotazioni.id_utente = AM_Utenti.id WHERE AM_Prenotazioni.id = ?"
@@ -266,6 +267,23 @@ export async function selectPrenotazioneRange(date: Date, time_start: number, ti
   )
 
   return ret;
+}
+
+export async function selectPrenotazioneRangeCount(date: Date, time_start: number, time_end: number, aula: number) {
+  const date_string = date.toISOString().slice(0, 10);
+  const time_start_string = timeToString(time_start);
+  const time_end_string = timeToString(time_end);
+
+  const ret = await query<number>(
+    QUERY_SELECT_PRE_RANGE_COUNT,
+    [date_string, time_start_string, time_end_string, aula]
+  ) as any;
+
+  if (!ret) return undefined;
+
+  const res = ret[0]["COUNT(*)"];
+
+  return res;
 }
 
 export async function selectPrenotazioniUser(email_utente: string, data: Date | null) {

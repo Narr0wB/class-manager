@@ -1,22 +1,15 @@
 import { JSDOM } from "jsdom";
-import { IDfromEmail, PRENOTAZIONE_APPROVED, selectPrenotazioneRange, TimeFrame, timeToString } from "./database";
+import { selectPrenotazioneRange, TimeFrame } from "./database";
 import fs from "fs";
-import { PRENOTAZIONE_REJECTED } from "./admin";
 
 export const COLORS = {
-  FREE: "#dac3e8",
-  BOOKED: "#2b2d42",
-  REJECTED: "#ff3333",
-  PENDING: "#E9E900",
-  APPROVED: "#7ABA78"
+  FREE: "#ccc8bc",
+  BOOKED: "#4e5169",
 };
 
 export const CODES = {
   FREE: "F",
   BOOKED: "B",
-  REJECTED: "R",
-  PENDING: "P",
-  APPROVED: "A"
 };
 
 export const THEMES = {
@@ -28,6 +21,10 @@ export const BACKGROUND = {
   LIGHT: "#FFFFFF",
   DARK: "#030712"
 }
+
+export const TEXT = "#000000";
+
+export const SEPARATOR = "*";
 
 // DO NOT CHANGE 
 const BACKGROUND_IDENTIFIER = "background";
@@ -48,36 +45,6 @@ class Button {
       this.code = code
   }
 
-  static fromRect(rect: SVGRectElement) {
-    const code = rect.id[0];
-    const id = rect.id.substring(1);
-
-    let color;
-    switch (code) {
-      case CODES.FREE: {
-        color = COLORS.FREE;
-        break;
-      }
-      case CODES.BOOKED: {
-        color = COLORS.BOOKED;
-        break;
-      }
-      case CODES.PENDING: {
-        color = COLORS.PENDING;
-        break;
-      }
-      case CODES.APPROVED: {
-        color = COLORS.APPROVED;
-        break;
-      }
-      default: {
-        color = COLORS.FREE;
-        break;
-      }
-    }
-    return new Button(id, color, code);
-  }
-
   static free(id: string) {
     return new Button(id, COLORS.FREE, CODES.FREE);
   }
@@ -94,7 +61,7 @@ export function loadMap(mapPath: string): Map {
   return map;
 }
 
-export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string, lightTheme: boolean) {
+export async function parseSVG(map: Map, timeframe: TimeFrame, lightTheme: boolean) {
   const dom = new JSDOM(map.svg);
   const svgElement = dom.window.document.querySelector("svg") as SVGSVGElement;
 
@@ -133,16 +100,15 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
     // Render only the rects that are in the json
     if (btn.id in map.config) {
       const aula = (map.config as any)[btn.id];
+      btn.code = btn.code + SEPARATOR + aula;
 
       if (button_text) {
         // TODO add new color for the text in dark mode
         button_text.style.fill = lightTheme ? THEMES.DARK : THEMES.DARK;
-        button_text.style.fontFamily = "Roboto";
         button_text.style.pointerEvents = "none";
         const spans = button_text.querySelectorAll("tspan");
         spans[1].textContent = aula;
-        spans[1].style.fontFamily = "Roboto";
-        spans[1].style.fill = "#884DEE";
+        spans[1].style.fill = TEXT;
       }
 
       // Fetch all the prenotazioni for that specific aula that are in the same day
@@ -151,30 +117,15 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, userEmail: string
 
       // Check if there are any prenotazioni in the specified timeframe and if so act accordingly
       if (prenotazioni && prenotazioni.length != 0) {
-        if (prenotazioni.at(0)?.id_utente == await IDfromEmail(userEmail)) {
-          
-          if (prenotazioni.at(0)?.status == PRENOTAZIONE_APPROVED) {
-            btn.color = COLORS.APPROVED;
-            btn.code = CODES.APPROVED;
-          }
-          else if (prenotazioni.at(0)?.status == PRENOTAZIONE_REJECTED) {
-            btn.color = COLORS.REJECTED;
-            btn.code = CODES.REJECTED;
-          }
-          else {
-            btn.color = COLORS.PENDING;
-            btn.code = CODES.PENDING;
-          }
-        }
-        else {
-          btn.color = COLORS.BOOKED;
-          btn.code = CODES.BOOKED;
-        }
+        rect.style.filter = "brightness(0.5)";
+        // btn.color = COLORS.BOOKED;
+        btn.code = CODES.BOOKED + SEPARATOR + aula + SEPARATOR + timeframe.inizio + SEPARATOR + timeframe.fine;
       }
 
       rect.style.fill = btn.color;
       rect.style.transition = "filter 0.1s ease";
-      rect.id = btn.code + map.config[rect.id as keyof typeof map.config];
+
+      rect.id = btn.code;
     }
 
     // If the button is not in the config file, then is it deactivated. Still, its color has to be updated on any theme changes

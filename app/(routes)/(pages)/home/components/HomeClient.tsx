@@ -42,11 +42,11 @@ const HomeClient: React.FC = () => {
           </UsersContainer>
         </section>
         <section id="datetime-section" className="flex-none h-fit min-h-fit flex flex-col items-center gap-6 p-2">
-          {/* <HourRangeDrawer>
+          <HourRangeDrawer>
             <HourRangeText start={timeframe.inizio} end={timeframe.fine} className="text-3xl" />
             <ChevronsUpDown className="ml-5 size-6 shrink-0 opacity-50" />
-          </HourRangeDrawer> */}
-          <HourRangeSlider />
+          </HourRangeDrawer>
+          {/* <HourRangeSlider /> */}
           <DatePicker />
         </section>
       </aside>
@@ -55,7 +55,7 @@ const HomeClient: React.FC = () => {
           <FloorSelect items={["Primo piano", "Secondo piano", "Terzo piano"]} setFloor={setFloor} className="w-fit h-10" />
           <DateTimeInfo timeframe={timeframe} />
         </div>
-        <FloorsContainer floor={floor} className="w-full h-[calc(100%-1rem-2.5rem)]">
+        <FloorsContainer floor={floor} className="w-full h-[calc(100%-1rem-2.5rem)] min-h-max">
           <Floor id={FLOORS.FLOOR_1} />
           <Floor id={FLOORS.FLOOR_2} />
           <Floor id={FLOORS.FLOOR_3} />

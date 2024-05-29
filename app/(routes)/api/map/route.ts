@@ -10,7 +10,7 @@ let FLOOR2: Map | undefined;
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.error();
-  
+
   const { searchParams } = new URL(req.url);
 
   // When the client requests a map, i.e. they are trying to render it, we should receive
@@ -19,9 +19,6 @@ export async function GET(req: NextRequest) {
   const floorParam = searchParams.get("floor") as string;
   const themeParam = searchParams.get("theme") as string;
   const timeframeParam = searchParams.get("timeframe") as string;
-  const userEmailParam = searchParams.get("userEmail") as string;
-
-  // if (!floorParam || !themeParam || !timeframeParam || !userEmailParam) return NextResponse.error();
 
   let selectedFloor;
 
@@ -61,7 +58,7 @@ export async function GET(req: NextRequest) {
   const timeframe = JSON.parse(timeframeParam);
   timeframe.data = new Date(timeframe.data);
 
-  const svgElement = await parseSVG(selectedFloor!, timeframe, userEmailParam, themeParam == "light");
+  const svgElement = await parseSVG(selectedFloor!, timeframe, themeParam == "light");
 
-  return NextResponse.json(svgElement!.innerHTML);
+  return NextResponse.json(svgElement.innerHTML);
 }

@@ -9,7 +9,7 @@ import { TimeFrame } from "@/lib/backend/database"
 const HourRangeSlider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>>(({ className, ...props }, ref) => {
   const [startMinutes, setStartMinutes] = useStartMinutes();
   const [endMinutes, setEndMinutes] = useEndMinutes();
-  const [timeframe, setTimeframe] = useTimeframe();
+  const [_, setTimeframe] = useTimeframe();
 
   return (
     <SliderPrimitive.Root
@@ -40,11 +40,14 @@ const HourRangeSlider = React.forwardRef<React.ElementRef<typeof SliderPrimitive
       <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary">
         <SliderPrimitive.Range className="absolute h-full bg-primary" />
       </SliderPrimitive.Track>
-      <SliderPrimitive.Thumb>
+      <SliderPrimitive.Thumb className="relative flex flex-col">
         {minutesToString(startMinutes)}
+        <div className="absolute top-0 bottom-0 size-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
+      </SliderPrimitive.Thumb>
+      <SliderPrimitive.Thumb>
+        {minutesToString(endMinutes)}
         <div className="size-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
       </SliderPrimitive.Thumb>
-      <SliderPrimitive.Thumb className="block size-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
     </SliderPrimitive.Root>
   )
 })

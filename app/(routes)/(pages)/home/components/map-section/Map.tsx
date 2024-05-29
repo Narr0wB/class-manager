@@ -17,7 +17,7 @@ const Map: React.FC<MapProps> = (props) => {
 
   const fetchData = useCallback(async () => {
     const res = await fetch(
-      `/api/map?floor=${floor}&theme=${theme}&timeframe=${JSON.stringify(timeframe)}&userEmail=${session.data?.user?.email}`,
+      `/api/map?floor=${floor}&theme=${theme}&timeframe=${JSON.stringify(timeframe)}`,
       { method: "GET" }
     );
     const svgInnerHtml = await res.json();
@@ -39,13 +39,15 @@ const Map: React.FC<MapProps> = (props) => {
 
   return (
     svgInnerHtml
-      ? <svg
+      ? < svg
+        // Necessary for this to work on safari
+        height="400px"
         {...others}
         key={theme}
         viewBox="0 0 1400 1400"
         preserveAspectRatio="xMinYMin"
         dangerouslySetInnerHTML={{ __html: svgInnerHtml }}
-        className="h-full aspect-square fade-in"
+        className="aspect-square fade-in"
       />
       : <Loading />
   )

@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 import Map from "@/app/(routes)/(pages)/home/components/map-section/Map";
 import SavePrenotazioneDialog from '../SavePrenotazioneDialog';
 import { useMap } from '@/app/components/LayoutProvider';
+// import { CODES, SEPARATOR } from '@/lib/backend/map';
+import { minutesToString } from '@/lib/utils';
+import InfoPrenotazioneDialog from '../InfoPrenotazioneDialog';
 
 type FloorProps = {
   className?: string;
@@ -11,86 +14,85 @@ type FloorProps = {
 }
 
 const Floor: React.FC<FloorProps> = ({ id }) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedAula, setSelectedAula] = useState<string>("");
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [infoDialogOpen, setInfoDialogOpen] = useState(false);
+  const [selectedAula, setSelectedAula] = useState("");
+  const [startHour, setStartHour] = useState("");
+  const [endHour, setEndHour] = useState("");
   const [renderMapFlag, _] = useMap();
 
-  function getAulaStatus(rect: Element) {
-    return rect.id[0];
+  function getAulaInfo(rect: Element) {
+    return rect.id.split("*");
   }
 
-  function getAulaId(rect: Element) {
-    return rect.id.substring(1);
+  function getAulaStatus(info: string[]) {
+    return info[0];
   }
 
-  function handleClick(e: React.MouseEvent) {
+  function getAulaNumber(info: string[]) {
+    return info[1];
+  }
+
+  function getAulaStart(info: string[]) {
+    return minutesToString(Number(info[2]));
+  }
+
+  function getAulaEnd(info: string[]) {
+    return minutesToString(Number(info[3]));
+  }
+
+  function handleSelectAula(e: React.MouseEvent | React.TouchEvent) {
     const target = e.target as HTMLElement;
-    if (getAulaStatus(target) == "F") {
-      const aula = getAulaId(target);
-      if (!aula) return;
-
-      setSelectedAula(aula.toString());
-
-      // Open the dialog
-      setIsDialogOpen(true);
+    const info = getAulaInfo(target);
+    const aula = getAulaNumber(info);
+    if (!aula) return;
+    const status = getAulaStatus(info);
+    switch (status) {
+      case "F": {
+        setSelectedAula(aula.toString());
+        setSaveDialogOpen(true);
+        break;
+      }
+      case "B": {
+        setStartHour(getAulaStart(info));
+        setEndHour(getAulaEnd(info));
+        setInfoDialogOpen(true);
+        break;
+      }
     }
   }
 
-  function handleMouseDown(e: React.MouseEvent) {
+  function handleSelecting(e: React.MouseEvent | React.TouchEvent) {
     const target = e.target as HTMLElement;
-    if (getAulaStatus(target) == "F") {
+    const info = getAulaInfo(target);
+    if (getAulaStatus(info) == "F") {
       target.style.filter = "brightness(0.6)";
+    } else if (getAulaStatus(info) == "B") {
+      target.style.filter = "brightness(1.6)";
     }
   }
 
-  function handleMouseUp(e: React.MouseEvent) {
+  function handleHover(e: React.MouseEvent | React.TouchEvent) {
     const target = e.target as HTMLElement;
-    if (getAulaStatus(target) == "F") {
+    const info = getAulaInfo(target);
+    const text = target.parentElement!.querySelector("text");
+    if (text) text.style.opacity = "0.5";
+    if (getAulaStatus(info) == "F") {
       target.style.filter = "brightness(0.8)";
+    } else if (getAulaStatus(info) == "B") {
+      target.style.filter = "brightness(1.1)";
     }
   }
 
-  // FIX FILTER NOT APPLIED
-  function handleTouchStartCapture(e: React.TouchEvent) {
-    e.preventDefault(); //prevent double clicks
+  function handleLeave(e: React.MouseEvent | React.TouchEvent) {
     const target = e.target as HTMLElement;
-    if (getAulaStatus(target) == "F") {
-      target.style.filter = "brightness(0.6)";
-    }
-  }
-
-  function handleTouchEndCapture(e: React.TouchEvent) {
-    e.preventDefault(); //prevent double clicks
-    const target = e.target as HTMLElement;
-    if (getAulaStatus(target) == "F") {
-      const aula = getAulaId(target);
-      if (!aula) return;
-
-      setSelectedAula(aula.toString());
-
-      // Open the dialog
-      setIsDialogOpen(true);
-    }
-  }
-
-  // TODO: Fix bug (on chrome) => whenever a button on the map is hovered the map flashes
-  function handleMouseOver(e: React.MouseEvent) {
-    const target = e.target as HTMLElement;
-    if (getAulaStatus(target) == "F") {
-      const text = target.parentElement!.querySelector("text");
-
-      if (text) text.style.opacity = "0.5";
-      target.style.filter = "brightness(0.8)";
-    }
-  }
-
-  function handleMouseOut(e: React.MouseEvent) {
-    const target = e.target as HTMLElement;
-    if (getAulaStatus(target) == "F") {
-      const text = target.parentElement!.querySelector("text");
-
-      if (text) text.style.opacity = "1";
+    const info = getAulaInfo(target);
+    const text = target.parentElement!.querySelector("text");
+    if (text) text.style.opacity = "1";
+    if (getAulaStatus(info) == "F") {
       target.style.filter = "none";
+    } else if (getAulaStatus(info) == "B") {
+      target.style.filter = "brightness(0.5)";
     }
   }
 
@@ -100,17 +102,24 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
         key={Number(renderMapFlag)}
         floor={id}
         id={`floor-${id}`}
-        onClick={handleClick}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onTouchStartCapture={handleTouchStartCapture}
-        onTouchEndCapture={handleTouchEndCapture}
-        onMouseOver={handleMouseOver}
-        onMouseOut={handleMouseOut}
+        onClick={handleSelectAula}
+        onTouchEndCapture={handleSelectAula}
+
+        onMouseDown={handleSelecting}
+        onTouchStartCapture={handleSelecting}
+
+        onMouseOver={handleHover}
+
+        onMouseOut={handleLeave}
       />
       <SavePrenotazioneDialog
-        open={[isDialogOpen, setIsDialogOpen]}
+        open={[saveDialogOpen, setSaveDialogOpen]}
         aula={parseInt(selectedAula!)}
+      />
+      <InfoPrenotazioneDialog
+        open={[infoDialogOpen, setInfoDialogOpen]}
+        startHour={startHour}
+        endHour={endHour}
       />
     </>
   )
