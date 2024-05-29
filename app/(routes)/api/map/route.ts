@@ -63,7 +63,5 @@ export async function GET(req: NextRequest) {
 
   const svgElement = await parseSVG(selectedFloor!, timeframe, userEmailParam, themeParam == "light");
 
-  // if (!svgElement) return NextResponse.error();
-
   return NextResponse.json(svgElement!.innerHTML);
 }
