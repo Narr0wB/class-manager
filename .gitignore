@@ -2,4 +2,3 @@ node_modules/
 .next
 .env
 restart-server.sh
-script.py
