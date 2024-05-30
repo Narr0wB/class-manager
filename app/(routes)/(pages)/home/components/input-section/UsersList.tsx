@@ -14,7 +14,7 @@ const UsersList: React.FC<UsersListProps> = (props) => {
   const [partecipanti, _] = usePartecipanti();
 
   return (
-    <div id="users-list" className={cn("flex flex-wrap gap-2", className)} {...others}>
+    <div id="users-list" className={cn("flex flex-wrap overflow-y-scroll gap-2 p-2", className)} {...others}>
       {
         partecipanti.map(partecipante => (
           <Badge key={partecipante.id} className="size-fit text-xs py-0 pl-0">

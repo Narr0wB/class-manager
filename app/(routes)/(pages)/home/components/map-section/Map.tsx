@@ -47,7 +47,7 @@ const Map: React.FC<MapProps> = (props) => {
         viewBox="0 0 1400 1400"
         preserveAspectRatio="xMinYMin"
         dangerouslySetInnerHTML={{ __html: svgInnerHtml }}
-        className="aspect-square fade-in"
+        className="h-full aspect-square fade-in"
       />
       : <Loading />
   )

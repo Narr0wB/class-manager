@@ -9,7 +9,7 @@ type FloorsContainerProps = {
 
 const FloorsContainer: React.FC<FloorsContainerProps> = ({ children, className, floor }) => {
   return (
-    <div id="floors-container" className={cn("relative flex items-center justify-center", className)}>
+    <div id="floors-container" className={cn("flex justify-center", className)}>
       {
         React.Children.map(children, (child, i) => (
           // Render the floor only if its selected

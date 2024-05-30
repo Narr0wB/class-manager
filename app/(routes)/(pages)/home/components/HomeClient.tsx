@@ -15,9 +15,8 @@ import HourRangeText from './input-section/HourRangeText';
 import Bookings from '@/app/components/header/bookings';
 import UsersContainer from './input-section/UsersContainer';
 import DateTimeInfo from './map-section/DateTimeInfo';
-import { Button } from '@/components/ui/button';
 import { ChevronsUpDown } from 'lucide-react';
-import { HourRangeSlider } from './input-section/HourRangeSlider';
+import { Separator } from '@/components/ui/separator';
 
 export const FLOORS = {
   FLOOR_1: 1,
@@ -33,29 +32,29 @@ const HomeClient: React.FC = () => {
   const [floor, setFloor] = useState(FLOORS.FLOOR_1);
 
   return (
-    <div id="content" className="w-screen overflow-y-auto overflow-x-auto h-fit lg:h-[calc(100vh-5rem)] box-border flex flex-col lg:flex-row gap-4 p-2">
-      <aside id="input-panel" className="max-w-full lg:max-w-min lg:h-full overflow-auto panel flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col">
-        <section id="users-section" className="shrink-0 grow h-max min-h-max overflow-hidden flex flex-col gap-2">
+    <div id="content" className="w-screen overflow-hidden h-fit lg:h-[calc(100vh-5rem)] flex flex-col lg:flex-row gap-4">
+      <aside id="input-panel" className="panel max-w-full lg:max-w-min lg:h-full overflow-y-scroll flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col space-y-4">
+        <section id="users-section" className="grow shrink-0 basis-1.5 min-h-40 flex flex-col gap-2">
           <UsersContainer>
-            <UsersCombobox />
-            <UsersList className="overflow-y-auto" />
+            <UsersCombobox className="flex-none" />
+            <UsersList className="flex-1 overflow-scroll content-start rounded-secondary" />
           </UsersContainer>
         </section>
-        <section id="datetime-section" className="flex-none h-fit min-h-fit flex flex-col items-center gap-6 p-2">
+        <section id="datetime-section" className="grow shrink-0 basis-1 h-fit min-h-fit flex flex-col items-center justify-start gap-6 p-2 rounded-secondary">
           <HourRangeDrawer>
             <HourRangeText start={timeframe.inizio} end={timeframe.fine} className="text-3xl" />
             <ChevronsUpDown className="ml-5 size-6 shrink-0 opacity-50" />
           </HourRangeDrawer>
-          {/* <HourRangeSlider /> */}
           <DatePicker />
         </section>
       </aside>
-      <main id="map-panel" className="grow panel flex-col">
+      <Separator orientation="vertical" />
+      <main id="map-panel" className="panel grow flex-col">
         <div className="flex flex-row justify-between items-center">
           <FloorSelect items={["Primo piano", "Secondo piano", "Terzo piano"]} setFloor={setFloor} className="w-fit h-10" />
           <DateTimeInfo timeframe={timeframe} />
         </div>
-        <FloorsContainer floor={floor} className="w-full h-[calc(100%-1rem-2.5rem)] min-h-max">
+        <FloorsContainer floor={floor} className="w-full h-[calc(100%-1rem-2.5rem)] min-h-fit overflow-scroll p-4">
           <Floor id={FLOORS.FLOOR_1} />
           <Floor id={FLOORS.FLOOR_2} />
           <Floor id={FLOORS.FLOOR_3} />
