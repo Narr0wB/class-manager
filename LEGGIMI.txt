@@ -1,1 +1,0 @@
-la porta su cui avviare npm è la 8000, nginx redirecta tutto il traffico su 8000 a 3000
