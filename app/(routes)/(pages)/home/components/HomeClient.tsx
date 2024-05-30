@@ -33,7 +33,7 @@ const HomeClient: React.FC = () => {
 
   return (
     <div id="content" className="w-screen overflow-hidden h-fit lg:h-[calc(100vh-5rem)] flex flex-col lg:flex-row gap-4">
-      <aside id="input-panel" className="panel max-w-full lg:max-w-min lg:h-full overflow-y-auto flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col space-y-4">
+      <aside id="input-panel" className="panel max-w-full lg:max-w-min lg:h-full overflow-y-auto flex flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col gap-4">
         <section id="users-section" className="grow shrink-0 basis-1.5 min-h-40 flex flex-col gap-2">
           <UsersContainer>
             <UsersCombobox className="flex-none" />
@@ -48,7 +48,8 @@ const HomeClient: React.FC = () => {
           <DatePicker />
         </section>
       </aside>
-      <Separator orientation="vertical" />
+      <Separator orientation="vertical" className="hidden lg:block" />
+      <Separator orientation="horizontal" className="block lg:hidden" />
       <main id="map-panel" className="panel grow flex-col">
         <div className="flex flex-row justify-between items-center">
           <FloorSelect items={["Primo piano", "Secondo piano", "Terzo piano"]} setFloor={setFloor} className="w-fit h-10" />

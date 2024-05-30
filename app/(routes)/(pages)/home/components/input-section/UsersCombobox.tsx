@@ -132,39 +132,47 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
   }
 
   return (
-    <div id="users-combobox" className={cn("", className)} {...others}>
-      <Popover open={open} onOpenChange={open => {
-        setOpen(open);
-        reset();
-      }}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[200px] justify-between"
-          >
-            Partecipanti
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-fit p-0">
-          <Command shouldFilter={false}>
-            <CommandInput placeholder="Cerca utenti..." onValueChange={handleSearch} />
-            <CommandEmpty className="p-0">
-              {
-                !loading &&
-                <p className="p-2">
-                  {inputEmpty ? "Nessun partecipante aggiunto." : "Nessun utente trovato"}
-                </p>
-              }
-            </CommandEmpty>
-            <CommandList>
-              {commandListContent()}
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+    <div id="users-combobox" className={cn(partecipanti.length != 0 ? "flex flex-row-reverse justify-between items-center" : "", className)} {...others}>
+      {
+        partecipanti.length != 0 &&
+        <div className="rounded-secondary rounded-full h-3/4 aspect-square flex items-center justify-center">
+          {partecipanti.length}
+        </div>
+      }
+      <div>
+        <Popover open={open} onOpenChange={open => {
+          setOpen(open);
+          reset();
+        }}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-[200px] justify-between"
+            >
+              Partecipanti
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-fit p-0">
+            <Command shouldFilter={false}>
+              <CommandInput placeholder="Cerca utenti..." onValueChange={handleSearch} />
+              <CommandEmpty className="p-0">
+                {
+                  !loading &&
+                  <p className="p-2">
+                    {inputEmpty ? "Nessun partecipante aggiunto." : "Nessun utente trovato"}
+                  </p>
+                }
+              </CommandEmpty>
+              <CommandList>
+                {commandListContent()}
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
     </div >
   )
 }
