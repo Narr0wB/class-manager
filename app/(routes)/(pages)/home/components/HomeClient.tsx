@@ -33,11 +33,11 @@ const HomeClient: React.FC = () => {
 
   return (
     <div id="content" className="w-screen overflow-hidden h-fit lg:h-[calc(100vh-5rem)] flex flex-col lg:flex-row gap-4">
-      <aside id="input-panel" className="panel max-w-full lg:max-w-min lg:h-full overflow-y-scroll flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col space-y-4">
+      <aside id="input-panel" className="panel max-w-full lg:max-w-min lg:h-full overflow-y-auto flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col space-y-4">
         <section id="users-section" className="grow shrink-0 basis-1.5 min-h-40 flex flex-col gap-2">
           <UsersContainer>
             <UsersCombobox className="flex-none" />
-            <UsersList className="flex-1 overflow-scroll content-start rounded-secondary" />
+            <UsersList className="flex-1 overflow-auto content-start rounded-secondary" />
           </UsersContainer>
         </section>
         <section id="datetime-section" className="grow shrink-0 basis-1 h-fit min-h-fit flex flex-col items-center justify-start gap-6 p-2 rounded-secondary">
@@ -54,7 +54,7 @@ const HomeClient: React.FC = () => {
           <FloorSelect items={["Primo piano", "Secondo piano", "Terzo piano"]} setFloor={setFloor} className="w-fit h-10" />
           <DateTimeInfo timeframe={timeframe} />
         </div>
-        <FloorsContainer floor={floor} className="w-full h-[calc(100%-1rem-2.5rem)] min-h-fit overflow-scroll p-4">
+        <FloorsContainer floor={floor} className="w-full h-[calc(100%-1rem-2.5rem)] min-h-fit overflow-auto p-4">
           <Floor id={FLOORS.FLOOR_1} />
           <Floor id={FLOORS.FLOOR_2} />
           <Floor id={FLOORS.FLOOR_3} />

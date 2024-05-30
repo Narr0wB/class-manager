@@ -4,12 +4,11 @@ import { useCallback, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../../../../components/ui/popover";
 import { Button } from "../../../../../../components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { Command, CommandInput, CommandItem, CommandList } from "../../../../../../components/ui/command";
+import { Command, CommandInput, CommandItem, CommandList, CommandEmpty } from "../../../../../../components/ui/command";
 import { cn } from "@/lib/utils";
 import { usePartecipanti } from "../HomeProvider";
 import { UsersUtility, getUserInfo } from "./UsersContainer";
 import Spinner from "./Spinner";
-import { CommandEmpty } from "cmdk";
 import { useSession } from "next-auth/react";
 import { Utente } from "@/lib/backend/database";
 
@@ -84,6 +83,16 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
     setTimer(newTimer);
   };
 
+  const reset = () => {
+    // Reset the list of searched users so that the next
+    // time the popup will be open, there will be no user
+    // displayed. (Especially if the popup is closed by clicking out of it)
+    if (!open) {
+      setUsers([]);
+      setInputEmpty(true);
+    }
+  }
+
   const listUsers = () => {
     return users.map(user => (
       <UserItem key={user.id} user={user} onSelect={async info => {
@@ -91,6 +100,10 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
         const [nome, _] = parseInfo(info);
         const user = users.find(user => user.nome === nome)!;
         isUserPartecipante(user, partecipanti) ? removePartecipante!(user) : addPartecipante!(user);
+
+        // Close the combobox
+        setOpen(false);
+        reset();
       }} />
     ))
   }
@@ -122,13 +135,7 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
     <div id="users-combobox" className={cn("", className)} {...others}>
       <Popover open={open} onOpenChange={open => {
         setOpen(open);
-        // Reset the list of searched users so that the next
-        // time the popup will be open, there will be no user
-        // displayed. (Especially if the popup is closed by clicking out of it)
-        if (!open) {
-          setUsers([]);
-          setInputEmpty(true);
-        }
+        reset();
       }}>
         <PopoverTrigger asChild>
           <Button
@@ -144,7 +151,7 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
         <PopoverContent className="w-fit p-0">
           <Command shouldFilter={false}>
             <CommandInput placeholder="Cerca utenti..." onValueChange={handleSearch} />
-            <CommandEmpty>
+            <CommandEmpty className="p-0">
               {
                 !loading &&
                 <p className="p-2">
