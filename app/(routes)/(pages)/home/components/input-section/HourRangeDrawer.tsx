@@ -9,7 +9,6 @@ import { useTimeframe } from '../HomeProvider';
 import { TimeFrame } from '@/lib/backend/database';
 import { useEndMinutes, useStartMinutes } from '@/app/components/LayoutProvider';
 import { cn } from '@/lib/utils';
-import { HourRangeSlider } from './HourRangeSlider';
 
 type HourRangeDrawerProps = {
 } & React.HTMLAttributes<HTMLButtonElement>
@@ -32,7 +31,7 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = (props) => {
       </CustomTooltip>
       <DrawerContent id="drawer-content" className="fixed bottom-0 mx-[10%] md:mx-[15%] lg:mx-[20%] flex items-center lg:xl:2xl">
         <DrawerHeader id="drawer-header">
-          <DrawerDescription>Seleziona l'ora della prenotazione</DrawerDescription>
+          <DrawerDescription>{"Seleziona l'ora della prenotazione"}</DrawerDescription>
         </DrawerHeader>
         <HourRangeSelector className="w-fit md:w-3/4 h-max flex flex-col justify-center space-y-4 md:flex-row md:space-x-4 md:space-y-0 md:lg:xl:2xl" />
         <DrawerFooter id="drawer-footer" className="flex items-center w-full h-full">

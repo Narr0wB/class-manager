@@ -24,10 +24,13 @@ const InfoPrenotazioneDialog: React.FC<InfoPrenotazioneDialogProps> = ({ open, s
         <AlertDialogHeader>
           <AlertDialogTitle>Informazioni</AlertDialogTitle>
           <AlertDialogDescription>
-            Quest'aula è prenotata dalle ore
-            <span className="text-primary"> {startHour} </span>
-            alle ore
-            <span className="text-primary"> {endHour} </span>
+            {
+              `Quest'aula è prenotata dalle ore 
+              ${startHour}
+              alle ore 
+              ${endHour}
+              `
+            }
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

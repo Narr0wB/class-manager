@@ -32,16 +32,16 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
   const date = formatDate(timeframe.data);
 
   // Do not change whitespaces
-  const prenotazioneInfo = <>
-    prenotazione per il il giorno
-    <span className="text-primary"> {date} </span>
-    dalle
-    <span className="text-primary"> {minutesToString(timeframe.inizio)} </span>
-    alle
-    <span className="text-primary"> {minutesToString(timeframe.fine)} </span>
-    nell'aula
-    <span className="text-primary"> {aula} </span>
-  </>
+  const prenotazioneInfo = `
+    prenotazione per il giorno 
+    ${date} 
+    dalle 
+    ${minutesToString(timeframe.inizio)} 
+    alle 
+    ${minutesToString(timeframe.fine)} 
+    nell'aula 
+    ${aula}
+  `;
 
   const handleInsert = async () => {
     // Get only the id of every partecipante

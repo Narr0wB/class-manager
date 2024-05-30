@@ -49,7 +49,7 @@ const Login: React.FC = () => {
         <Card className="w-max border-0 shadow-none">
           <CardHeader className="text-center">
             <CardTitle className="text-primary text-3xl">Class manager</CardTitle>
-            <CardDescription>Utilizza l'account Google dell'Istituto</CardDescription>
+            <CardDescription>{"Utilizza l'account Google dell'Istituto"}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={() => { signIn("google") }} className="size-full">
