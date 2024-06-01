@@ -3,8 +3,8 @@ import { selectPrenotazioneRange, TimeFrame } from "./database";
 import fs from "fs";
 
 export const COLORS = {
-  FREE: "#ccc8bc",
-  BOOKED: "#4e5169",
+  FREE: "#dca2f5",
+  BOOKED: "#9e50bf",
 };
 
 export const CODES = {
@@ -117,8 +117,7 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, lightTheme: boole
 
       // Check if there are any prenotazioni in the specified timeframe and if so act accordingly
       if (prenotazioni && prenotazioni.length != 0) {
-        rect.style.filter = "brightness(50%)";
-        // btn.color = COLORS.BOOKED;
+        btn.color = COLORS.BOOKED;
         btn.code = CODES.BOOKED + SEPARATOR + aula + SEPARATOR + timeframe.inizio + SEPARATOR + timeframe.fine;
       }
 

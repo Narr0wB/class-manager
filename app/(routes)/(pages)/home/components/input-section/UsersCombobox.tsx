@@ -50,19 +50,18 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [loading, setLoading] = useState(false);
   const [inputEmpty, setInputEmpty] = useState(true);
-  const session = useSession();
 
   const { className, removePartecipante, addPartecipante, ...others } = props;
 
-  const getUsers = useCallback(async (email: string) => {
+  const getUsers = async (name: string) => {
     const res = await fetch(
-      `/api/database/utente/SELECT_EMAIL?email=${email}`, {
+      `/api/database/utente/SELECT_NAME?name=${name}`, {
       method: "GET",
     });
     const users = await res.json() as Utente[];
 
     return users;
-  }, [session.data?.user?.email]);
+  }
 
   // Create a new timeout every time the user types something to avoid making unecessary
   // api calls that are overwritten shortly after.
@@ -135,7 +134,7 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
     <div id="users-combobox" className={cn(partecipanti.length != 0 ? "flex flex-row-reverse justify-between items-center" : "", className)} {...others}>
       {
         partecipanti.length != 0 &&
-        <div className="rounded-secondary rounded-full h-3/4 aspect-square flex items-center justify-center">
+        <div className="rounded-secondary border-primary border-[3px] select-none rounded-full h-3/4 aspect-square flex items-center justify-center">
           {partecipanti.length}
         </div>
       }
@@ -149,9 +148,9 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="w-[200px] justify-between"
+              className="w-fit justify-between md:text-2xl lg:text-xl"
             >
-              Partecipanti
+              Aggiungi partecipanti
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>

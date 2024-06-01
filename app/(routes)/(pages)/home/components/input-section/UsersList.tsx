@@ -18,7 +18,7 @@ const UsersList: React.FC<UsersListProps> = (props) => {
       {
         partecipanti.length != 0
           ? partecipanti.map(partecipante => (
-            <Badge key={partecipante.id} className="size-fit text-xs py-0 pl-0">
+            <Badge key={partecipante.id} className="size-fit text-xs md:text-xl lg:text-base py-0 pl-0">
               <Button
                 onClick={() => removePartecipante!(partecipante)}
                 className="p-0 size-fit bg-transparent hover:bg-transparent">

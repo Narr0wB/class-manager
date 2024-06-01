@@ -34,18 +34,18 @@ const HomeClient: React.FC = () => {
   return (
     <div id="content" className="w-screen overflow-hidden h-fit lg:h-[calc(100vh-5rem)] flex flex-col lg:flex-row gap-4">
       <aside id="input-panel" className="panel max-w-full lg:max-w-min lg:h-full overflow-y-auto flex flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col gap-4">
-        <section id="users-section" className="grow shrink-0 basis-1.5 min-h-40 flex flex-col gap-2">
+        <section id="users-section" className="grow shrink-0 basis-1.5 min-h-40 flex flex-col gap-2 p-2">
           <UsersContainer>
             <UsersCombobox className="flex-none" />
             <UsersList className="flex-1 overflow-auto content-start rounded-secondary" />
           </UsersContainer>
         </section>
-        <section id="datetime-section" className="grow shrink-0 basis-1 h-fit min-h-fit flex flex-col items-center justify-start gap-6 p-2 rounded-secondary">
-          <HourRangeDrawer>
+        <section id="datetime-section" className="grow shrink-0 basis-1 h-fit min-h-fit flex flex-col items-center justify-start gap-2 p-2">
+          <HourRangeDrawer className="rounded-secondary self-start w-full sm:w-1/2 md:w-full flex justify-between px-4">
             <HourRangeText start={timeframe.inizio} end={timeframe.fine} className="text-3xl" />
             <ChevronsUpDown className="ml-5 size-6 shrink-0 opacity-50" />
           </HourRangeDrawer>
-          <DatePicker />
+          <DatePicker className="w-full rounded-secondary p-2 px-4" />
         </section>
       </aside>
       <Separator orientation="vertical" className="hidden lg:block" />

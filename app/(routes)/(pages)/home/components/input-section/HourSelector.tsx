@@ -9,11 +9,11 @@ type HourSelectorProps = {
   className?: string;
   minutes: number;
   setMinutes: React.Dispatch<React.SetStateAction<number>>;
-  min: number;
-  max: number;
+  disabledPlus: boolean;
+  disabledMinus: boolean
 }
 
-const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, setMinutes, min, max }) => {
+const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, setMinutes, disabledMinus, disabledPlus }) => {
   function handleBlur(event: React.ChangeEvent<HTMLInputElement>) {
     const targetValue = event.target.valueAsDate;
     if (targetValue) {
@@ -34,7 +34,7 @@ const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, set
   return (
     <div id={id} className={cn("h-max flex items-center space-x-2", className)}>
       <Button
-        disabled={minutes == min}
+        disabled={disabledMinus}
         size="icon"
         className="h-8 w-8 shrink-0 rounded-full"
         onClick={() => setMinutes(prev => prev - 10)}
@@ -50,7 +50,7 @@ const HourSelector: React.FC<HourSelectorProps> = ({ className, id, minutes, set
         className="h-max text-center text-2xl md:text-3xl lg:text-4xl 2xl:text-6xl"
       />
       <Button
-        disabled={minutes == max}
+        disabled={disabledPlus}
         size="icon"
         className="h-8 w-8 shrink-0 rounded-full"
         onClick={() => setMinutes(prev => prev + 10)}

@@ -56,19 +56,21 @@ const HourRangeSelector: React.FC<HourRangeSelectorProps> = ({ className }) => {
     checkBounds();
   }, [startMinutes, endMinutes]);
 
+  const diff = () => endMinutes - startMinutes;
+
   return (
     <div id="hour-range-selector" className={className}>
       <HourSelector
         id="start-selector"
-        min={minOra}
-        max={maxOra - minDurataPrenotazione}
+        disabledMinus={startMinutes == minOra}
+        disabledPlus={diff() - 10 < minDurataPrenotazione}
         minutes={startMinutes}
         setMinutes={setStartMinutes}
       />
       <HourSelector
         id="end-selector"
-        min={minOra + minDurataPrenotazione}
-        max={maxOra}
+        disabledMinus={diff() - 10 < minDurataPrenotazione}
+        disabledPlus={endMinutes == maxOra}
         minutes={endMinutes}
         setMinutes={setEndMinutes}
       />

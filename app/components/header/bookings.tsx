@@ -46,11 +46,11 @@ const Bookings: React.FC<BookingsProps> = () => {
           prenotazioni && prenotazioni.length == 0
             ? <div className="w-full text-center">Nessuna prenotazione</div>
             : prenotazioni
-              ? <ul className="w-full flex flex-col lg:grid lg:grid-cols-2 gap-3 items-center lg:xl:2xl">
+              ? <ul className="w-full flex overflow-auto flex-col lg:grid lg:grid-cols-2 gap-3 items-center lg:xl:2xl">
                 {
                   prenotazioni.map((prenotazione, i) => {
                     return (
-                      <li key={prenotazione.id} className="w-full flex flex-row justify-center">
+                      <li key={prenotazione.id} className="size-full flex flex-row justify-center">
                         <Booking
                           prenotazione={prenotazione}
                           n={i}

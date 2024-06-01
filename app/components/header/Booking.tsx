@@ -2,12 +2,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED } from "@/lib/backend/admin";
 import { Prenotazione, Utente } from "@/lib/backend/database";
 import { formatDate, minutesToString, stringToMinutes } from "@/lib/utils";
-import { CalendarIcon, Clock3Icon, DoorOpenIcon, TrashIcon } from "lucide-react";
+import { CalendarIcon, Clock3Icon, DoorOpenIcon, PersonStanding, TrashIcon, User2Icon } from "lucide-react";
 import Pulse from "./Pulse";
 import ConfirmDeletionDialog from "@/app/(routes)/(pages)/home/components/ConfirmDeletionDialog";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import CustomTooltip from "@/components/custom/CustomTooltip";
+import { usePartecipanti } from "@/app/(routes)/(pages)/home/components/HomeProvider";
 
 type BookingProps = {
   prenotazione: Prenotazione;
@@ -15,29 +16,29 @@ type BookingProps = {
   n: number;
 } & React.HTMLAttributes<HTMLDivElement>
 
-// async function fetchPartecipanti(prenotazioneId: number) {
-//   const res = await fetch(
-//     `/api/database/partecipazione/SELECT?prenotazioneId=${prenotazioneId}`,
-//     { method: "GET" }
-//   );
+async function fetchPartecipanti(prenotazioneId: number) {
+  const res = await fetch(
+    `/api/database/partecipazione/SELECT?prenotazioneId=${prenotazioneId}`,
+    { method: "GET" }
+  );
 
-//   const partecipanti = await res.json() as Utente[];
+  const partecipanti = await res.json() as Utente[];
 
-//   return partecipanti;
-// }
+  return partecipanti.length;
+}
 
 type Status = "In approvazione" | "Approvata" | "Rifiutata";
 type Color = "bg-yellow-500" | "bg-green-500" | "bg-red-500";
 
 const Booking: React.FC<BookingProps> = (props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  // const [partecipanti, setPartecipanti] = useState<Utente[]>([]);
+  const [partecipanti, setPartecipanti] = useState(0);
 
   const { prenotazione, n, ...others } = props;
 
-  // useEffect(() => {
-  //   fetchPartecipanti(prenotazione.id!).then(partecipanti => setPartecipanti(partecipanti));
-  // }, []);
+  useEffect(() => {
+    fetchPartecipanti(prenotazione.id!).then(num => setPartecipanti(num));
+  });
 
   let statusString: Status = "In approvazione";
   let colorString: Color = "bg-yellow-500";
@@ -60,9 +61,9 @@ const Booking: React.FC<BookingProps> = (props) => {
       <Card className="w-full overflow-y-auto relative">
         <CustomTooltip content="Elimina">
           <Button
-            variant={"ghost"}
+            variant="ghost"
             onClick={() => setDialogOpen(prev => !prev)}
-            className="absolute p-1 right-1 top-1 size-6"
+            className="absolute p-1 right-1 top-1 size-7 z-10"
           >
             <TrashIcon className="size-full" />
             <span className="sr-only">Elimina</span>
@@ -97,21 +98,10 @@ const Booking: React.FC<BookingProps> = (props) => {
               <DoorOpenIcon />
               Aula {prenotazione.id_aula}
             </span>
-            {/* {
-              partecipanti.length != 0 &&
-              <div>
-                <h1>Partecipanti</h1>
-                <ul>
-                  {
-                    partecipanti.map((partecipante, i) => (
-                      <ul key={i} className="text-xs">
-                        {partecipante.nome + " " + partecipante.classe}
-                      </ul>
-                    ))
-                  }
-                </ul>
-              </div>
-            } */}
+            <span className="flex flex-row gap-1">
+              <User2Icon />
+              {partecipanti + 1}
+            </span>
           </div>
         </CardContent>
       </Card>

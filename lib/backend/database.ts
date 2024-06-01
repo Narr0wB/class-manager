@@ -1,6 +1,7 @@
 import { PrenotazioneInfo, Ruleset } from "@/lib/backend/admin";
 import { minutesToString } from "../utils";
 import { query } from "./mysql";
+import * as sql from "mysql2";
 import { ResultSetHeader } from "mysql2";
 
 const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_utente, id_aula, data, status, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -17,10 +18,10 @@ const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fi
 const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
 const QUERY_SELECT_UTENTE_ID = "SELECT * FROM AM_Utenti WHERE id = ?";
 const QUERY_NUMBER_PRE_AFTER = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
-const QUERY_SELECT_UTENTE_EMAIL_LIKE = `
+const QUERY_SELECT_UTENTE_NAME_LIKE = `
   SELECT * FROM AM_Utenti
   WHERE
-    email LIKE CONCAT('%', ?, '%') AND
+    nome LIKE CONCAT('%', ?, '%') AND
     email != ? AND
     classe != "" AND
     type != "Amministratore"
@@ -147,10 +148,10 @@ export async function selectUtenteEmail(email: string) {
   return undefined;
 }
 
-export async function selectUtentiEmailLike(email_like: string, sessionEmail: string) {
+export async function selectUtentiNameLike(name_like: string, sessionEmail: string) {
   const ret = await query<Utente>(
-    QUERY_SELECT_UTENTE_EMAIL_LIKE,
-    [email_like, sessionEmail]
+    QUERY_SELECT_UTENTE_NAME_LIKE,
+    [name_like, sessionEmail]
   );
 
   return ret;

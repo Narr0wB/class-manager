@@ -86,14 +86,9 @@ const Floor: React.FC<FloorProps> = ({ id }) => {
 
   function handleLeave(e: React.MouseEvent | React.TouchEvent) {
     const target = e.target as HTMLElement;
-    const info = getAulaInfo(target);
     const text = target.parentElement!.querySelector("text");
     if (text) text.style.opacity = "1";
-    if (getAulaStatus(info) == "F") {
-      target.style.filter = "none";
-    } else if (getAulaStatus(info) == "B") {
-      target.style.filter = "brightness(0.5)";
-    }
+    target.style.filter = "none";
   }
 
   return (

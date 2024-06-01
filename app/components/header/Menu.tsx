@@ -20,6 +20,12 @@ import { useSheet } from "../LayoutProvider"
 import { Button } from "@/components/ui/button"
 import ThemeDropdown from "./ThemeDropdown"
 
+function getPage() {
+  if (!window) return undefined;
+  const parts = window.location.href.split("/");
+  return parts[parts.length - 1].trim();
+}
+
 type ProfileButtonProps = {
   className?: string;
   admin: boolean;
@@ -65,6 +71,7 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ className, admin }) => {
           <>
             {
               !admin &&
+              (getPage() == "login" || getPage() == "home") &&
               <DropdownMenuItem onClick={() => setSheetOpen(true)} className="flex flex-row items-center justify-start">
                 <CalendarIcon className="size-5" />
                 <span className="ml-2">Le mie prenotazioni</span>

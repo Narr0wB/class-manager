@@ -24,7 +24,7 @@ const HourRangeDrawer: React.FC<HourRangeDrawerProps> = (props) => {
     <Drawer>
       <CustomTooltip content="Seleziona l'ora" side="bottom">
         <DrawerTrigger asChild>
-          <Button id="hour-range-drawer-open" variant="ghost" className={cn("size-max p-2", className)} {...others}>
+          <Button id="hour-range-drawer-open" variant="outline" className={cn("h-max p-2", className)} {...others}>
             {children}
           </Button>
         </DrawerTrigger>
