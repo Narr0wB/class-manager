@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import config from "@/public/config.json";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -11,7 +12,7 @@ export function getValidDate() {
   const tomorrowDate = new Date(new Date().getTime() + Math.abs(new Date().getTimezoneOffset() * 60000));
   tomorrowDate.setDate(todayDate.getDate() + 1);
 
-  return todayDate.getHours() > 13 ? tomorrowDate : todayDate;
+  return todayDate.getHours() > config.min.ora_prenotazione ? tomorrowDate : todayDate;
 }
 
 export function minutesToString(minutes: number): string {

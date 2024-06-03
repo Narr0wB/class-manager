@@ -2,6 +2,7 @@ import { TimeFrame, Utente } from '@/lib/backend/database';
 import { getValidDate } from '@/lib/utils';
 import React, { createContext, SetStateAction, useContext, useState } from 'react';
 import { dash_rules, Ruleset } from '../../../../../lib/backend/admin';
+import config from "@/public/config.json";
 
 type HomeClientContextValue = {
   timeframe: TimeFrame,
@@ -63,7 +64,7 @@ type HomeProviderProps = {
 }
 
 const HomeProvider: React.FC<HomeProviderProps> = ({ children }) => {
-  const [timeframe, setTimeframe] = useState<TimeFrame>({ data: getValidDate(), inizio: 13 * 60 + 30, fine: 14 * 60 + 30 });
+  const [timeframe, setTimeframe] = useState<TimeFrame>({ data: getValidDate(), inizio: config.min.ora_prenotazione * 60, fine: config.min.ora_prenotazione * 60 + config.min.ore_durata_prenotazione * 60 });
   const [ruleset, setRuleset] = useState<Ruleset>({ dashRule: dash_rules.in_arrivo });
   const [trigger, setTrigger] = useState<boolean>(false);
   const [partecipanti, setPartecipanti] = useState<Utente[]>([]);

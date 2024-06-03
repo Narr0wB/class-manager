@@ -31,6 +31,7 @@ function Calendar({
 }: CalendarProps) {
   return (
     <DayPicker
+      disabled={date => date.getDay() == 0}
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       locale={locale}
