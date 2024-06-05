@@ -38,3 +38,20 @@ export function formatDate(date: Date): string {
     day: "2-digit"
   });
 }
+
+/**
+ *
+ * @param date a string in the format "dd/MM"
+ * @param year a 4 digit number representing the year
+ * @return A Date object representing the given date at the given year
+ */
+export function stringToDate(date: string, year: number): Date {
+  const [dayString, monthString] = date.split("/");
+
+  const day = Number(dayString.length == 0 ? "0" + dayString : dayString);
+
+  // Because the month number starts from 0
+  const month = Number(monthString) - 1;
+
+  return new Date(`${year}-${month}-${day}`);
+}
