@@ -19,6 +19,7 @@ const QUERY_SELECT_UTENTE_ID             = "SELECT * FROM AM_Utenti WHERE id = ?
 const QUERY_NUMBER_PRE_AFTER             = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
 const QUERY_INSERT_CALENDAR_RELATIONSHIP = "INSERT INTO AM_Calendar(id_event, id_prenotazione) VALUES (?, ?)";
 const QUERY_DELETE_CALENDAR_RELATIONSHIP = "DELETE FROM AM_Calendar WHERE id_event = ?"
+const QUERY_DELETE_RELATIONSHIP_PRE      = "DELETE FROM AM_Calendar WHERE id_prenotazione = ?"
 const QUERY_SELECT_CALENDAR_PRE          = "SELECT AM_Prenotazioni.* FROM AM_Prenotazioni JOIN AM_Calendar on AM_Prenotazioni.id = AM_Calendar.id_prenotazione WHERE AM_Calendar.id_event = ?"
 const QUERY_SELECT_UTENTE_NAME_LIKE = `
   SELECT * FROM AM_Utenti
@@ -326,6 +327,11 @@ export async function updatePrenotazione(ora_inizio: number, ora_fine: number, i
 }
 
 export async function deletePrenotazione(id_prenotazione: number) {
+  const res1 = await query(
+    QUERY_DELETE_RELATIONSHIP_PRE,
+    [id_prenotazione]
+  );
+
   const res = await query(
     QUERY_DELETE_PRE,
     [id_prenotazione]
