@@ -2,3 +2,4 @@ node_modules/
 .next
 .env
 restart-server.sh
+manager_service.json

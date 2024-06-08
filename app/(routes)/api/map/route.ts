@@ -2,6 +2,7 @@ import { parseSVG, Map, loadMap } from "@/lib/backend/map";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
+import { readTmpVar, writeTmpVar } from "@/lib/backend/tmp";
 
 let FLOOR0: Map | undefined;
 let FLOOR1: Map | undefined;
@@ -25,8 +26,6 @@ export async function GET(req: NextRequest) {
   // Lazy loading: if it is the first time that a user requests the loading of the asset
   // then load it once and keep it saved in memory, so that subsequent calls
   // do not trigger a re-read of the file, which could be expensive
-
-  // DO NOT USE Number(floorParam) BECAUSE IT DOES NOT WORK IN REACT!!!
   switch (floorParam) {
     case "1": {
       if (!FLOOR0) {

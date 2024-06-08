@@ -6,10 +6,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function getLocaleDate(date: Date): Date {
+  return new Date(date.getTime() + Math.abs(date.getTimezoneOffset() * 60000));
+}
+
 // After 13.00 it's not possible to book a classroom anymore
 export function getValidDate() {
-  const todayDate = new Date(new Date().getTime() + Math.abs(new Date().getTimezoneOffset() * 60000));
-  const tomorrowDate = new Date(new Date().getTime() + Math.abs(new Date().getTimezoneOffset() * 60000));
+  const todayDate = getLocaleDate(new Date);
+  const tomorrowDate = getLocaleDate(new Date);
   tomorrowDate.setDate(todayDate.getDate() + 1);
 
   return todayDate.getHours() > config.min.ora_prenotazione ? tomorrowDate : todayDate;

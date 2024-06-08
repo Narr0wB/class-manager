@@ -1,0 +1,1 @@
+00 23 * * * python3 /home/liceo/server/class-manager/cronjob.py

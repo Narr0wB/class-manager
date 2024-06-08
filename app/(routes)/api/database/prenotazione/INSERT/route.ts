@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/app/(routes)/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
 import config from "@/public/config.json";
+import { getLocaleDate } from "@/lib/utils";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -12,13 +13,12 @@ export async function POST(req: NextRequest) {
   const timeframe = obj.timeframe as TimeFrame;
 
   const prenotazioniCount = await selectPrenotazioneRangeCount(new Date(timeframe.data), timeframe.inizio, timeframe.fine, obj.id_aula);
-  console.log(prenotazioniCount);
   if (prenotazioniCount == undefined || prenotazioniCount != 0) return NextResponse.error();
 
   const user_id = await IDfromEmail(obj.user_email);
   if (!user_id) return NextResponse.error();
 
-  const pren_user = await numberPrenotazioniUtente(user_id, new Date());
+  const pren_user = await numberPrenotazioniUtente(user_id, getLocaleDate(new Date));
   if (pren_user > config.max.num_prenotazioni_utente - 1) return NextResponse.json(
     { error: "Hai già 3 prenotazioni attive! Se vuoi crearne una nuova prima eliminane una." },
     { status: 500 }
