@@ -13,7 +13,7 @@ type FiltersDropdownProps = {
 } & React.HTMLAttributes<HTMLDivElement>
 
 const FiltersDropdown: React.FC<FiltersDropdownProps> = (props) => {
-  const [ruleset, setRuleset] = useRuleset();
+  const [_, setRuleset] = useRuleset();
   const [from, setFrom] = useState<string>();
   const [to, setTo] = useState<string>();
 
@@ -33,23 +33,21 @@ const FiltersDropdown: React.FC<FiltersDropdownProps> = (props) => {
             <DropdownMenuLabel>Da</DropdownMenuLabel>
             <DateTimePicker className="border-0" value={from} onChange={(event) => {
               let date_time_from_rule = filter_rules.da_data_ora;
-              
-              
               setFrom(event.target.value);
 
               date_time_from_rule.values[0] = event.target.value.replace("T", " ") + ":00";
 
               setRuleset(prev => {
-                const new_rs = {...prev, filterDateHourFrom: date_time_from_rule}
+                const new_rs = { ...prev, filterDateHourFrom: date_time_from_rule }
                 return new_rs;
               })
-            }}/>
+            }} />
             <Button onClick={() => {
               setFrom("");
               setRuleset(prev => {
-                const new_ruleset = {...prev, filterDateHourFrom: undefined};
+                const new_ruleset = { ...prev, filterDateHourFrom: undefined };
                 return new_ruleset;
-              }); 
+              });
             }}>
               <X className="h-4 w-4" />
             </Button>
@@ -59,22 +57,22 @@ const FiltersDropdown: React.FC<FiltersDropdownProps> = (props) => {
             <DropdownMenuLabel>A&nbsp;&nbsp;</DropdownMenuLabel>
             <DateTimePicker className="border-0" value={to} onChange={(event) => {
               let date_time_to_rule = filter_rules.a_data_ora;
-              
+
               setTo(event.target.value);
-              
+
               date_time_to_rule.values[0] = event.target.value.replace("T", " ") + ":00";
 
               setRuleset(prev => {
-                const new_rs = {...prev, filterDateHourTo: date_time_to_rule}
+                const new_rs = { ...prev, filterDateHourTo: date_time_to_rule }
                 return new_rs;
               });
-            }}/>
+            }} />
             <Button onClick={() => {
               setTo("");
               setRuleset(prev => {
-                const new_ruleset = {...prev, filterDateHourTo: undefined};
+                const new_ruleset = { ...prev, filterDateHourTo: undefined };
                 return new_ruleset;
-              }); 
+              });
             }}>
               <X className="h-4 w-4" />
             </Button>
