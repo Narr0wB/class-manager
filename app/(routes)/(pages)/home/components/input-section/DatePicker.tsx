@@ -16,7 +16,6 @@ const DatePicker: React.FC<DatePickerProps> = ({ className }) => {
   const currentYear = new Date(Date.now()).getFullYear();
 
   return (
-
     <div id="date-picker" className={cn(className, "overflow-auto flex justify-center")}>
       <Calendar
         mode="single"
