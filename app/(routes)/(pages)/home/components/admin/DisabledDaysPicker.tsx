@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { isSameDay } from "date-fns";
-import { useEffect, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { formatDate } from "@/lib/utils";
+import { isBefore, isSameDay } from "date-fns";
+import { useCallback, useEffect, useState } from "react";
 import { DateRange, DayMouseEventHandler } from "react-day-picker";
 
 type Props = {
@@ -15,13 +17,15 @@ function capitalize(value: string) {
 
 function getDatesInRange(range: DateRange) {
   const dateArray = [];
-  const from = range.from as Date;
-  const to = range.to as Date;
+  const { from, to } = range;
+  if (!from || !to) return [];
 
-  while (from <= to) {
-    dateArray.push(from);
+  while (isBefore(from, to)) {
+    dateArray.push(new Date(from));
     from.setDate(from.getDate() + 1);
   }
+
+  dateArray.push(to);
 
   return dateArray;
 }
@@ -29,43 +33,74 @@ function getDatesInRange(range: DateRange) {
 export const DisabledDaysPicker = ({ }: Props) => {
   const modes = ["multiple", "range"];
   const [mode, setMode] = useState<"multiple" | "range">("multiple");
-  const [selectedDays, setSelectedDays] = useState<Date[]>([]);
-  const [currentRange, setCurrentRange] = useState<DateRange | undefined>();
+  const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+  const [rangeFrom, setRangeFrom] = useState<Date | undefined>();
+  const { toast } = useToast();
+
+  const writeDatesToFile = useCallback(async () => {
+    const res = await fetch("/api/disabled/write", { method: "POST", body: JSON.stringify(selectedDates) });
+    if (!res.ok) toast({
+      title: "Errore",
+      description: "Non è stato possibile salvare i giorni disabilitati",
+      variant: "destructive",
+      action: <Button variant="ghost" onClick={writeDatesToFile}>Riprova</Button>
+    });
+  }, [selectedDates]);
+
+  async function readDatesFromFile() {
+    const res = await fetch("/api/disabled/read", { method: "GET" });
+    if (!res.ok) toast({
+      title: "Errore",
+      description: "Non è stato possibile leggere i giorni precedentemente disabilitati",
+      variant: "destructive",
+      action: <Button variant="ghost" onClick={readDatesFromFile}>Riprova</Button>
+    });
+    const dates = res.json() as any as Date[];
+    return dates;
+  };
 
   useEffect(() => {
-    console.log("Current range: " + JSON.stringify(currentRange));
-  }, [currentRange?.from, currentRange?.to]);
+    readDatesFromFile().then(dates => setSelectedDates(dates));
+  }, []);
+
+  useEffect(() => {
+    writeDatesToFile();
+  }, [selectedDates.length]);
 
   const handleResetClick = () => {
-    setSelectedDays([]);
-    setCurrentRange(undefined);
+    setSelectedDates([]);
+    setRangeFrom(undefined);
   }
 
   const handleDayClick: DayMouseEventHandler = (day, modifiers) => {
-    console.log(day);
-
-    const selected = [...selectedDays];
+    let selected = Array.from(selectedDates);
 
     if (mode == "range") {
-      if (!currentRange?.from) {
-        setCurrentRange({ from: day });
-      } else if (currentRange.from && !currentRange.to) {
-        setCurrentRange(prev => {
-          const range: DateRange = { from: prev?.from, to: day };
-          return range;
-        });
-        console.log(getDatesInRange(currentRange));
+      if (!rangeFrom) setRangeFrom(day);
+      else if (isSameDay(day, rangeFrom)) setRangeFrom(undefined);
+      else {
+        const from = isBefore(rangeFrom, day) ? rangeFrom : day;
+        const to = isBefore(rangeFrom, day) ? day : rangeFrom;
+        const range: DateRange = { from, to };
+        const dates = getDatesInRange(range);
+        selected = selected.concat(dates);
+
         setMode("multiple");
+        setRangeFrom(undefined);
       }
     } else {
       if (modifiers.selected) {
-        const index = selectedDays.findIndex(d => isSameDay(day, d));
+        const index = selectedDates.findIndex(d => isSameDay(day, d));
         selected.splice(index, 1);
-      } else {
-        selected.push(day);
       }
-      setSelectedDays(selected);
+      else selected.push(day);
     }
+
+    // Convert it first to a set to remove eventual duplicates
+    // (use timestamps instead of directly using Date objects)
+    const times = new Set(selected.map(date => date.getTime()));
+    const dates = Array.from(times).map(time => new Date(time));
+    setSelectedDates(dates);
   };
 
   return (
@@ -93,11 +128,11 @@ export const DisabledDaysPicker = ({ }: Props) => {
       </div>
       <Calendar
         onDayClick={handleDayClick}
-        modifiers={{ selected: selectedDays }}
+        modifiers={{ selected: selectedDates }}
         footer={
           <div className="flex flex-row items-center gap-4">
             <h1>
-              {selectedDays.length == 0 ? "Seleziona uno o più giorni" : `Hai selezionato ${selectedDays.length} giorno/i`}
+              {selectedDates.length == 0 ? "Seleziona uno o più giorni" : `Hai selezionato ${selectedDates.length} giorno/i`}
             </h1>
             <Button variant="outline" onClick={handleResetClick}>
               Reset

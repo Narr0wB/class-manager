@@ -88,7 +88,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
         <ResizableHandle withHandle />
         {
           selected == "Calendario" ? <>
-            <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]}>
+            <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]} minSize={60}>
               <DisabledDaysPicker />
             </ResizablePanel>
           </>
