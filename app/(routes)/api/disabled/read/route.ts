@@ -10,7 +10,10 @@ export async function GET(req: NextRequest) {
   let disabledDates: Date[] = [];
 
   const jsonString = await readFile("disabled.json", "utf8");
-  disabledDates = JSON.parse(jsonString).disabled as Date[];
+  const datesString = JSON.parse(jsonString).disabled as string[];
+  disabledDates = datesString.map(dateString => new Date(new Date(dateString).setHours(0, 0, 0, 0)));
+
+  console.log(disabledDates);
 
   return NextResponse.json(disabledDates);
 }

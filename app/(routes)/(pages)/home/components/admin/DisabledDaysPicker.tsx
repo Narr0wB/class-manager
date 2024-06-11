@@ -2,13 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { formatDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { isBefore, isSameDay } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import { DateRange, DayMouseEventHandler } from "react-day-picker";
 
 type Props = {
-
 }
 
 function capitalize(value: string) {
@@ -35,17 +34,8 @@ export const DisabledDaysPicker = ({ }: Props) => {
   const [mode, setMode] = useState<"multiple" | "range">("multiple");
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [rangeFrom, setRangeFrom] = useState<Date | undefined>();
+  const [initialDisabledCount, setInitialDisabledCount] = useState(0);
   const { toast } = useToast();
-
-  const writeDatesToFile = useCallback(async () => {
-    const res = await fetch("/api/disabled/write", { method: "POST", body: JSON.stringify(selectedDates) });
-    if (!res.ok) toast({
-      title: "Errore",
-      description: "Non è stato possibile salvare i giorni disabilitati",
-      variant: "destructive",
-      action: <Button variant="ghost" onClick={writeDatesToFile}>Riprova</Button>
-    });
-  }, [selectedDates]);
 
   async function readDatesFromFile() {
     const res = await fetch("/api/disabled/read", { method: "GET" });
@@ -60,12 +50,21 @@ export const DisabledDaysPicker = ({ }: Props) => {
   };
 
   useEffect(() => {
-    readDatesFromFile().then(dates => setSelectedDates(dates));
+    readDatesFromFile().then(dates => {
+      setSelectedDates(dates);
+      setInitialDisabledCount(dates.length);
+    });
   }, []);
 
-  useEffect(() => {
-    writeDatesToFile();
-  }, [selectedDates.length]);
+  const writeDatesToFile = useCallback(async () => {
+    const res = await fetch("/api/disabled/write", { method: "POST", body: JSON.stringify(selectedDates) });
+    if (!res.ok) toast({
+      title: "Errore",
+      description: "Non è stato possibile salvare i giorni disabilitati",
+      variant: "destructive",
+      action: <Button variant="ghost" onClick={writeDatesToFile}>Riprova</Button>
+    });
+  }, [selectedDates]);
 
   const handleResetClick = () => {
     setSelectedDates([]);
@@ -98,7 +97,7 @@ export const DisabledDaysPicker = ({ }: Props) => {
 
     // Convert it first to a set to remove eventual duplicates
     // (use timestamps instead of directly using Date objects)
-    const times = new Set(selected.map(date => date.getTime()));
+    const times = new Set(selected.map(date => new Date(date).setHours(0, 0, 0, 0)));
     const dates = Array.from(times).map(time => new Date(time));
     setSelectedDates(dates);
   };
@@ -130,12 +129,17 @@ export const DisabledDaysPicker = ({ }: Props) => {
         onDayClick={handleDayClick}
         modifiers={{ selected: selectedDates }}
         footer={
-          <div className="flex flex-row items-center gap-4">
-            <h1>
-              {selectedDates.length == 0 ? "Seleziona uno o più giorni" : `Hai selezionato ${selectedDates.length} giorno/i`}
-            </h1>
-            <Button variant="outline" onClick={handleResetClick}>
-              Reset
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-row items-center gap-4">
+              <h1>
+                {selectedDates.length == 0 ? "Seleziona uno o più giorni" : `Hai selezionato ${selectedDates.length} giorno/i`}
+              </h1>
+              <Button variant="outline" onClick={handleResetClick}>
+                Reset
+              </Button>
+            </div>
+            <Button onClick={writeDatesToFile} className={cn(selectedDates.length == initialDisabledCount ? "hidden" : "block")}>
+              Salva
             </Button>
           </div>
         }
