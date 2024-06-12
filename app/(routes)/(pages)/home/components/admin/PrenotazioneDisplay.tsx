@@ -45,7 +45,7 @@ import {
 
 
 interface MailDisplayProps {
-  prenotazione: PrenotazioneInfo | null
+  prenotazione?: PrenotazioneInfo
 }
 
 export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {

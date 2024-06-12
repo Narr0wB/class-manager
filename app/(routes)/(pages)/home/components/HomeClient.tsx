@@ -17,6 +17,7 @@ import UsersContainer from './input-section/UsersContainer';
 import DateTimeInfo from './map-section/DateTimeInfo';
 import { ChevronsUpDown } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { getLocaleDate, getValidDate, getValidDate2, isDateInSchoolYear } from '@/lib/utils';
 
 export const FLOORS = {
   FLOOR_1: 1,
@@ -32,37 +33,46 @@ const HomeClient: React.FC = () => {
   const [floor, setFloor] = useState(FLOORS.FLOOR_1);
 
   return (
-    <div id="content" className="w-screen overflow-hidden h-fit lg:h-[calc(100vh-5rem)] flex flex-col lg:flex-row gap-4">
-      <aside id="input-panel" className="panel max-w-full lg:max-w-min lg:h-full overflow-y-auto flex flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col gap-4">
-        <section id="users-section" className="grow shrink-0 basis-1.5 min-h-40 flex flex-col gap-2 p-2">
-          <UsersContainer>
-            <UsersCombobox className="flex-none" />
-            <UsersList className="flex-1 overflow-auto content-start rounded-secondary" />
-          </UsersContainer>
-        </section>
-        <section id="datetime-section" className="grow shrink-0 basis-1 h-fit min-h-fit flex flex-col items-center justify-start gap-2 p-2">
-          <HourRangeDrawer className="rounded-secondary self-start w-full sm:w-1/2 md:w-full flex justify-between px-4">
-            <HourRangeText start={timeframe.inizio} end={timeframe.fine} className="text-3xl" />
-            <ChevronsUpDown className="ml-5 size-6 shrink-0 opacity-50" />
-          </HourRangeDrawer>
-          <DatePicker className="w-full rounded-secondary p-2 px-4" />
-        </section>
-      </aside>
-      <Separator orientation="vertical" className="hidden lg:block" />
-      <Separator orientation="horizontal" className="block lg:hidden" />
-      <main id="map-panel" className="panel grow flex-col">
-        <div className="flex flex-row justify-between items-center">
-          <FloorSelect items={["Primo piano", "Secondo piano", "Terzo piano"]} setFloor={setFloor} className="w-fit h-10" />
-          <DateTimeInfo timeframe={timeframe} />
+    isDateInSchoolYear(getLocaleDate(timeframe.data))
+      ? <div id="content" className="w-screen overflow-hidden h-fit lg:h-[calc(100vh-5rem)] flex flex-col lg:flex-row gap-4">
+        <aside id="input-panel" className="panel max-w-full lg:max-w-min lg:h-full overflow-y-auto flex flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col gap-4">
+          <section id="users-section" className="grow shrink-0 basis-1.5 min-h-40 flex flex-col gap-2 p-2">
+            <UsersContainer>
+              <UsersCombobox className="flex-none" />
+              <UsersList className="flex-1 overflow-auto content-start rounded-secondary" />
+            </UsersContainer>
+          </section>
+          <section id="datetime-section" className="grow shrink-0 basis-1 h-fit min-h-fit flex flex-col items-center justify-start gap-2 p-2">
+            <HourRangeDrawer className="rounded-secondary self-start w-full sm:w-1/2 md:w-full flex justify-between px-4">
+              <HourRangeText start={timeframe.inizio} end={timeframe.fine} className="text-3xl" />
+              <ChevronsUpDown className="ml-5 size-6 shrink-0 opacity-50" />
+            </HourRangeDrawer>
+            <DatePicker className="w-full rounded-secondary p-2 px-4" />
+          </section>
+        </aside>
+        <Separator orientation="vertical" className="hidden lg:block" />
+        <Separator orientation="horizontal" className="block lg:hidden" />
+        <main id="map-panel" className="panel grow flex-col">
+          <div className="flex flex-row justify-between items-center">
+            <FloorSelect items={["Primo piano", "Secondo piano", "Terzo piano"]} setFloor={setFloor} className="w-fit h-10" />
+            <DateTimeInfo timeframe={timeframe} />
+          </div>
+          <FloorsContainer floor={floor} className="w-full h-[calc(100%-1rem-2.5rem)] min-h-fit overflow-auto p-4">
+            <Floor id={FLOORS.FLOOR_1} />
+            <Floor id={FLOORS.FLOOR_2} />
+            <Floor id={FLOORS.FLOOR_3} />
+          </FloorsContainer>
+        </main>
+        <Bookings />
+      </div>
+      : <div
+        className="w-screen h-[calc(100vh-5rem)] bg-cover bg-center flex justify-center items-center"
+        style={{ backgroundImage: "url('https://liceocuneo.it/wp-content/uploads/2022/09/Liceo-Pellico-Peano-Cuneo.jpg')" }}
+      >
+        <div className="bg-secondary text-2xl sm:text-3xl md:text-4xl text-primary p-4 rounded-md select-none whitespace-nowrap">
+          {"Torna l'anno prossimo!"}
         </div>
-        <FloorsContainer floor={floor} className="w-full h-[calc(100%-1rem-2.5rem)] min-h-fit overflow-auto p-4">
-          <Floor id={FLOORS.FLOOR_1} />
-          <Floor id={FLOORS.FLOOR_2} />
-          <Floor id={FLOORS.FLOOR_3} />
-        </FloorsContainer>
-      </main>
-      <Bookings />
-    </div>
+      </div>
   )
 }
 

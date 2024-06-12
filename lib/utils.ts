@@ -1,6 +1,8 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import config from "@/public/config.json";
+import { isAfter, isBefore, isSameDay, isSunday } from "date-fns";
+import disabledList from "@/public/disabled.json";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -10,13 +12,40 @@ export function getLocaleDate(date: Date): Date {
   return new Date(date.getTime() + Math.abs(date.getTimezoneOffset() * 60000));
 }
 
-// After 13.00 it's not possible to book a classroom anymore
 export function getValidDate() {
   const todayDate = getLocaleDate(new Date);
   const tomorrowDate = getLocaleDate(new Date);
   tomorrowDate.setDate(todayDate.getDate() + 1);
 
   return todayDate.getHours() > config.min.ora_prenotazione ? tomorrowDate : todayDate;
+}
+
+export function getValidDate2() {
+  let date = getLocaleDate(new Date);
+  while (date.getHours() >= config.min.ora_prenotazione || isDateDisabled(date) || isSunday(date)) {
+    date.setDate(date.getDate() + 1);
+  }
+  return date;
+}
+
+export function isDateBeforeValidDate(date: Date) {
+  const validDate = getValidDate();
+  return isBefore(date, validDate);
+}
+
+export function isDateDisabled(date: Date) {
+  const disabledDays = disabledList.disabled.map(dateString => new Date(dateString));
+  return disabledDays.some(disabledDay => isSameDay(disabledDay, date));
+}
+
+export function isDateInSchoolYear(date: Date) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const isSecondHalf = month >= 0 && month <= 5; // 0 = January, 5 = june
+  const start = stringToDate(config.min.data, isSecondHalf ? year - 1 : year);
+  const end = stringToDate(config.max.data, isSecondHalf ? year : year + 1);
+
+  return isBefore(date, end) && isAfter(date, start);
 }
 
 export function minutesToString(minutes: number): string {
@@ -57,5 +86,5 @@ export function stringToDate(date: string, year: number): Date {
   // Because the month number starts from 0
   const month = Number(monthString) - 1;
 
-  return new Date(`${year}-${month}-${day}`);
+  return new Date(year, month, day);
 }

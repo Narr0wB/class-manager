@@ -9,8 +9,8 @@ import { redirect } from "next/navigation";
 
 const HomeClientAdmin: React.FC = () => {
   const session = useSession();
-  if (!session.data) redirect("/login"); 
-  
+  if (!session.data) redirect("/login");
+
   const [ruleset, setRuleset] = useRuleset();
   const [trigger, setTrigger] = useTrigger();
   const [cachelist, setCachelist] = useState<PrenotazioneInfo[]>();
@@ -40,12 +40,7 @@ const HomeClientAdmin: React.FC = () => {
 
   return (
     cachelist &&
-    <AdminDashboard
-      prenotazioni={cachelist}
-      defaultLayout={undefined}
-      defaultCollapsed={false}
-      navCollapsedSize={1000}
-    />
+    <AdminDashboard prenotazioni={cachelist} />
   );
 }
 

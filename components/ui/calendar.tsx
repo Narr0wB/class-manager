@@ -1,14 +1,10 @@
-"use client"
-
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker } from "react-day-picker"
 
-import { cn, getValidDate, stringToDate } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Locale } from "date-fns"
-
-import config from "@/public/config.json";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -26,19 +22,11 @@ const locale = {
 } as unknown as Locale;
 
 function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
-  const currentYear = new Date(Date.now()).getFullYear();
-
   return (
     <DayPicker
-      disabled={date => date.getDay() == 0}
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       locale={locale}
-      fromDate={stringToDate(config.min.data, currentYear)}
-      toDate={stringToDate(config.max.data, currentYear)}
-      // fromDate={getValidDate()}
-      // 9th of june
-      // toDate={new Date(new Date().setMonth(5, 10))}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
