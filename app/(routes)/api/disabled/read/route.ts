@@ -7,13 +7,8 @@ export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.error();
 
-  let disabledDates: Date[] = [];
+  const jsonString = await readFile("public/disabled.json", "utf8");
+  const dates = JSON.parse(jsonString).disabled as string[];
 
-  const jsonString = await readFile("disabled.json", "utf8");
-  const datesString = JSON.parse(jsonString).disabled as string[];
-  disabledDates = datesString.map(dateString => new Date(new Date(dateString).setHours(0, 0, 0, 0)));
-
-  console.log(disabledDates);
-
-  return NextResponse.json(disabledDates);
+  return NextResponse.json(dates);
 }

@@ -1,11 +1,12 @@
 "use client"
 
-import { cn, stringToDate } from '@/lib/utils';
+import { cn, isDateBeforeValidDate, isDateDisabled, stringToDate } from '@/lib/utils';
 import { TimeFrame } from '@/lib/backend/database';
 import { Calendar } from '@/components/ui/calendar';
 import { useTimeframe } from '../HomeProvider';
 
 import config from "@/public/config.json";
+import { isSunday } from 'date-fns';
 
 type DatePickerProps = {
   className?: string;
@@ -13,16 +14,16 @@ type DatePickerProps = {
 
 const DatePicker: React.FC<DatePickerProps> = ({ className }) => {
   const [timeframe, setTimeframe] = useTimeframe();
-  const currentYear = new Date(Date.now()).getFullYear();
+  const currentYear = new Date().getFullYear();
 
   return (
     <div id="date-picker" className={cn(className, "overflow-auto flex justify-center")}>
       <Calendar
         mode="single"
         selected={timeframe.data}
-        fromDate={stringToDate(config.min.data, currentYear)}
+        fromDate={stringToDate(config.min.data, currentYear - 1)}
         toDate={stringToDate(config.max.data, currentYear)}
-        disabled={date => date.getDay() == 0}
+        disabled={date => isDateDisabled(date) || isSunday(date) || isDateBeforeValidDate(date)}
         onSelect={date => {
           if (!date) return;
           const formatted = new Date(date.getTime() + Math.abs(date.getTimezoneOffset() * 60000));

@@ -49,7 +49,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
         // Just like in HomeClient (full screen height - header height)
         className="max-h-[calc(100vh-5rem)] flex flex-row items-stretch"
       >
-        <ResizablePanel defaultSize={defaultLayout[0]} minSize={20}>
+        <ResizablePanel defaultSize={defaultLayout[0]} minSize={15}>
           <Nav
             links={[
               {
@@ -79,6 +79,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
               {
                 title: "Calendario",
                 icon: CalendarIcon,
+                separated: true,
                 action: () => {
                   setSelected("Calendario");
                 }

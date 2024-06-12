@@ -9,7 +9,10 @@ export async function POST(req: NextRequest) {
 
   const disabledDates = await req.json() as Date[];
 
-  writeFile("disabled.json", JSON.stringify({ disabled: disabledDates }), _ => NextResponse.error());
+  writeFile(
+    "public/disabled.json",
+    JSON.stringify({ disabled: disabledDates }),
+    _ => NextResponse.error());
 
   return NextResponse.json("");
 }
