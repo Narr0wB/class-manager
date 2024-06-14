@@ -12,7 +12,7 @@ import React from "react";
 
 type ConfirmResetDialogProps = {
   open: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
-  action: () => Promise<void>
+  action: () => void
 }
 
 const ConfirmResetDialog: React.FC<ConfirmResetDialogProps> = ({ open, action }) => {
@@ -29,7 +29,7 @@ const ConfirmResetDialog: React.FC<ConfirmResetDialogProps> = ({ open, action })
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancella</AlertDialogCancel>
-          <AlertDialogAction onClick={async () => await action()}>
+          <AlertDialogAction onClick={action}>
             Conferma
           </AlertDialogAction>
         </AlertDialogFooter>

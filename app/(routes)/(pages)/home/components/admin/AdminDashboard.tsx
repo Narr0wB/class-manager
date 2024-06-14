@@ -39,7 +39,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
   const [prenotazione] = usePrenotazione()
   const [_, setRuleset] = useRuleset();
   const [selected, setSelected] = useState<"In arrivo" | "Approvate" | "Rifiutate" | "Calendario">("In arrivo");
-  const defaultLayout = [250, 450, 660];
+  const defaultLayout = [20, 50, 30];
 
   return (
     <TooltipProvider>
@@ -49,7 +49,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
         // Just like in HomeClient (full screen height - header height)
         className="max-h-[calc(100vh-5rem)] flex flex-row items-stretch"
       >
-        <ResizablePanel defaultSize={defaultLayout[0]} minSize={15}>
+        <ResizablePanel defaultSize={defaultLayout[0]} minSize={defaultLayout[0] - 10}>
           <Nav
             links={[
               {
@@ -89,12 +89,12 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
         <ResizableHandle withHandle />
         {
           selected == "Calendario" ? <>
-            <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]} minSize={60}>
+            <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]} minSize={(defaultLayout[1] + defaultLayout[2]) - 10}>
               <DisabledDaysPicker />
             </ResizablePanel>
           </>
             : <>
-              <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
+              <ResizablePanel defaultSize={defaultLayout[1]} minSize={defaultLayout[1] - 10}>
                 <div className="flex items-center justify-between px-4 py-2">
                   <h1 className="text-xl font-bold">{selected}</h1>
                   <FiltersDropdown />
@@ -130,7 +130,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
                 <PrenotazioneList items={prenotazioni} />
               </ResizablePanel>
               <ResizableHandle withHandle />
-              <ResizablePanel defaultSize={defaultLayout[2]} minSize={20}>
+              <ResizablePanel defaultSize={defaultLayout[2]} minSize={defaultLayout[2] - 10}>
                 <PrenotazioneDisplay prenotazione={prenotazioni.find(item => item.id === prenotazione.selected)} />
               </ResizablePanel>
             </>

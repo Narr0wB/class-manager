@@ -4,11 +4,13 @@ import { getServerSession } from "next-auth";
 import { readFile } from "fs/promises";
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.error();
+  // const session = await getServerSession(authOptions);
+  // if (!session) return NextResponse.error();
 
-  const jsonString = await readFile("public/disabled.json", "utf8");
-  const dates = JSON.parse(jsonString).disabled as string[];
+  const content = await readFile("public/disabled.json", "utf8");
+  if (content === "" || content === "[]") return NextResponse.json([]);
 
-  return NextResponse.json(dates);
+  const isoDates = JSON.parse(content) as string[];
+
+  return NextResponse.json(isoDates);
 }

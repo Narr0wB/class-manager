@@ -49,8 +49,9 @@ export const DisabledDaysPicker = ({ }: Props) => {
       });
       return [];
     }
-    const dates = await res.json() as string[];
-    return dates.map((dateString: string) => new Date(Date.parse(dateString)));
+
+    const isoDates = await res.json() as string[];
+    return isoDates.map(str => new Date(str));
   };
 
   useEffect(() => {
@@ -60,10 +61,13 @@ export const DisabledDaysPicker = ({ }: Props) => {
     });
   }, []);
 
-  const writeDatesToFile = useCallback(async () => {
+  const writeDatesToFile = async () => {
     const res = await fetch("/api/disabled/write", {
       method: "POST",
-      body: JSON.stringify(selectedDates.map(date => date.toISOString())),
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(selectedDates), // converts dates to ISO strings
     });
     if (!res.ok) {
       toast({
@@ -73,16 +77,15 @@ export const DisabledDaysPicker = ({ }: Props) => {
         action: <Button variant="ghost" onClick={writeDatesToFile}>Riprova</Button>
       });
     }
-  }, [selectedDates]);
+  };
 
-  const handleReset = async () => {
+  const handleReset = () => {
     setRangeFrom(undefined);
     setSelectedDates([]);
-    await handleSave();
   }
 
   const handleSave = async () => {
-    await writeDatesToFile();
+    writeDatesToFile().catch(err => console.error(err));
     setInitialDisabledCount(selectedDates.length);
   }
 
@@ -116,7 +119,6 @@ export const DisabledDaysPicker = ({ }: Props) => {
     // Convert it first to a set to remove eventual duplicates
     const set = new Set(selected.map(date => +date));
     const dates = Array.from(set).map(time => new Date(time));
-    console.log(dates);
     setSelectedDates(dates);
   };
 
@@ -151,14 +153,13 @@ export const DisabledDaysPicker = ({ }: Props) => {
         toYear={new Date().getFullYear() + 1}
         onDayClick={handleDayClick}
         selected={selectedDates}
-        disabled={date => date.getDay() == 0} // Sundays
         footer={
           <div className="flex flex-col gap-4 mt-5">
             <h1 className="text-center">
               {selectedDates.length === 0 ? "Seleziona uno o più giorni" : `Hai selezionato ${selectedDates.length == 1 ? "1 giorno" : selectedDates.length + " giorni"}`}
             </h1>
             <Button
-              onClick={handleSave}
+              onClick={async () => await handleSave()}
               className={cn(selectedDates.length === initialDisabledCount ? "hidden" : "block")}
             >
               Salva

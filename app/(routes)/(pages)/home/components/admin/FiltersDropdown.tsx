@@ -21,8 +21,8 @@ const FiltersDropdown: React.FC<FiltersDropdownProps> = (props) => {
     <div id="filters-dropdown" {...props}>
       <DropdownMenu>
         <CustomTooltip content="Filtri" side="bottom">
-          <DropdownMenuTrigger id="filters-button">
-            <Button variant={"secondary"} className="pl-2">
+          <DropdownMenuTrigger id="filters-button" asChild>
+            <Button variant="secondary" className="pl-2">
               <FilterIcon className="p-1" />
               Filtri
             </Button>

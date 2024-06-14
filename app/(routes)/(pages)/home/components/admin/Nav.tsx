@@ -19,25 +19,26 @@ export function Nav({ links }: NavProps) {
   const [selected, setSelected] = useState(0);
 
   return (
-    <nav className="grid gap-1">
+    <nav className="grid gap-2 pt-2">
       {
         links.map((link, index) => {
           return (
-            <>
+            <div key={link.title}>
               <Separator className={link.separated ? "block" : "hidden"} />
-              <Button
-                key={index}
-                variant={selected == index ? "default" : "ghost"}
-                onClick={() => {
-                  link.action();
-                  setSelected(index);
-                }}
-                className="justify-start mx-2 mt-1"
-              >
-                <link.icon className="mr-2 h-4 w-4" />
-                {link.title}
-              </Button>
-            </>
+              <div className="px-2">
+                <Button
+                  variant={selected == index ? "default" : "ghost"}
+                  onClick={() => {
+                    link.action();
+                    setSelected(index);
+                  }}
+                  className="w-full flex justify-start"
+                >
+                  <link.icon className="mr-2 h-4 w-4" />
+                  {link.title}
+                </Button>
+              </div>
+            </div>
           )
         })
       }
