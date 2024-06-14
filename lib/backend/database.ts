@@ -3,24 +3,24 @@ import { getLocaleDate, minutesToString } from "../utils";
 import { query } from "./mysql";
 import { ResultSetHeader } from "mysql2";
 
-const QUERY_INSERT_PRE                   = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_utente, id_aula, data, status, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?, ?)";
-const QUERY_SELECT_PRE_UTENTE            = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
-const QUERY_SELECT_PRE_RANGE             = "SELECT * FROM AM_Prenotazioni WHERE data = ? and ora_fine >= ? and ora_fine <= ? and id_aula = ?";
-const QUERY_SELECT_PRE_RANGE_COUNT       = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE data = ? and ora_fine >= ? and ora_fine <= ? and id_aula = ?";
-const QUERY_SELECT_PRE_UTENTE_AFTER      = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
-const QUERY_SELECT_PRE_RULESET           = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome, AM_Utenti.classe FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
-const QUERY_SELECT_UTENTE_PRE            = "SELECT AM_Utenti.* FROM AM_Prenotazioni JOIN AM_Utenti on AM_Prenotazioni.id_utente = AM_Utenti.id WHERE AM_Prenotazioni.id = ?"
-const QUERY_DELETE_PRE                   = "DELETE FROM AM_Prenotazioni WHERE id = ?"
-const QUERY_SELECT_PRE                   = "SELECT * FROM AM_Prenotazioni WHERE id = ?"
-const QUERY_UPDATE_PRE_STATUS            = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?"
-const QUERY_UPDATE_PRE_HOUR              = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fine = ? WHERE id = ?"
-const QUERY_SELECT_UTENTE_EMAIL          = "SELECT * FROM AM_Utenti WHERE email = ?";
-const QUERY_SELECT_UTENTE_ID             = "SELECT * FROM AM_Utenti WHERE id = ?";
-const QUERY_NUMBER_PRE_AFTER             = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
+const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_utente, id_aula, data, status, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?, ?)";
+const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
+const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? and ora_fine >= ? and ora_fine <= ? and id_aula = ?";
+const QUERY_SELECT_PRE_RANGE_COUNT = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE data = ? and ora_fine >= ? and ora_fine <= ? and id_aula = ?";
+const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
+const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome, AM_Utenti.classe FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
+const QUERY_SELECT_UTENTE_PRE = "SELECT AM_Utenti.* FROM AM_Prenotazioni JOIN AM_Utenti on AM_Prenotazioni.id_utente = AM_Utenti.id WHERE AM_Prenotazioni.id = ?"
+const QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id = ?"
+const QUERY_SELECT_PRE = "SELECT * FROM AM_Prenotazioni WHERE id = ?"
+const QUERY_UPDATE_PRE_STATUS = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?"
+const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fine = ? WHERE id = ?"
+const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
+const QUERY_SELECT_UTENTE_ID = "SELECT * FROM AM_Utenti WHERE id = ?";
+const QUERY_NUMBER_PRE_AFTER = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
 const QUERY_INSERT_CALENDAR_RELATIONSHIP = "INSERT INTO AM_Calendar(id_event, id_prenotazione) VALUES (?, ?)";
 const QUERY_DELETE_CALENDAR_RELATIONSHIP = "DELETE FROM AM_Calendar WHERE id_event = ?"
-const QUERY_DELETE_RELATIONSHIP_PRE      = "DELETE FROM AM_Calendar WHERE id_prenotazione = ?"
-const QUERY_SELECT_CALENDAR_PRE          = "SELECT AM_Prenotazioni.* FROM AM_Prenotazioni JOIN AM_Calendar on AM_Prenotazioni.id = AM_Calendar.id_prenotazione WHERE AM_Calendar.id_event = ?"
+const QUERY_DELETE_RELATIONSHIP_PRE = "DELETE FROM AM_Calendar WHERE id_prenotazione = ?"
+const QUERY_SELECT_CALENDAR_PRE = "SELECT AM_Prenotazioni.* FROM AM_Prenotazioni JOIN AM_Calendar on AM_Prenotazioni.id = AM_Calendar.id_prenotazione WHERE AM_Calendar.id_event = ?"
 const QUERY_SELECT_UTENTE_NAME_LIKE = `
   SELECT * FROM AM_Utenti
   WHERE
@@ -360,7 +360,7 @@ export async function insertPrenotazioniCalendar(event_id: string, aule: Number[
     ) as unknown as ResultSetHeader
 
     return res!.insertId;
-  }); 
+  });
 }
 
 export async function deleteCalendarRelationship(event_id: string) {

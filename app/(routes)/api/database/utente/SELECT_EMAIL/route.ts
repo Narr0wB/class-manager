@@ -1,4 +1,4 @@
-import { selectUtentiEmailLike } from "@/lib/backend/database";
+import { selectUtentiNameLike } from "@/lib/backend/database";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../../auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
   if (!emailParam) return NextResponse.error();
 
-  const res = await selectUtentiEmailLike(emailParam, session.user?.email!);
+  const res = await selectUtentiNameLike(emailParam, session.user?.email!);
 
   return NextResponse.json(res);
 }

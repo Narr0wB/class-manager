@@ -34,7 +34,7 @@ export function isDateBeforeValidDate(date: Date) {
 }
 
 export function isDateDisabled(date: Date) {
-  const disabledDays = disabledList.disabled.map(dateString => new Date(dateString));
+  const disabledDays = disabledList.map(dateString => new Date(dateString));
   return disabledDays.some(disabledDay => isSameDay(disabledDay, date));
 }
 
