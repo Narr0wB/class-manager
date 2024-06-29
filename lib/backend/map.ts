@@ -118,7 +118,7 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, lightTheme: boole
       // Check if there are any prenotazioni in the specified timeframe and if so act accordingly
       if (prenotazioni && prenotazioni.length != 0) {
         btn.color = COLORS.BOOKED;
-        btn.code = CODES.BOOKED + SEPARATOR + aula + SEPARATOR + stringToTime(prenotazioni[0].ora_inizio) + SEPARATOR + stringToTime(prenotazioni[0].ora_fine);
+        btn.code = CODES.BOOKED + SEPARATOR + aula + SEPARATOR + stringToTime(String(prenotazioni[0].ora_inizio)) + SEPARATOR + stringToTime(String(prenotazioni[0].ora_inizio));
       }
 
       rect.style.fill = btn.color;
