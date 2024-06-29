@@ -5,8 +5,8 @@ import { ResultSetHeader } from "mysql2";
 
 const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_utente, id_aula, data, status, ora_inizio, ora_fine) VALUES (?, ?, ?, ?, ?, ?, ?)";
 const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
-const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? and ora_fine >= ? and ora_fine <= ? and id_aula = ?";
-const QUERY_SELECT_PRE_RANGE_COUNT = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE data = ? and ora_fine >= ? and ora_fine <= ? and id_aula = ?";
+const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? and ((ora_inizio >= ? and ora_inizio <= ?) or (ora_fine >= ? and ora_fine <= ?)) and id_aula = ?";
+const QUERY_SELECT_PRE_RANGE_COUNT = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE data = ? and ((ora_inizio >= ? and ora_inizio <= ?) or (ora_fine >= ? and ora_fine <= ?)) and id_aula = ?";
 const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
 const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome, AM_Utenti.classe FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
 const QUERY_SELECT_UTENTE_PRE = "SELECT AM_Utenti.* FROM AM_Prenotazioni JOIN AM_Utenti on AM_Prenotazioni.id_utente = AM_Utenti.id WHERE AM_Prenotazioni.id = ?"
@@ -93,6 +93,11 @@ export const PRENOTAZIONE_REJECTED = 2;
 
 export function timeToString(time: number) {
   return Math.floor(time / 60).toString().padStart(2, "0") + ":" + (time % 60).toString().padStart(2, "0") + ":" + "00";
+}
+
+export function stringToTime(string: string) {
+  const numbers = string.split(":");
+  return Number(numbers[0]) * 60 + Number(numbers[1]);
 }
 
 export async function changeStatusPrenotazione(id: number, status: number) {
@@ -272,7 +277,7 @@ export async function selectPrenotazioneRange(date: Date, time_start: number, ti
 
   const ret = await query<Prenotazione>(
     QUERY_SELECT_PRE_RANGE,
-    [date_string, time_start_string, time_end_string, aula]
+    [date_string, time_start_string, time_end_string, time_start_string, time_end_string, aula]
   )
 
   return ret;
@@ -285,7 +290,7 @@ export async function selectPrenotazioneRangeCount(date: Date, time_start: numbe
 
   const ret = await query<number>(
     QUERY_SELECT_PRE_RANGE_COUNT,
-    [date_string, time_start_string, time_end_string, aula]
+    [date_string, time_start_string, time_end_string, time_start_string, time_end_string, aula]
   ) as any;
 
   if (!ret) return undefined;

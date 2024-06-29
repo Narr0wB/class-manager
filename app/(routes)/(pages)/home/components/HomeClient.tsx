@@ -17,7 +17,7 @@ import UsersContainer from './input-section/UsersContainer';
 import DateTimeInfo from './map-section/DateTimeInfo';
 import { ChevronsUpDown } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { getLocaleDate, getValidDate, getValidDate2, isDateInSchoolYear } from '@/lib/utils';
+import { isDateInSchoolYear } from '@/lib/utils';
 
 export const FLOORS = {
   FLOOR_1: 1,
@@ -33,7 +33,8 @@ const HomeClient: React.FC = () => {
   const [floor, setFloor] = useState(FLOORS.FLOOR_1);
 
   return (
-    isDateInSchoolYear(getLocaleDate(timeframe.data))
+    // isDateInSchoolYear(getLocaleDate(timeframe.data))
+    true
       ? <div id="content" className="w-screen overflow-hidden h-fit lg:h-[calc(100vh-5rem)] flex flex-col lg:flex-row gap-4">
         <aside id="input-panel" className="panel max-w-full lg:max-w-min lg:h-full overflow-y-auto flex flex-col justify-between md:grid md:grid-cols-2 lg:flex lg:flex-col gap-4">
           <section id="users-section" className="grow shrink-0 basis-1.5 min-h-40 flex flex-col gap-2 p-2">

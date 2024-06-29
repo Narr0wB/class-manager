@@ -1,6 +1,6 @@
 "use client"
 
-import { cn, isDateBeforeValidDate, isDateDisabled, stringToDate } from '@/lib/utils';
+import { cn, getLocaleDate, isDateBeforeValidDate, isDateDisabled, stringToDate } from '@/lib/utils';
 import { TimeFrame } from '@/lib/backend/database';
 import { Calendar } from '@/components/ui/calendar';
 import { useTimeframe } from '../HomeProvider';
@@ -26,7 +26,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ className }) => {
         disabled={date => isDateDisabled(date) || isSunday(date) || isDateBeforeValidDate(date)}
         onSelect={date => {
           if (!date) return;
-          const formatted = new Date(date.getTime() + Math.abs(date.getTimezoneOffset() * 60000));
+          const formatted = getLocaleDate(date);
 
           setTimeframe(prev => {
             const t: TimeFrame = {

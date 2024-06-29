@@ -14,10 +14,16 @@ export function getLocaleDate(date: Date): Date {
 
 export function getValidDate() {
   const todayDate = getLocaleDate(new Date);
+  todayDate.setHours(2, 0, 0, 0);
+
   const tomorrowDate = getLocaleDate(new Date);
   tomorrowDate.setDate(todayDate.getDate() + 1);
 
-  return todayDate.getHours() > config.min.ora_prenotazione ? tomorrowDate : todayDate;
+  let final_date = todayDate.getHours() > config.min.ora_prenotazione ? tomorrowDate : todayDate;
+
+  if (isSunday(final_date)) final_date.setDate(final_date.getDate() + 1);
+
+  return final_date;
 }
 
 export function getValidDate2() {
@@ -30,7 +36,9 @@ export function getValidDate2() {
 
 export function isDateBeforeValidDate(date: Date) {
   const validDate = getValidDate();
-  return isBefore(date, validDate);
+  const locale = getLocaleDate(date); 
+
+  return isBefore(locale, validDate);
 }
 
 export function isDateDisabled(date: Date) {

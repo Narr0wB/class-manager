@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Booking from './Booking';
 import { useSheet } from '../LayoutProvider';
 import Loading from '../Loading';
+import { getLocaleDate } from '@/lib/utils';
 
 type BookingsProps = {
 }
@@ -20,7 +21,7 @@ const Bookings: React.FC<BookingsProps> = () => {
 
   const fetchPrenotazioni = useCallback(async () => {
     const res = await fetch(
-      `/api/database/prenotazione/SELECT?userEmail=${session.data?.user?.email}&date=${new Date(new Date().getTime() + Math.abs(new Date().getTimezoneOffset() * 60000))}`,
+      `/api/database/prenotazione/SELECT?userEmail=${session.data?.user?.email}&date=${getLocaleDate(new Date())}`,
       { method: "GET" }
     );
 

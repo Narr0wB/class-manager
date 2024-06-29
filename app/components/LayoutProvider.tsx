@@ -1,5 +1,7 @@
 "use client"
 
+import config from "@/public/config.json";
+
 import React, { createContext, SetStateAction, useContext, useState } from 'react';
 
 type LayoutContextValue = {
@@ -59,8 +61,8 @@ type LayoutProviderProps = {
 const LayoutProvider: React.FC<LayoutProviderProps> = ({ children }) => {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [rerenderMapFlag, setRerenderMapFlag] = useState(false);
-  const [startMinutes, setStartMinutes] = useState(13 * 60 + 30);
-  const [endMinutes, setEndMinutes] = useState(14 * 60 + 30);
+  const [startMinutes, setStartMinutes] = useState(config.min.ora_prenotazione * 60);
+  const [endMinutes, setEndMinutes] = useState(config.min.ora_prenotazione * 60 + config.min.ore_durata_prenotazione * 60);
 
   const value = {
     sheetOpen: sheetOpen,

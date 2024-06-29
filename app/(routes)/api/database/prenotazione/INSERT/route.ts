@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
   const prenotazione: Prenotazione = {
     id_utente: user_id,
     id_aula: obj.id_aula,
-    data_ora_prenotazione: new Date(new Date().getTime() + Math.abs((new Date().getTimezoneOffset() * 60000))),
-    data: new Date(new Date(timeframe.data).getTime() + Math.abs((new Date(timeframe.data).getTimezoneOffset() * 60000))),
+    data_ora_prenotazione: getLocaleDate(new Date()),
+    data: getLocaleDate(new Date(timeframe.data)),
     status: PRENOTAZIONE_PENDING,
     ora_inizio: timeframe.inizio,
     ora_fine: timeframe.fine

@@ -1,5 +1,5 @@
 import { JSDOM } from "jsdom";
-import { selectPrenotazioneRange, TimeFrame } from "./database";
+import { selectPrenotazioneRange, stringToTime, TimeFrame, timeToString } from "./database";
 import fs from "fs";
 
 export const COLORS = {
@@ -118,7 +118,7 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, lightTheme: boole
       // Check if there are any prenotazioni in the specified timeframe and if so act accordingly
       if (prenotazioni && prenotazioni.length != 0) {
         btn.color = COLORS.BOOKED;
-        btn.code = CODES.BOOKED + SEPARATOR + aula + SEPARATOR + timeframe.inizio + SEPARATOR + timeframe.fine;
+        btn.code = CODES.BOOKED + SEPARATOR + aula + SEPARATOR + stringToTime(prenotazioni[0].ora_inizio) + SEPARATOR + stringToTime(prenotazioni[0].ora_fine);
       }
 
       rect.style.fill = btn.color;
