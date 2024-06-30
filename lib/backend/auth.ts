@@ -1,6 +1,6 @@
 import { ADMIN_USER, selectUtenteEmail } from "@/lib/backend/database"
 import { google } from "googleapis";
-import Credentials from "@/manager_service.json"
+// import Credentials from "@/manager_service.json"
 
 export default async function checkValidUser(userEmail: string) {
   // Check if user is in database
@@ -30,21 +30,21 @@ export async function checkIfAdmin(userEmail: string) {
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 
-export async function getCalendarioAPIToken() {
-  const auth = new google.auth.GoogleAuth({
-    credentials: {
-      client_email: Credentials.client_email,
-      private_key: Credentials.private_key
-    },
-    scopes: SCOPES,
-    clientOptions: {
-      subject: "calendario@liceocuneo.it"
-    }
-  });
-
-  const access_token = await auth.getAccessToken();
-  return access_token;
-}
+// export async function getCalendarioAPIToken() {
+//   const auth = new google.auth.GoogleAuth({
+//     credentials: {
+//       client_email: Credentials.client_email,
+//       private_key: Credentials.private_key
+//     },
+//     scopes: SCOPES,
+//     clientOptions: {
+//       subject: "calendario@liceocuneo.it"
+//     }
+//   });
+//
+//   const access_token = await auth.getAccessToken();
+//   return access_token;
+// }
 
 export function getSecondsUntil(targetHour: string): number {
   const [targetHours, targetMinutes] = targetHour.split(':').map(Number);
