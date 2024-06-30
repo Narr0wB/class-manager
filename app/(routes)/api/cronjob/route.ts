@@ -1,7 +1,6 @@
 import { getCalendarioAPIToken, getSecondsUntil } from "@/lib/backend/auth";
 import { google } from "googleapis";
 import { NextRequest, NextResponse } from "next/server";
-import { string } from "zod";
 
 export async function POST(req: NextRequest) {
     // Every day at 11 PM the cronjob daemon will send a post request to this api endpoint.

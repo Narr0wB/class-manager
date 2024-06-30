@@ -114,11 +114,11 @@ export async function parseSVG(map: Map, timeframe: TimeFrame, lightTheme: boole
       // Fetch all the prenotazioni for that specific aula that are in the same day
       // and which start time is in between the time range specified in the timeframe
       const prenotazioni = await selectPrenotazioneRange(timeframe.data, timeframe.inizio, timeframe.fine, aula);
-
+      
       // Check if there are any prenotazioni in the specified timeframe and if so act accordingly
       if (prenotazioni && prenotazioni.length != 0) {
         btn.color = COLORS.BOOKED;
-        btn.code = CODES.BOOKED + SEPARATOR + aula + SEPARATOR + stringToTime(String(prenotazioni[0].ora_inizio)) + SEPARATOR + stringToTime(String(prenotazioni[0].ora_inizio));
+        btn.code = CODES.BOOKED + SEPARATOR + aula + SEPARATOR + stringToTime(String(prenotazioni[0].ora_inizio)) + SEPARATOR + stringToTime(String(prenotazioni[0].ora_fine));
       }
 
       rect.style.fill = btn.color;
