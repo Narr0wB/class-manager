@@ -41,9 +41,9 @@ export function isDateBeforeValidDate(date: Date) {
   return isBefore(locale, validDate);
 }
 
-export function isDateDisabled(date: Date) {
-  const disabledDays = disabledList.map(dateString => new Date(dateString));
-  return disabledDays.some(disabledDay => isSameDay(disabledDay, date));
+export function isDateDisabled(date: Date, disabled: Date[]) {
+  // const disabledDays = disabledList.map(dateString => new Date(dateString));
+  return disabled.some(dd => isSameDay(dd, date));
 }
 
 export function isDateInSchoolYear(date: Date) {
