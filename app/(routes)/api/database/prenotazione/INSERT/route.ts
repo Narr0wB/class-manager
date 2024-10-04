@@ -2,6 +2,7 @@ import { IDfromEmail, PRENOTAZIONE_PENDING, Prenotazione, TimeFrame, insertParte
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/app/(routes)/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
+import disabledDates from '@/public/disabled.json'
 import config from "@/public/config.json";
 import { getLocaleDate, isDateDisabled } from "@/lib/utils";
 
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
   if (prenotazioniCount == undefined || prenotazioniCount != 0) return NextResponse.error();
 
   // Just in case someone has selected a day just before admins removed it
-  if (isDateDisabled(timeframe.data)) return NextResponse.error();
+  if (isDateDisabled(timeframe.data, disabledDates.map(str => new Date(str)))) return NextResponse.error();
 
   const user_id = await IDfromEmail(obj.user_email);
   if (!user_id) return NextResponse.error();
