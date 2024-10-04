@@ -1,6 +1,9 @@
 import requests
 import json
+import os 
 
-payload = {"token": "eddugamingaudio"}
+from dotenv import load_dotenv
+load_dotenv()
 
-r = requests.post("http://localhost:3000/api/cronjob", data=json.dumps(payload))
+payload = {"token": os.getenv("CRONJOB_TOKEN")}
+r = requests.post(os.getenv("ADDRESS_BASE") + "/api/cronjob", data=json.dumps(payload))

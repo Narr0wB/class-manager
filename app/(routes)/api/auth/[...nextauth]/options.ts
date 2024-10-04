@@ -27,8 +27,6 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ account, profile }) {
-      // if (account?.provider == "google" && await checkUser(profile?.email!)) {
-
       // TODO REMOVE THIS!! TEST ONLY
       if (account?.provider == "google" && await checkValidUser(profile?.email!)) {
         return true

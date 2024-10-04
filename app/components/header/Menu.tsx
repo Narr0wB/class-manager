@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button"
 import ThemeDropdown from "./ThemeDropdown"
 
 function getPage() {
-  if (!window) return undefined;
+  if (typeof window == "undefined") return undefined;
   const parts = window.location.href.split("/");
   return parts[parts.length - 1].trim();
 }

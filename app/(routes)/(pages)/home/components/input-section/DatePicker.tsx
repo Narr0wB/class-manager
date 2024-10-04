@@ -15,14 +15,17 @@ type DatePickerProps = {
 const DatePicker: React.FC<DatePickerProps> = ({ className }) => {
   const [timeframe, setTimeframe] = useTimeframe();
   const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth();
 
   return (
     <div id="date-picker" className={cn(className, "overflow-auto flex justify-center")}>
       <Calendar
         mode="single"
         selected={timeframe.data}
-        fromDate={stringToDate(config.min.data, currentYear - 1)}
-        toDate={stringToDate(config.max.data, currentYear)}
+        // If we are in a month that is before September, then our AS is CurrentYear - 1 / CurrentYear
+        // else, if we are in September or after, then our AS is CurrentYear / CurrentYear + 1
+        fromDate={stringToDate(config.min.data, currentMonth < 9 ? currentYear - 1 : currentYear)}
+        toDate={stringToDate(config.max.data, currentMonth < 9 ? currentYear : currentYear + 1)}
         disabled={date => isDateDisabled(date) || isSunday(date) || isDateBeforeValidDate(date)}
         onSelect={date => {
           if (!date) return;

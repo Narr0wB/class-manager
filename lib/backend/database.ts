@@ -7,7 +7,7 @@ const QUERY_INSERT_PRE = "INSERT INTO AM_Prenotazioni(data_ora_prenotazione, id_
 const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ?";
 const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? and ((? BETWEEN ora_inizio and ora_fine) or (? BETWEEN ora_inizio and ora_fine) or (ora_inizio BETWEEN ? and ?)) and id_aula = ?";
 const QUERY_SELECT_PRE_RANGE_COUNT = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE data = ? and ((? BETWEEN ora_inizio and ora_fine) or (? BETWEEN ora_inizio and ora_fine) or (ora_inizio BETWEEN ? and ?)) and id_aula = ?";
-const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data > ?";
+const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
 const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome, AM_Utenti.classe FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
 const QUERY_SELECT_UTENTE_PRE = "SELECT AM_Utenti.* FROM AM_Prenotazioni JOIN AM_Utenti on AM_Prenotazioni.id_utente = AM_Utenti.id WHERE AM_Prenotazioni.id = ?"
 const QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id = ?"
@@ -101,7 +101,6 @@ export function stringToTime(string: string) {
 }
 
 export async function changeStatusPrenotazione(id: number, status: number) {
-
   const res = await query(
     QUERY_UPDATE_PRE_STATUS,
     [status, id]
@@ -111,7 +110,7 @@ export async function changeStatusPrenotazione(id: number, status: number) {
 }
 
 export async function insertPrenotazione(pren: Prenotazione) {
-  const formattedDate = pren.data.toISOString().slice(0, 19).replace('T', ' ');
+  const formattedDate = pren.data.toISOString().slice(0, 10);
   const formattedDateInsertion = pren.data_ora_prenotazione.toISOString().slice(0, 19).replace('T', ' ');
 
   const ora_inizio_string = minutesToString(pren.ora_inizio);
@@ -304,7 +303,7 @@ export async function selectPrenotazioniUser(email_utente: string, data: Date | 
   const id_utente = await IDfromEmail(email_utente);
 
   if (data) {
-    const date_start_string = data.toISOString().slice(0, 19).replace('T', ' ');
+    const date_start_string = data.toISOString().slice(0, 10);
 
     const ret = await query<Prenotazione>(
       QUERY_SELECT_PRE_UTENTE_AFTER,
@@ -350,7 +349,7 @@ export async function deletePrenotazione(id_prenotazione: number) {
 
 const id_calendar_account = 1;
 export async function insertPrenotazioniCalendar(event_id: string, aule: Number[], data: Date, ora_inizio: string, ora_fine: string) {
-  const formattedDate = data.toISOString().slice(0, 19).replace('T', ' ');
+  const formattedDate = data.toISOString().slice(0, 10);
   const formattedDateInsertion = getLocaleDate(new Date).toISOString().slice(0, 19).replace('T', ' ');
 
   aule.forEach(async (aula) => {
