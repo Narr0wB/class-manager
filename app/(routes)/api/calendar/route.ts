@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
       const event_end_ms   = new Date(event_end.dateTime!).getTime() + Math.abs(new Date().getTimezoneOffset() * 60000);
       const event_date     = new Date(event_start_ms - event_start_ms % (1000 * 60 * 60 * 24));
       
-      // Check if the event start and end are on the same day
+      // Check if the event's start and end are on the same day
       if (Math.floor(event_start_ms / (1000 * 60 * 60 * 24)) != Math.floor(event_end_ms / (1000 * 60 * 60 * 24))) return;
 
       const start_minutes = Math.floor((event_start_ms % (1000 * 60 * 60 * 24)) / (1000 * 60));
