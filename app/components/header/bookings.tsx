@@ -26,7 +26,7 @@ const Bookings: React.FC<BookingsProps> = () => {
     );
 
     const prenotazioni = await res.json();
-
+    
     return prenotazioni;
   }, [timeframe.data, session.data?.user?.email, sheetOpen]);
 

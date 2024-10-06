@@ -28,7 +28,7 @@ export function getValidDate() {
 
 export function getValidDate2() {
   let date = getLocaleDate(new Date);
-  while (date.getHours() >= config.min.ora_prenotazione || isDateDisabled(date) || isSunday(date)) {
+  while (date.getHours() >= config.min.ora_prenotazione || isDateDisabled(date, disabledList.map(dateString => new Date(dateString))) || isSunday(date)) {
     date.setDate(date.getDate() + 1);
   }
   return date;
@@ -41,9 +41,9 @@ export function isDateBeforeValidDate(date: Date) {
   return isBefore(locale, validDate);
 }
 
-export function isDateDisabled(date: Date) {
-  const disabledDays = disabledList.map(dateString => new Date(dateString));
-  return disabledDays.some(disabledDay => isSameDay(disabledDay, date));
+export function isDateDisabled(date: Date, disabled: Date[]) {
+  // const disabledDays = disabledList.map(dateString => new Date(dateString));
+  return disabled.some(dd => isSameDay(dd, date));
 }
 
 export function isDateInSchoolYear(date: Date) {

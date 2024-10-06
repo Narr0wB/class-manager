@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
-import { isBefore, isSameDay } from "date-fns";
+import { cn, isDateBeforeValidDate } from "@/lib/utils";
+import { isBefore, isSameDay, isSunday } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import { DateRange, DayMouseEventHandler } from "react-day-picker";
 import ConfirmResetDialog from "./ConfirmResetDialog";
@@ -38,6 +38,13 @@ export const DisabledDaysPicker = ({ }: Props) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const { toast } = useToast();
 
+  useEffect(() => {
+    readDatesFromFile().then(dates => {
+      setSelectedDates(dates);
+      setInitialDisabledCount(dates.length);
+    });
+  }, []);
+
   async function readDatesFromFile() {
     const res = await fetch("/api/disabled/read", { method: "GET" });
     if (!res.ok) {
@@ -53,13 +60,6 @@ export const DisabledDaysPicker = ({ }: Props) => {
     const isoDates = await res.json() as string[];
     return isoDates.map(str => new Date(str));
   };
-
-  useEffect(() => {
-    readDatesFromFile().then(dates => {
-      setSelectedDates(dates);
-      setInitialDisabledCount(dates.length);
-    });
-  }, []);
 
   const writeDatesToFile = async () => {
     const res = await fetch("/api/disabled/write", {
@@ -153,6 +153,8 @@ export const DisabledDaysPicker = ({ }: Props) => {
         toYear={new Date().getFullYear() + 1}
         onDayClick={handleDayClick}
         selected={selectedDates}
+        disabled={date => isDateBeforeValidDate(date) || isSunday(date)}
+        showOutsideDays={false}
         footer={
           <div className="flex flex-col gap-4 mt-5">
             <h1 className="text-center">
@@ -172,3 +174,5 @@ export const DisabledDaysPicker = ({ }: Props) => {
     </div>
   );
 }
+
+export default DisabledDaysPicker;
