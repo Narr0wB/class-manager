@@ -201,6 +201,17 @@ export async function numberPrenotazioniUtente(id_utente: number, after: Date) {
   return number![0]["COUNT(*)"];
 }
 
+export async function selectPrenotazione(pren_id: number) {
+  const res = await query<Prenotazione>(
+    QUERY_SELECT_PRE,
+    [pren_id]
+  );
+
+  if (!res) return undefined;
+
+  return res[0];
+}
+
 export async function statusPrenotazione(id_pren: number) {
   const ret = await query<Prenotazione>(
     QUERY_SELECT_PRE,
@@ -229,7 +240,6 @@ export async function selectPrenotazioneOn(date: Date) {
 
   return res;
 }
-
 
 export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, before: Date) {
   let query_string: string = QUERY_SELECT_PRE_RULESET + ruleset.dashRule.sqlRule;
