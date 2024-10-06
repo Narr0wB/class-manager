@@ -1,15 +1,13 @@
 "use client"
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../../../../components/ui/popover";
 import { Button } from "../../../../../../components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Command, CommandInput, CommandItem, CommandList, CommandEmpty } from "../../../../../../components/ui/command";
 import { cn } from "@/lib/utils";
-import { usePartecipanti } from "../HomeProvider";
 import { UsersUtility, getUserInfo } from "./UsersContainer";
 import Spinner from "./Spinner";
-import { useSession } from "next-auth/react";
 import { Utente } from "@/lib/backend/database";
 
 type UsersComboboxProps = {
@@ -22,10 +20,10 @@ const parseInfo = (info: string) => info.trim().split(", ");
 type CommandItemProps = React.ComponentProps<typeof CommandItem>;
 type UserItemProps = {
   user: Utente,
+  partecipanti: Utente[]
 } & Omit<CommandItemProps, "value">
 const UserItem: React.FC<UserItemProps> = (props) => {
-  const { user, ...others } = props;
-  const [partecipanti, _] = usePartecipanti();
+  const { user, partecipanti, ...others } = props;
 
   return (
     <CommandItem
@@ -35,7 +33,7 @@ const UserItem: React.FC<UserItemProps> = (props) => {
       <Check
         className={cn(
           "mr-2 h-4 w-4",
-          isUserPartecipante(user, partecipanti) ? "opacity-100" : "opacity-0"
+          isUserPartecipante(user, partecipanti!) ? "opacity-100" : "opacity-0"
         )}
       />
       {getUserInfo(user)}
@@ -44,14 +42,13 @@ const UserItem: React.FC<UserItemProps> = (props) => {
 }
 
 const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
-  const [partecipanti, _] = usePartecipanti();
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<Utente[]>([]);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [loading, setLoading] = useState(false);
   const [inputEmpty, setInputEmpty] = useState(true);
 
-  const { className, removePartecipante, addPartecipante, ...others } = props;
+  const { className, partecipanti, removePartecipante, addPartecipante, ...others } = props;
 
   const getUsers = async (name: string) => {
     const res = await fetch(
@@ -94,11 +91,11 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
 
   const listUsers = () => {
     return users.map(user => (
-      <UserItem key={user.id} user={user} onSelect={async info => {
+      <UserItem key={user.id} user={user} partecipanti={partecipanti!} onSelect={async info => {
         // There will always be a user since I'm able to select the item
         const [nome, _] = parseInfo(info);
         const user = users.find(user => user.nome === nome)!;
-        isUserPartecipante(user, partecipanti) ? removePartecipante!(user) : addPartecipante!(user);
+        isUserPartecipante(user, partecipanti!) ? removePartecipante!(user) : addPartecipante!(user);
 
         // Close the combobox
         setOpen(false);
@@ -108,8 +105,8 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
   }
 
   const listPartecipanti = () => (
-    partecipanti.map(partecipante => (
-      <UserItem key={partecipante.id} user={partecipante} onSelect={async () => removePartecipante!(partecipante)} />
+    partecipanti?.map(partecipante => (
+      <UserItem key={partecipante.id} user={partecipante} partecipanti={partecipanti!} onSelect={async () => removePartecipante!(partecipante)} />
     ))
   )
 
@@ -122,7 +119,7 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
 
     if (users.length != 0) return listUsers();
 
-    if (partecipanti.length != 0 && inputEmpty) return (
+    if (partecipanti?.length != 0 && inputEmpty) return (
       <>
         <p className="p-2">Partecipanti aggiunti</p>
         {listPartecipanti()}
@@ -130,12 +127,14 @@ const UsersCombobox: React.FC<UsersComboboxProps> = (props) => {
     );
   }
 
+  const num_partecipanti = partecipanti?.length;
+
   return (
-    <div id="users-combobox" className={cn(partecipanti.length != 0 ? "flex flex-row-reverse justify-between items-center" : "", className)} {...others}>
+    <div id="users-combobox" className={cn(num_partecipanti != 0 ? "flex flex-row-reverse justify-between items-center" : "", className)} {...others}>
       {
-        partecipanti.length != 0 &&
+        num_partecipanti != 0 &&
         <div className="rounded-secondary border-primary border-[3px] select-none rounded-full h-3/4 aspect-square flex items-center justify-center">
-          {partecipanti.length}
+          {num_partecipanti}
         </div>
       }
       <div>

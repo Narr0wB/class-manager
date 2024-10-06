@@ -3,21 +3,19 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { XIcon } from "lucide-react";
 import React from "react";
-import { usePartecipanti } from "../HomeProvider";
 import { UsersUtility, getUserInfo } from "./UsersContainer";
 
 type UsersListProps = {
 } & Partial<UsersUtility> & React.HTMLAttributes<HTMLDivElement>
 
 const UsersList: React.FC<UsersListProps> = (props) => {
-  const { className, removePartecipante, addPartecipante, ...others } = props;
-  const [partecipanti, _] = usePartecipanti();
+  const { className, partecipanti, removePartecipante, addPartecipante, ...others } = props;
 
   return (
     <div id="users-list" className={cn("flex flex-wrap overflow-y-scroll gap-2 p-2", className)} {...others}>
       {
-        partecipanti.length != 0
-          ? partecipanti.map(partecipante => (
+        partecipanti?.length != 0
+          ? partecipanti?.map(partecipante => (
             <Badge key={partecipante.id} className="size-fit text-xs md:text-xl lg:text-base py-0 pl-0">
               <Button
                 onClick={() => removePartecipante!(partecipante)}

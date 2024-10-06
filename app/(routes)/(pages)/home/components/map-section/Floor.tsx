@@ -16,6 +16,7 @@ type FloorProps = {
 const Floor: React.FC<FloorProps> = ({ id }) => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [infoDialogOpen, setInfoDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedAula, setSelectedAula] = useState("");
   const [startHour, setStartHour] = useState("");
   const [endHour, setEndHour] = useState("");
