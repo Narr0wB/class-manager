@@ -30,7 +30,7 @@ const HomeClient: React.FC = () => {
   if (!session.data) redirect("/login");
 
   const [timeframe, _] = useTimeframe();
-  const [floor, setFloor] = useState(FLOORS.FLOOR_1);
+  const [floor, setFloor] = useState(FLOORS.FLOOR_2);
 
   return (
     // isDateInSchoolYear(getLocaleDate(timeframe.data))
