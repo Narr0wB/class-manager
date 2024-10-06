@@ -2,7 +2,7 @@
 
 import { useTimeframe } from '@/app/(routes)/(pages)/home/components/HomeProvider';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Prenotazione, Utente } from '@/lib/backend/database';
+import { Prenotazione } from '@/lib/backend/database';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
 import Booking from './Booking';
@@ -26,7 +26,7 @@ const Bookings: React.FC<BookingsProps> = () => {
     );
 
     const prenotazioni = await res.json();
-    
+
     return prenotazioni;
   }, [timeframe.data, session.data?.user?.email, sheetOpen]);
 

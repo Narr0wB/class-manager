@@ -2,17 +2,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED } from "@/lib/backend/admin";
 import { Prenotazione, Utente } from "@/lib/backend/database";
 import { formatDate, minutesToString, stringToMinutes } from "@/lib/utils";
-import { CalendarIcon, Clock3Icon, DoorOpenIcon, PersonStanding, TrashIcon, User2Icon } from "lucide-react";
+import { CalendarIcon, Clock3Icon, DoorOpenIcon, EditIcon, MenuSquareIcon, TrashIcon, User2Icon } from "lucide-react";
 import Pulse from "./Pulse";
 import ConfirmDeletionDialog from "@/app/(routes)/(pages)/home/components/ConfirmDeletionDialog";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import CustomTooltip from "@/components/custom/CustomTooltip";
-import { usePartecipanti } from "@/app/(routes)/(pages)/home/components/HomeProvider";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import EditPrenotazioneDialog from "@/app/(routes)/(pages)/home/components/EditPrenotazioneDialog";
 
 type BookingProps = {
   prenotazione: Prenotazione;
-  partecipanti?: Utente[];
   n: number;
 } & React.HTMLAttributes<HTMLDivElement>
 
@@ -24,21 +24,22 @@ async function fetchPartecipanti(prenotazioneId: number) {
 
   const partecipanti = await res.json() as Utente[];
 
-  return partecipanti.length;
+  return partecipanti;
 }
 
 type Status = "In approvazione" | "Approvata" | "Rifiutata";
 type Color = "bg-yellow-500" | "bg-green-500" | "bg-red-500";
 
 const Booking: React.FC<BookingProps> = (props) => {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [partecipanti, setPartecipanti] = useState(0);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [partecipanti, setPartecipanti] = useState<Utente[] | null>(null);
 
   const { prenotazione, n, ...others } = props;
 
   useEffect(() => {
-    fetchPartecipanti(prenotazione.id!).then(num => setPartecipanti(num));
-  });
+    fetchPartecipanti(prenotazione.id!).then(parts => setPartecipanti(parts));
+  }, []);
 
   let statusString: Status = "In approvazione";
   let colorString: Color = "bg-yellow-500";
@@ -59,16 +60,25 @@ const Booking: React.FC<BookingProps> = (props) => {
   return (
     <>
       <Card className="w-full overflow-y-auto relative">
-        <CustomTooltip content="Elimina">
-          <Button
-            variant="ghost"
-            onClick={() => setDialogOpen(prev => !prev)}
-            className="absolute p-1 right-1 top-1 size-7 z-10"
-          >
-            <TrashIcon className="size-full" />
-            <span className="sr-only">Elimina</span>
-          </Button>
-        </CustomTooltip>
+        <DropdownMenu>
+          <CustomTooltip content="Altro">
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="absolute p-1 right-1 top-1 size-7 z-10">
+                <MenuSquareIcon className="size-full" />
+              </Button>
+            </DropdownMenuTrigger>
+          </CustomTooltip>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => setEditDialogOpen(prev => !prev)}>
+              <EditIcon className="size-5" />
+              <span className="ml-2">Modifica</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setDeleteDialogOpen(prev => !prev)}>
+              <TrashIcon className="size-5" />
+              <span className="ml-2">Elimina</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <CardHeader className="text-center p-4 space-y-0">
           <div className="relative">
             <Pulse color={colorString} className="absolute top-0 bottom-0 m-auto" />
@@ -100,12 +110,13 @@ const Booking: React.FC<BookingProps> = (props) => {
             </span>
             <span className="flex flex-row gap-1">
               <User2Icon />
-              {partecipanti + 1}
+              {(partecipanti?.length || 0) + 1}
             </span>
           </div>
         </CardContent>
       </Card>
-      <ConfirmDeletionDialog prenotazioneId={props.prenotazione.id!} open={dialogOpen} setDialogOpen={setDialogOpen} />
+      <ConfirmDeletionDialog prenotazioneId={props.prenotazione.id!} open={deleteDialogOpen} setDialogOpen={setDeleteDialogOpen} />
+      <EditPrenotazioneDialog key={Number(partecipanti)} prenotazioneId={props.prenotazione.id!} partecipanti={partecipanti} open={editDialogOpen} setDialogOpen={setEditDialogOpen} />
     </>
   )
 }

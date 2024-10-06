@@ -12,7 +12,7 @@ import React from "react";
 type InfoPrenotazioneDialogProps = {
   open: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
   startHour: string,
-  endHour: string
+  endHour: string,
 }
 
 const InfoPrenotazioneDialog: React.FC<InfoPrenotazioneDialogProps> = ({ open, startHour, endHour }) => {
@@ -28,7 +28,7 @@ const InfoPrenotazioneDialog: React.FC<InfoPrenotazioneDialogProps> = ({ open, s
               `Quest'aula è prenotata dalle ore 
               ${startHour}
               alle ore 
-              ${endHour}
+              ${endHour} 
               `
             }
           </AlertDialogDescription>

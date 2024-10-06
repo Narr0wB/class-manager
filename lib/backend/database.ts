@@ -8,19 +8,20 @@ const QUERY_SELECT_PRE_UTENTE = "SELECT * FROM AM_Prenotazioni WHERE id_utente =
 const QUERY_SELECT_PRE_RANGE = "SELECT * FROM AM_Prenotazioni WHERE data = ? and ((? BETWEEN ora_inizio and ora_fine) or (? BETWEEN ora_inizio and ora_fine) or (ora_inizio BETWEEN ? and ?)) and id_aula = ?";
 const QUERY_SELECT_PRE_RANGE_COUNT = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE data = ? and ((? BETWEEN ora_inizio and ora_fine) or (? BETWEEN ora_inizio and ora_fine) or (ora_inizio BETWEEN ? and ?)) and id_aula = ?";
 const QUERY_SELECT_PRE_UTENTE_AFTER = "SELECT * FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
-const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome, AM_Utenti.classe FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE "
-const QUERY_SELECT_UTENTE_PRE = "SELECT AM_Utenti.* FROM AM_Prenotazioni JOIN AM_Utenti on AM_Prenotazioni.id_utente = AM_Utenti.id WHERE AM_Prenotazioni.id = ?"
-const QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id = ?"
-const QUERY_SELECT_PRE = "SELECT * FROM AM_Prenotazioni WHERE id = ?"
-const QUERY_UPDATE_PRE_STATUS = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?"
-const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fine = ? WHERE id = ?"
+const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, AM_Utenti.nome, AM_Utenti.classe FROM AM_Prenotazioni JOIN AM_Utenti ON AM_Prenotazioni.id_utente = AM_Utenti.id WHERE ";
+const QUERY_SELECT_UTENTE_PRE = "SELECT AM_Utenti.* FROM AM_Prenotazioni JOIN AM_Utenti on AM_Prenotazioni.id_utente = AM_Utenti.id WHERE AM_Prenotazioni.id = ?";
+const QUERY_SELECT_PRE_AULA = "SELECT AM_Prenotazioni WHERE id_aula = ? AND status = ?";
+const QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id = ?";
+const QUERY_SELECT_PRE = "SELECT * FROM AM_Prenotazioni WHERE id = ?";
+const QUERY_UPDATE_PRE_STATUS = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?";
+const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fine = ? WHERE id = ?";
 const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
 const QUERY_SELECT_UTENTE_ID = "SELECT * FROM AM_Utenti WHERE id = ?";
 const QUERY_NUMBER_PRE_AFTER = "SELECT COUNT(*) FROM AM_Prenotazioni WHERE id_utente = ? and data >= ?";
 const QUERY_INSERT_CALENDAR_RELATIONSHIP = "INSERT INTO AM_Calendar(id_event, id_prenotazione) VALUES (?, ?)";
-const QUERY_DELETE_CALENDAR_RELATIONSHIP = "DELETE FROM AM_Calendar WHERE id_event = ?"
-const QUERY_DELETE_RELATIONSHIP_PRE = "DELETE FROM AM_Calendar WHERE id_prenotazione = ?"
-const QUERY_SELECT_CALENDAR_PRE = "SELECT AM_Prenotazioni.* FROM AM_Prenotazioni JOIN AM_Calendar on AM_Prenotazioni.id = AM_Calendar.id_prenotazione WHERE AM_Calendar.id_event = ?"
+const QUERY_DELETE_CALENDAR_RELATIONSHIP = "DELETE FROM AM_Calendar WHERE id_event = ?";
+const QUERY_DELETE_RELATIONSHIP_PRE = "DELETE FROM AM_Calendar WHERE id_prenotazione = ?";
+const QUERY_SELECT_CALENDAR_PRE = "SELECT AM_Prenotazioni.* FROM AM_Prenotazioni JOIN AM_Calendar on AM_Prenotazioni.id = AM_Calendar.id_prenotazione WHERE AM_Calendar.id_event = ?";
 const QUERY_SELECT_UTENTE_NAME_LIKE = `
   SELECT * FROM AM_Utenti
   WHERE
@@ -35,6 +36,7 @@ const QUERY_SELECT_UTENTE_NAME_LIKE = `
 `;
 const QUERY_INSERT_PARTECIPAZIONE = "INSERT INTO AM_Partecipazioni(id_prenotazione, id_utente) VALUES (?, ?)";
 const QUERY_SELECT_UTENTI_PARTECIPAZIONI = "SELECT AM_Utenti.* FROM AM_Partecipazioni JOIN AM_Utenti on AM_Partecipazioni.id_utente = AM_Utenti.id WHERE id_prenotazione = ?";
+const QUERY_DELETE_PARTECIPAZIONI = "DELETE FROM AM_Partecipazioni WHERE id_prenotazione = ?";
 
 function createDescription(partecipazioni: Utente[], classe: string, id_pren: number, nome: string, ora_inizio: string, ora_fine: string, aula: number) {
   if (nome == "Calendar") {
@@ -321,6 +323,15 @@ export async function selectPrenotazioniUser(email_utente: string, data: Date | 
   return ret;
 }
 
+export async function selectPrenotazioneAula(aula_number: number, aula_status: boolean) {
+  const ret = await query<Prenotazione>(
+    QUERY_SELECT_PRE_AULA,
+    [aula_number, aula_status ? 1 : 0]
+  );
+
+  return ret;
+}
+
 export async function updatePrenotazione(ora_inizio: number, ora_fine: number, id: number) {
   const ret = await query<Prenotazione>(
     QUERY_UPDATE_PRE_HOUR,
@@ -328,6 +339,28 @@ export async function updatePrenotazione(ora_inizio: number, ora_fine: number, i
   );
 
   return ret;
+}
+
+export async function updateUtentiPrenotazione(id_prenotazione: number, new_utenti: Utente[]) {
+  // For simplicity delete every user from a prenotazione
+  // then add all the new ones
+  const res = await query(
+    QUERY_DELETE_PARTECIPAZIONI,
+    [id_prenotazione]
+  );
+
+  if (!res) return false;
+
+  const promises = new_utenti.map(async utente => {
+    const res2 = await query(
+      QUERY_INSERT_PARTECIPAZIONE,
+      [id_prenotazione, utente.id]
+    );
+    return res2 ? true : false;
+  });
+
+  const res2 = await Promise.all(promises);
+  return !res2.includes(false);
 }
 
 export async function deletePrenotazione(id_prenotazione: number) {

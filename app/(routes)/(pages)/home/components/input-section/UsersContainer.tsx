@@ -1,14 +1,15 @@
 import { useToast } from "@/components/ui/use-toast";
-import { usePartecipanti } from "../HomeProvider";
 import React from "react";
 
 import config from "@/public/config.json";
 import { Utente } from "@/lib/backend/database";
+import { usePartecipanti } from "../HomeProvider";
 
 type UsersContainerProps = {
 } & React.ComponentProps<typeof React.Fragment>
 
 export type UsersUtility = {
+  partecipanti: Utente[];
   addPartecipante: (partecipante: Utente) => void;
   removePartecipante: (partecipante: Utente) => void;
 }
@@ -21,7 +22,7 @@ const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
 
   function addPartecipante(partecipante: Utente) {
     const max_partecipanti = config.max.num_partecipanti;
-    if (partecipanti.length == max_partecipanti) {
+    if (partecipanti?.length == max_partecipanti) {
       toast({
         title: "Errore!",
         description: `Numero massimo di partecipanti raggiunti (${max_partecipanti})`,
@@ -30,7 +31,7 @@ const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
       return;
     }
 
-    setPartecipanti(prev => [...prev, partecipante]);
+    setPartecipanti(prev => [...prev!, partecipante]);
     toast({
       title: "Successo!",
       description: (
@@ -49,8 +50,8 @@ const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
   }
 
   function removePartecipante(partecipante: Utente) {
-    const updatedPartecipanti = partecipanti.filter(p => p.id !== partecipante.id);
-    setPartecipanti(updatedPartecipanti);
+    const updatedPartecipanti = partecipanti?.filter(p => p.id !== partecipante.id);
+    setPartecipanti(updatedPartecipanti || null);
     toast({
       title: "Successo!",
       description: (
@@ -68,11 +69,11 @@ const UsersContainer: React.FC<UsersContainerProps> = ({ children }) => {
     });
   }
 
-
   return (
     React.Children.map(children, (child) =>
       React.isValidElement(child)
         ? React.cloneElement(child, {
+          partecipanti: partecipanti,
           addPartecipante: addPartecipante,
           removePartecipante: removePartecipante
         } as UsersUtility)
