@@ -28,12 +28,6 @@ const EditPrenotazioneDialog: React.FC<EditPrenotazioneDialogProps> = ({ prenota
   const [_, setSheetOpen] = useSheet();
   const rerenderMap = useRerender();
   const { toast } = useToast();
-  const [eddu, setEddu] = useState(false);
-
-  useEffect(() => {
-    setEddu(false);
-    console.log(partecipanti);
-  }, []);
 
   // Do this because we don't want to update the original "partecipanti",
   // instead work with this new state and update the database with a single call

@@ -34,11 +34,13 @@ const Booking: React.FC<BookingProps> = (props) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [partecipanti, setPartecipanti] = useState<Utente[] | null>(null);
+  const [rerenderFlag, setRerenderFlag] = useState(false);
 
   const { prenotazione, n, ...others } = props;
 
   useEffect(() => {
     fetchPartecipanti(prenotazione.id!).then(parts => setPartecipanti(parts));
+    setRerenderFlag(prev => !prev);
   }, []);
 
   let statusString: Status = "In approvazione";
@@ -115,8 +117,18 @@ const Booking: React.FC<BookingProps> = (props) => {
           </div>
         </CardContent>
       </Card>
-      <ConfirmDeletionDialog prenotazioneId={props.prenotazione.id!} open={deleteDialogOpen} setDialogOpen={setDeleteDialogOpen} />
-      <EditPrenotazioneDialog key={Number(partecipanti)} prenotazioneId={props.prenotazione.id!} partecipanti={partecipanti} open={editDialogOpen} setDialogOpen={setEditDialogOpen} />
+      <ConfirmDeletionDialog
+        prenotazioneId={props.prenotazione.id!}
+        open={deleteDialogOpen}
+        setDialogOpen={setDeleteDialogOpen}
+      />
+      <EditPrenotazioneDialog
+        key={partecipanti ? partecipanti.length : 'loading'}
+        prenotazioneId={props.prenotazione.id!}
+        partecipanti={partecipanti}
+        open={editDialogOpen}
+        setDialogOpen={setEditDialogOpen}
+      />
     </>
   )
 }
