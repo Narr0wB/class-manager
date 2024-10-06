@@ -12,6 +12,7 @@ const QUERY_SELECT_PRE_RULESET = "SELECT AM_Prenotazioni.id, AM_Prenotazioni.*, 
 const QUERY_SELECT_UTENTE_PRE = "SELECT AM_Utenti.* FROM AM_Prenotazioni JOIN AM_Utenti on AM_Prenotazioni.id_utente = AM_Utenti.id WHERE AM_Prenotazioni.id = ?"
 const QUERY_DELETE_PRE = "DELETE FROM AM_Prenotazioni WHERE id = ?"
 const QUERY_SELECT_PRE = "SELECT * FROM AM_Prenotazioni WHERE id = ?"
+const QUERY_SELECT_PRE_ON = "SELECT * FROM AM_Prenotazioni WHERE data = ?"
 const QUERY_UPDATE_PRE_STATUS = "UPDATE AM_Prenotazioni SET status = ? WHERE id = ?"
 const QUERY_UPDATE_PRE_HOUR = "UPDATE AM_Prenotazioni SET ora_inizio = ?, ora_fine = ? WHERE id = ?"
 const QUERY_SELECT_UTENTE_EMAIL = "SELECT * FROM AM_Utenti WHERE email = ?";
@@ -215,6 +216,18 @@ export async function selectPartecipazioni(prenotazione_id: number) {
 
   return res;
 }
+
+export async function selectPrenotazioneOn(date: Date) {
+  const date_string = date.toISOString().slice(0, 10);
+
+  const res = await query<Prenotazione>(
+    QUERY_SELECT_PRE_ON,
+    [date_string]
+  );
+
+  return res;
+}
+
 
 export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, before: Date) {
   let query_string: string = QUERY_SELECT_PRE_RULESET + ruleset.dashRule.sqlRule;

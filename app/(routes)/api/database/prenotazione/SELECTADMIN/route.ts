@@ -16,7 +16,6 @@ export async function GET(req: NextRequest) {
   const count = Number(countParam);
   const before = new Date(beforeParam);
 
-
   const res = await selectPrenotazioneRuleset(count, ruleset, before);
   if (!res) return NextResponse.error();
 
