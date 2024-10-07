@@ -22,8 +22,6 @@ async function getTasks(date: Date) {
   const res = await fetch(`/api/database/prenotazione/SELECTRIEPILOGO?date=${date}`, { method: "GET" }); 
   const prenotazioni = await res.json();
 
-  console.log(prenotazioni)
-
   return z.array(taskSchema).parse(prenotazioni)
 }
 

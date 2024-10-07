@@ -63,12 +63,12 @@ export const USER_RULE = 3;
 export var filter_rules = {
   da_data_ora: {
     values: ["13:30"],
-    sqlRule: "(CONCAT(data, \" \", ora_inizio) > ?)",
+    sqlRule: "(CONCAT(data, \" \", ora_inizio) >= ?)",
     rule_id: FROM_DATE_HOUR_RULE
   },
   a_data_ora: {
     values: ["14:30"],
-    sqlRule: "(CONCAT(data, \" \", ora_inizio) < ?)",
+    sqlRule: "(CONCAT(data, \" \", ora_inizio) <= ?)",
     rule_id: TO_DATE_HOUR_RULE
   },
   da_utente: {
