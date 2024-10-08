@@ -17,7 +17,7 @@ import UsersContainer from './input-section/UsersContainer';
 import DateTimeInfo from './map-section/DateTimeInfo';
 import { ChevronsUpDown } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { isDateInSchoolYear } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 export const FLOORS = {
   FLOOR_1: 1,
@@ -26,9 +26,6 @@ export const FLOORS = {
 }
 
 const HomeClient: React.FC = () => {
-  const session = useSession();
-  if (!session.data) redirect("/login");
-
   const [timeframe, _] = useTimeframe();
   const [floor, setFloor] = useState(FLOORS.FLOOR_2);
 
