@@ -4,10 +4,8 @@ import {
   ArrowRightIcon,
   ArrowUpIcon,
   CheckCircledIcon,
-  CircleIcon,
   CrossCircledIcon,
   QuestionMarkCircledIcon,
-  StopwatchIcon,
 } from "@radix-ui/react-icons"
 
 export const labels = [
@@ -29,7 +27,7 @@ export const statuses = [
   {
     value: PRENOTAZIONE_PENDING,
     label: "In Approvazione",
-    icon: CheckCircledIcon,
+    icon: QuestionMarkCircledIcon,
   },
   {
     value: PRENOTAZIONE_APPROVED,

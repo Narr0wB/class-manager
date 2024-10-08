@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { statuses } from "./data/Data"
 import { Task } from "./data/Schema"
 import { DataTableColumnHeader } from "./DataTableHeader"
+import { cn } from "@/lib/utils"
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -35,18 +36,18 @@ export const columns: ColumnDef<Task>[] = [
     },
   },
   {
-      accessorKey: "orario",
-      header: ({ column }) => (
+    accessorKey: "orario",
+    header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Orario" />
-      ),
-      cell: ({ row }) => {
-        return (
-            <div className="flex space-x-2">
-              <span className="max-w-[500px] truncate font-medium">
-                {row.getValue("orario")}
-              </span>
-            </div>
-          )
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <span className="max-w-[500px] truncate font-medium">
+            {row.getValue("orario")}
+          </span>
+        </div>
+      )
     },
   },
   {
@@ -65,9 +66,19 @@ export const columns: ColumnDef<Task>[] = [
 
       return (
         <div className="flex w-[150px] items-center">
-          {status.icon && (
-            <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
+          {
+            status.icon &&
+            <status.icon
+              className={cn(
+                "mr-2 h-4 w-4",
+                status.label === "Approvata" ?
+                  "text-green-500" :
+                  (status.label === "In Approvazione")
+                    ? "text-yellow-500"
+                    : "text-red-500"
+              )}
+            />
+          }
           <span>{status.label}</span>
         </div>
       )
