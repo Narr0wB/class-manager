@@ -39,13 +39,13 @@ const QUERY_INSERT_PARTECIPAZIONE = "INSERT INTO AM_Partecipazioni(id_prenotazio
 const QUERY_SELECT_UTENTI_PARTECIPAZIONI = "SELECT AM_Utenti.* FROM AM_Partecipazioni JOIN AM_Utenti on AM_Partecipazioni.id_utente = AM_Utenti.id WHERE id_prenotazione = ?";
 const QUERY_DELETE_PARTECIPAZIONI = "DELETE FROM AM_Partecipazioni WHERE id_prenotazione = ?";
 
-function createDescription(partecipazioni: Utente[], classe: string, id_pren: number, nome: string, ora_inizio: string, ora_fine: string, aula: number) {
+function createDescription(partecipazioni: Utente[], classe: string, id_pren: number, nome: string, data: Date, ora_inizio: string, ora_fine: string, aula: number) {
   if (nome == "Calendar") {
     return "E' stata prenotata l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5);
   }
 
   const classe_string = classe ? (" della " + classe) : ""
-  let description = nome + classe_string + " ha prenotato l'aula " + aula + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5);
+  let description = nome + classe_string + " ha prenotato l'aula " + aula + " per il " + data.toLocaleString("it-IT").slice(0, 10) + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5);
 
   if (partecipazioni.length != 0) {
     description += " assieme con: \n\n"
@@ -284,7 +284,7 @@ export async function selectPrenotazioneRuleset(num: number, ruleset: Ruleset, b
       ora_inizio: pren.ora_inizio.substring(0, 5),
       ora_fine: pren.ora_fine.substring(0, 5),
       name: pren.nome,
-      desc: createDescription(partecipazioni!, pren.classe, pren.id, pren.nome, pren.ora_inizio, pren.ora_fine, pren.id_aula),
+      desc: createDescription(partecipazioni!, pren.classe, pren.id, pren.nome, pren.data, pren.ora_inizio, pren.ora_fine, pren.id_aula),
       subject: "Prenotazione",
       read: false,
       label: "Aula " + pren.id_aula
