@@ -4,9 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useRuleset, useTrigger } from "./HomeProvider";
 import { AdminDashboard } from "./admin/AdminDashboard"
 import { PrenotazioneInfo } from "../../../../../lib/backend/admin";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { isInManutenzione } from "@/lib/backend/manutenzione";
 
 const HomeClientAdmin: React.FC = () => {
   const [ruleset, setRuleset] = useRuleset();
