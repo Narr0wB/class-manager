@@ -47,64 +47,62 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
   let middle_panel;
   if (selected == "Calendario") {
     middle_panel =
-        <>
-          <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]} minSize={(defaultLayout[1] + defaultLayout[2]) - 10}>
-            <DisabledDaysPicker />
-          </ResizablePanel>
-        </>
+      <>
+        <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]} minSize={(defaultLayout[1] + defaultLayout[2]) - 10}>
+          <DisabledDaysPicker />
+        </ResizablePanel>
+      </>
   }
   else if (selected == "Riepilogo") {
-    middle_panel = 
-        <>
-          <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]} minSize={(defaultLayout[1] + defaultLayout[2]) - 10}>
-          <TaskProvider>
-            <Tasks/>
-          </TaskProvider>
-          </ResizablePanel>
-        </>
+    middle_panel =
+      <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]} minSize={(defaultLayout[1] + defaultLayout[2]) - 10}>
+        <TaskProvider>
+          <Tasks />
+        </TaskProvider>
+      </ResizablePanel>
   }
   else {
     middle_panel =
       <>
-      <ResizablePanel defaultSize={defaultLayout[1]} minSize={defaultLayout[1] - 10}>
-        <div className="flex items-center justify-between px-4 py-2">
-          <h1 className="text-xl font-bold">{selected}</h1>
-          <FiltersDropdown />
-        </div>
-        <Separator />
-        <div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Cerca per nome o per email"
-            onChange={(e) => {
-                let search_rule = filter_rules.da_utente;
+        <ResizablePanel defaultSize={defaultLayout[1]} minSize={defaultLayout[1] - 10}>
+          <div className="flex items-center justify-between px-4 py-2">
+            <h1 className="text-xl font-bold">{selected}</h1>
+            <FiltersDropdown />
+          </div>
+          <Separator />
+          <div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="relative">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Cerca per nome o per email"
+                onChange={(e) => {
+                  let search_rule = filter_rules.da_utente;
 
-                search_rule.values[0] = e.target.value!;
-                search_rule.values[1] = e.target.value!;
+                  search_rule.values[0] = e.target.value!;
+                  search_rule.values[1] = e.target.value!;
 
-                if (e.target.value == "") {
+                  if (e.target.value == "") {
                     setRuleset(prev => {
-                    const new_ruleset = { ...prev, filterSearchRule: undefined };
-                    return new_ruleset;
+                      const new_ruleset = { ...prev, filterSearchRule: undefined };
+                      return new_ruleset;
                     })
-                } else {
+                  } else {
                     setRuleset(prev => {
-                    const new_ruleset = { ...prev, filterSearchRule: search_rule };
-                    return new_ruleset;
+                      const new_ruleset = { ...prev, filterSearchRule: search_rule };
+                      return new_ruleset;
                     })
-                }
+                  }
                 }}
                 className="pl-8"
-            />
+              />
+            </div>
           </div>
-        </div>
-      <PrenotazioneList items={prenotazioni} />
-      </ResizablePanel>
-      <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={defaultLayout[2]} minSize={defaultLayout[2] - 10}>
-        <PrenotazioneDisplay prenotazione={prenotazioni.find(item => item.id === prenotazione.selected)} />
-      </ResizablePanel>
+          <PrenotazioneList items={prenotazioni} />
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={defaultLayout[2]} minSize={defaultLayout[2] - 10}>
+          <PrenotazioneDisplay prenotazione={prenotazioni.find(item => item.id === prenotazione.selected)} />
+        </ResizablePanel>
       </>
   }
 
@@ -163,7 +161,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
           />
         </ResizablePanel>
         <ResizableHandle withHandle />
-            {middle_panel}
+        {middle_panel}
       </ResizablePanelGroup >
     </TooltipProvider>
   )

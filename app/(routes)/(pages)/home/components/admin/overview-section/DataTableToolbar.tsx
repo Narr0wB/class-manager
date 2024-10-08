@@ -4,10 +4,9 @@ import { Cross2Icon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { DataTableViewOptions } from "./DataTableViewOptions"
 
-import { priorities, statuses } from "./data/Data"
+import { statuses } from "./data/Data"
 import { DataTableFacetedFilter } from "./DataTableFilter"
 import { useData } from "./TaskProvider"
 import DatePicker from "./DatePicker"
@@ -23,10 +22,10 @@ export function DataTableToolbar<TData>({
   const [data, setData] = useData();
 
   return (
-    <div className="flex items-center justify-between">
+    <div id="data-table-filters" className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
 
-        <DatePicker date={data} setDate={setData}/> 
+        <DatePicker date={data} setDate={setData} />
 
         {table.getColumn("status") && (
           <DataTableFacetedFilter

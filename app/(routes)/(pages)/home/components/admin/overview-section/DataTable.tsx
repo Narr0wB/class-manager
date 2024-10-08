@@ -68,30 +68,34 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className="space-y-4">
+    <div id="table-full" className="space-y-4 flex flex-col" >
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+      <Table className="grow rounded border overflow-y-scroll">
+        <TableHeader>
+          {
+            table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
+                {
+                  headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                    </TableHead>
-                  )
-                })}
+                      </TableHead>
+                    )
+                  })
+                }
               </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
+            ))
+          }
+        </TableHeader>
+        <TableBody>
+          {
+            table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -116,10 +120,17 @@ export function DataTable<TData, TValue>({
                   No results.
                 </TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+            )
+          }
+        </TableBody>
+      </Table>
+      {/*
+          Empty element just to make the DataTablePagination element stick to the
+          bottom.
+          I know it is not optimal but I couldn't get anything else
+          to work.
+      */}
+      <div id="spacer" className="flex-1" />
       <DataTablePagination table={table} />
     </div>
   )

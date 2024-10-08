@@ -10,8 +10,8 @@ export function PrenotazioneList({ items }: PrenotazioneListProps) {
   items = items.sort((a, b) => { return (a.data_ora_prenotazione < b.data_ora_prenotazione) ? 1 : -1 });
 
   return (
-    <ScrollArea>
-      <div className="flex-grow flex flex-col gap-2 p-4 pt-0">
+    <ScrollArea id="prenotazione-list" className="h-[75%]">
+      <div className="flex flex-col gap-2 p-4 pt-0">
         {
           items.map(item =>
             <PrenotazioneCard key={item.id} card={item} />
