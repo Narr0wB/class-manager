@@ -89,6 +89,8 @@ export const DisabledDaysPicker = ({ }: Props) => {
     setInitialDisabledCount(selectedDates.length);
   }
 
+  const isDisabled = (day: Date) => isDateBeforeValidDate(day) || isSunday(day);
+
   const handleDayClick: DayMouseEventHandler = (day, modifiers) => {
     let selected = Array.from(selectedDates);
 
@@ -102,7 +104,11 @@ export const DisabledDaysPicker = ({ }: Props) => {
         const to = isBefore(rangeFrom, day) ? day : rangeFrom;
         const range: DateRange = { from, to };
         const dates = getDatesInRange(range);
-        selected = selected.concat(dates);
+
+        // Remove disabled days (like sundays) because they shouldn't be
+        // selected at all
+        let filtered = dates.filter(date => !isDisabled(date));
+        selected = selected.concat(filtered);
 
         setMode("Normale");
         setRangeFrom(undefined);
@@ -153,7 +159,7 @@ export const DisabledDaysPicker = ({ }: Props) => {
         toYear={new Date().getFullYear() + 1}
         onDayClick={handleDayClick}
         selected={selectedDates}
-        disabled={date => isDateBeforeValidDate(date) || isSunday(date)}
+        disabled={isDisabled}
         showOutsideDays={false}
         footer={
           <div className="flex flex-col gap-4 mt-5">

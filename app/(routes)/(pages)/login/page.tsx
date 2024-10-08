@@ -1,8 +1,6 @@
 "use client"
 
-import { signIn, useSession } from 'next-auth/react';
-import { redirect } from "next/navigation";
-
+import { signIn } from 'next-auth/react';
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -19,10 +17,6 @@ import ThemeDropdown from '@/app/components/header/ThemeDropdown';
 import { Moon, Sun } from 'lucide-react';
 
 const Login: React.FC = () => {
-  const session = useSession();
-
-  if (session.data) redirect("home");
-
   return (
     <main className="w-full h-screen relative flex justify-center items-center lg:grid lg:grid-cols-2 overflow-hidden">
       <div className="absolute top-0 right-0 m-auto flex flex-row items-center justify-center gap-2 p-2">
