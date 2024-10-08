@@ -1,6 +1,6 @@
 "use client"
 
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -15,23 +15,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ThemeDropdown from '@/app/components/header/ThemeDropdown';
 import { Moon, Sun } from 'lucide-react';
-import { isInManutenzione } from '@/lib/backend/manutenzione';
-import { redirect, useRouter } from 'next/navigation';
 
 const Login: React.FC = () => {
-  // const router = useRouter();
-  // const session = useSession();
-
-  // if (isInManutenzione()) {
-  //   router.push("/manutenzione");
-  //   return null;
-  // }
-  // else if (session.data) {
-  //   router.push("/home");
-  //   return null;
-  // }
-  // else
-
   return (
     <main className="w-full h-screen relative flex justify-center items-center lg:grid lg:grid-cols-2 overflow-hidden">
       <div className="absolute top-0 right-0 m-auto flex flex-row items-center justify-center gap-2 p-2">

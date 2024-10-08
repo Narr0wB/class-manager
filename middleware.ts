@@ -1,38 +1,33 @@
-import { isInManutenzione } from '@/lib/backend/manutenzione';
-import { getServerSession } from 'next-auth';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  // const session = await getServerSession();
-  // const path = request.nextUrl.pathname;
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req });
+  const { pathname } = req.nextUrl;
+  const manutenzione = process.env.MANUTENZIONE === "true";
 
-  // console.log("Session:", session);
-  // console.log("Path:", path);
-  // console.log("Maintenance Mode:", isInManutenzione());
+  // Handle maintenance mode
+  if (manutenzione && pathname !== "/manutenzione") {
+    return NextResponse.redirect(new URL("/manutenzione", req.url));
+  }
 
-  // if (isInManutenzione()) {
-  //   return NextResponse.rewrite(new URL("/manutenzione", request.url));
-  // }
+  if (!manutenzione && pathname === "/manutenzione") {
+    return NextResponse.redirect(new URL("/home", req.url));
+  }
 
-  // if (path.startsWith("/manutenzione") && !isInManutenzione()) {
-  //   return NextResponse.rewrite(new URL("/home", request.url));
-  // }
+  // Redirect logged-in users from login page to home
+  if (token && pathname === "/login") {
+    return NextResponse.redirect(new URL("/home", req.url));
+  }
 
-  // if (path.startsWith("/home") && !session) {
-  //   return NextResponse.rewrite(new URL("/login", request.url));
-  // }
+  // Redirect unauthenticated users to login page
+  if (!token && pathname !== "/login") {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
 
-  // if (path.startsWith("/login") && session) {
-  //   return NextResponse.rewrite(new URL("/home", request.url));
-  // }
-
-  // return NextResponse.next();  // This is important for other requests
-
-  console.log("Middleware is running");
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/home*', '/login*', '/manutenzione*'],
+  matcher: ["/home/:path*", "/login/:path*", "/manutenzione/:path*"]
 };
