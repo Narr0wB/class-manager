@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
     if (utente == undefined) return;
 
     return {
+      id: prenotazione.id,
       aula: prenotazione.id_aula, 
       prenotante: utente.nome, 
       orario: String(prenotazione.ora_inizio).slice(0, 5) + "-" + String(prenotazione.ora_fine).slice(0, 5),

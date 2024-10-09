@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/resizable"
 import { Separator } from "@/components/ui/separator"
 import { PrenotazioneDisplay } from "./PrenotazioneDisplay"
-import { dash_rules, filter_rules, usePrenotazione } from "../../../../../../lib/backend/admin"
+import { dash_rules, filter_rules, useAdminSelectedSection, usePrenotazione } from "../../../../../../lib/backend/admin"
 import { useState } from "react"
 import { PrenotazioneInfo } from "../../../../../../lib/backend/admin"
 import { useRuleset } from "../HomeProvider"
@@ -38,14 +38,20 @@ type AdminDashboardProps = {
   prenotazioni: PrenotazioneInfo[]
 }
 
+const statuses = [
+  "In arrivo",
+  "Approvate",
+  "Rifiutate"
+]
+
 export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
   const [prenotazione] = usePrenotazione()
   const [_, setRuleset] = useRuleset();
-  const [selected, setSelected] = useState<"In arrivo" | "Approvate" | "Rifiutate" | "Calendario" | "Riepilogo">("In arrivo");
+  const [selected, setSelected] = useAdminSelectedSection();
   const defaultLayout = [20, 50, 30];
 
   let middle_panel;
-  if (selected == "Calendario") {
+  if (selected.value == "Calendario") {
     middle_panel =
       <>
         <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]} minSize={(defaultLayout[1] + defaultLayout[2]) - 10}>
@@ -53,7 +59,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
         </ResizablePanel>
       </>
   }
-  else if (selected == "Riepilogo") {
+  else if (selected.value == "Riepilogo") {
     middle_panel =
       <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]} minSize={(defaultLayout[1] + defaultLayout[2]) - 10}>
         <TaskProvider>
@@ -66,7 +72,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
       <>
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={defaultLayout[1] - 10}>
           <div className="flex items-center justify-between px-4 py-2">
-            <h1 className="text-xl font-bold">{selected}</h1>
+            <h1 className="text-xl font-bold">{selected.value}</h1>
             <FiltersDropdown />
           </div>
           <Separator />
@@ -116,13 +122,14 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
       >
         <ResizablePanel defaultSize={defaultLayout[0]} minSize={defaultLayout[0] - 10}>
           <Nav
+            sel={statuses.indexOf(selected.value)}
             links={[
               {
                 title: "In arrivo",
                 icon: Inbox,
                 action: () => {
                   setRuleset(prev => ({ ...prev, dashRule: dash_rules.in_arrivo }));
-                  setSelected("In arrivo");
+                  setSelected({value: "In arrivo"});
                 }
               },
               {
@@ -130,7 +137,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
                 icon: Check,
                 action: () => {
                   setRuleset(prev => ({ ...prev, dashRule: dash_rules.approvate }));
-                  setSelected("Approvate");
+                  setSelected({value: "Approvate"});
                 }
               },
               {
@@ -138,7 +145,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
                 icon: X,
                 action: () => {
                   setRuleset(prev => ({ ...prev, dashRule: dash_rules.rifiutate }));
-                  setSelected("Rifiutate");
+                  setSelected({value: "Rifiutate"});
                 }
               },
               {
@@ -146,7 +153,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
                 icon: CalendarIcon,
                 separated: true,
                 action: () => {
-                  setSelected("Calendario");
+                  setSelected({value: "Calendario"});
                 }
               },
               {
@@ -154,7 +161,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
                 icon: EyeIcon,
                 separated: false,
                 action: () => {
-                  setSelected("Riepilogo");
+                  setSelected({value: "Riepilogo"});
                 }
               },
             ]}

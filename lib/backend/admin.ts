@@ -13,12 +13,24 @@ type Config = {
   selected: PrenotazioneInfo["id"] | null
 }
 
+type ConfigAdminSelected = {
+  value: string
+}
+
 const configAtom = atom<Config>({
   selected: 0,
 })
 
+const configAdminSelectedAtom = atom<ConfigAdminSelected>({
+  value: "In arrivo"
+})
+
 export function usePrenotazione() {
   return useAtom(configAtom)
+}
+
+export function useAdminSelectedSection() {
+  return useAtom(configAdminSelectedAtom)
 }
 
 export type DashboardRule = {
@@ -73,7 +85,7 @@ export var filter_rules = {
   },
   da_utente: {
     values: ["nome", "email"],
-    sqlRule: "(nome LIKE '%' + ? + '%' OR email LIKE '%' + ? + '%')",
+    sqlRule: "(LOWER(nome) LIKE '%' + ? + '%' and ? IS NOT NULL)",
     rule_id: USER_RULE
   }
 }

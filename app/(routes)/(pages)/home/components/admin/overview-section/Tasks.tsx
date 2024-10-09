@@ -16,7 +16,8 @@ async function getTasks(date: Date) {
   const res = await fetch(`/api/database/prenotazione/SELECTRIEPILOGO?date=${date}`, { method: "GET" });
   const prenotazioni = await res.json();
 
-  return z.array(taskSchema).parse(prenotazioni)
+  const arr = z.array(taskSchema).parse(prenotazioni);
+  return arr 
 }
 
 const Tasks: React.FC<TasksProps> = (props) => {
@@ -24,7 +25,7 @@ const Tasks: React.FC<TasksProps> = (props) => {
   const [data, _] = useData();
 
   useEffect(() => {
-    getTasks(data).then(data => { setPrenotazioni(data) });
+    getTasks(data).then(tasks => { setPrenotazioni(tasks) });
   }, [data])
 
   return (
@@ -32,7 +33,7 @@ const Tasks: React.FC<TasksProps> = (props) => {
       <div id="riepilogo-title" className="flex flex-col space-y-2">
         <h2 className="text-2xl font-bold tracking-tight">Riepilogo</h2>
         <p className="text-muted-foreground">
-          {data.toLocaleString("it-IT").slice(0, 9)}
+          {data.toLocaleString("it-IT").slice(0, 10)}
         </p>
       </div>
       <DataTable data={prenotazioni} columns={columns} />

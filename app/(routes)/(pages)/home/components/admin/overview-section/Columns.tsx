@@ -9,6 +9,9 @@ import { cn } from "@/lib/utils"
 
 export const columns: ColumnDef<Task>[] = [
   {
+    accessorKey: "id"
+  },
+  {
     accessorKey: "aula",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Aula" />

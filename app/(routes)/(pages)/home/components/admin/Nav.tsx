@@ -3,7 +3,7 @@
 import { LucideIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Separator } from "@/components/ui/separator"
 
 type NavProps = {
@@ -12,11 +12,18 @@ type NavProps = {
     icon: LucideIcon,
     separated?: boolean,
     action: () => void
-  }[]
+  }[],
+  sel: number
 }
 
-export function Nav({ links }: NavProps) {
+export function Nav({ links, sel }: NavProps) {
   const [selected, setSelected] = useState(0);
+
+  useEffect(() =>{
+    if (sel) {
+      setSelected(sel)
+    }
+  }, [sel]);
 
   return (
     <nav className="grid gap-2 pt-2">

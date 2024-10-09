@@ -27,11 +27,19 @@ import {
 
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
+import { dash_rules, PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED, PRENOTAZIONE_PENDING, useAdminSelectedSection, usePrenotazione } from "@/lib/backend/admin"
+import { useRuleset, useTrigger } from "../../HomeProvider"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
+
+const statuses = [
+  "In arrivo",
+  "Approvate",
+  "Rifiutate"
+]
 
 export function DataTable<TData, TValue>({
   columns,
@@ -43,6 +51,10 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
+  const [_, setSelected] = useAdminSelectedSection();
+  const [__, setTrigger] = useTrigger()
+  const [___, setPrenotazione] = usePrenotazione()
+  const [____, setRuleset] = useRuleset()
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
@@ -97,19 +109,37 @@ export function DataTable<TData, TValue>({
           {
             table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    onClick={(e) => {
+                      const status = Number(row.getValue("status"));
+
+                      if (status == PRENOTAZIONE_PENDING) {
+                        setRuleset(prev => ({ ...prev, dashRule: dash_rules.in_arrivo }));
+                        setSelected({value: "In arrivo"});
+                      }
+                      else if (status == PRENOTAZIONE_APPROVED) {
+                        setRuleset(prev => ({ ...prev, dashRule: dash_rules.approvate }));
+                        setSelected({value: "Approvate"});
+                      }
+                      else if (status == PRENOTAZIONE_REJECTED) {
+                        setRuleset(prev => ({ ...prev, dashRule: dash_rules.rifiutate }));
+                        setSelected({value: "Rifiutate"});
+                      }
+                      
+                      setPrenotazione({selected: Number(row.getValue("id"))})
+                    }}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
               ))
             ) : (
               <TableRow>
@@ -124,12 +154,7 @@ export function DataTable<TData, TValue>({
           }
         </TableBody>
       </Table>
-      {/*
-          Empty element just to make the DataTablePagination element stick to the
-          bottom.
-          I know it is not optimal but I couldn't get anything else
-          to work.
-      */}
+      {}
       <div id="spacer" className="flex-1" />
       <DataTablePagination table={table} />
     </div>

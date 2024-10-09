@@ -26,11 +26,7 @@ const HomeClientAdmin: React.FC = () => {
   }, [ruleset, trigger]);
 
   useEffect(() => {
-    // fetch all the prenotazioni that match the ruleset rules
-    //setCachelist([]);
-
     fetchData(100, new Date()).then(result => { setCachelist(result); });
-
   }, [ruleset, trigger])
 
   return (
