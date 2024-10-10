@@ -1,6 +1,7 @@
 import PrenotazioneCard from "./PrenotazioneCard"
 import { PrenotazioneInfo, usePrenCardHeight, usePrenotazione } from "../../../../../../lib/backend/admin"
 import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 function calculateScrollPosition(
   itemHeight: number,
@@ -42,7 +43,7 @@ export function PrenotazioneList({ items }: PrenotazioneListProps) {
   }, []);
 
   return (
-    <div id="prenotazione-list" ref={scrollRef} className={`h-[75%] flex flex-col gap-[${gap}px] p-4 pt-0 overflow-y-scroll mx-2`}>
+    <div id="prenotazione-list" ref={scrollRef} className={cn("h-[75%] flex flex-col p-4 pt-0 overflow-y-scroll mx-2", `gap-${gap / 4}`)}>
       {
         items.map(item =>
           <PrenotazioneCard key={item.id} card={item} />
