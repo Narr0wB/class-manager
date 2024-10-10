@@ -109,37 +109,37 @@ export function DataTable<TData, TValue>({
           {
             table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    onClick={(e) => {
-                      const status = Number(row.getValue("status"));
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  onClick={(e) => {
+                    const status = Number(row.getValue("status"));
 
-                      if (status == PRENOTAZIONE_PENDING) {
-                        setRuleset(prev => ({ ...prev, dashRule: dash_rules.in_arrivo }));
-                        setSelected({value: "In arrivo"});
-                      }
-                      else if (status == PRENOTAZIONE_APPROVED) {
-                        setRuleset(prev => ({ ...prev, dashRule: dash_rules.approvate }));
-                        setSelected({value: "Approvate"});
-                      }
-                      else if (status == PRENOTAZIONE_REJECTED) {
-                        setRuleset(prev => ({ ...prev, dashRule: dash_rules.rifiutate }));
-                        setSelected({value: "Rifiutate"});
-                      }
-                      
-                      setPrenotazione({selected: Number(row.getValue("id"))})
-                    }}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
+                    if (status == PRENOTAZIONE_PENDING) {
+                      setRuleset(prev => ({ ...prev, dashRule: dash_rules.in_arrivo }));
+                      setSelected({ value: "In arrivo" });
+                    }
+                    else if (status == PRENOTAZIONE_APPROVED) {
+                      setRuleset(prev => ({ ...prev, dashRule: dash_rules.approvate }));
+                      setSelected({ value: "Approvate" });
+                    }
+                    else if (status == PRENOTAZIONE_REJECTED) {
+                      setRuleset(prev => ({ ...prev, dashRule: dash_rules.rifiutate }));
+                      setSelected({ value: "Rifiutate" });
+                    }
+
+                    setPrenotazione({ selected: Number(row.getValue("id")) })
+                  }}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
               ))
             ) : (
               <TableRow>
@@ -154,7 +154,6 @@ export function DataTable<TData, TValue>({
           }
         </TableBody>
       </Table>
-      {}
       <div id="spacer" className="flex-1" />
       <DataTablePagination table={table} />
     </div>

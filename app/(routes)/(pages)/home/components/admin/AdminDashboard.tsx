@@ -19,7 +19,6 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { PrenotazioneDisplay } from "./PrenotazioneDisplay"
 import { dash_rules, filter_rules, useAdminSelectedSection, usePrenotazione } from "../../../../../../lib/backend/admin"
-import { useState } from "react"
 import { PrenotazioneInfo } from "../../../../../../lib/backend/admin"
 import { useRuleset } from "../HomeProvider"
 import { Nav } from "./Nav"
@@ -38,10 +37,12 @@ type AdminDashboardProps = {
   prenotazioni: PrenotazioneInfo[]
 }
 
-const statuses = [
+const sections = [
   "In arrivo",
   "Approvate",
-  "Rifiutate"
+  "Rifiutate",
+  "Calendario",
+  "Riepilogo"
 ]
 
 export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
@@ -49,15 +50,25 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
   const [_, setRuleset] = useRuleset();
   const [selected, setSelected] = useAdminSelectedSection();
   const defaultLayout = [20, 50, 30];
+  const [leftCollapsed, setLeftCollapsed] = React.useState(false);
+  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
+
+  React.useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+
+    // Set up the event listener for resizing
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup the event listener when the component unmounts
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   let middle_panel;
   if (selected.value == "Calendario") {
     middle_panel =
-      <>
-        <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]} minSize={(defaultLayout[1] + defaultLayout[2]) - 10}>
-          <DisabledDaysPicker />
-        </ResizablePanel>
-      </>
+      <ResizablePanel defaultSize={defaultLayout[1] + defaultLayout[2]} minSize={(defaultLayout[1] + defaultLayout[2]) - 10}>
+        <DisabledDaysPicker />
+      </ResizablePanel>
   }
   else if (selected.value == "Riepilogo") {
     middle_panel =
@@ -120,16 +131,25 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
         // Just like in HomeClient (full screen height - header height)
         className="max-h-[calc(100vh-5rem)] flex flex-row items-stretch"
       >
-        <ResizablePanel defaultSize={defaultLayout[0]} minSize={defaultLayout[0] - 10}>
+        <ResizablePanel
+          collapsible
+          collapsedSize={5}
+          onCollapse={() => setLeftCollapsed(true)}
+          onExpand={() => setLeftCollapsed(false)}
+          defaultSize={defaultLayout[0]}
+          minSize={defaultLayout[0] - 10}
+        >
           <Nav
-            sel={statuses.indexOf(selected.value)}
+            key={selected.value}
+            collapsed={leftCollapsed}
+            sel={sections.indexOf(selected.value)}
             links={[
               {
                 title: "In arrivo",
                 icon: Inbox,
                 action: () => {
                   setRuleset(prev => ({ ...prev, dashRule: dash_rules.in_arrivo }));
-                  setSelected({value: "In arrivo"});
+                  setSelected({ value: "In arrivo" });
                 }
               },
               {
@@ -137,7 +157,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
                 icon: Check,
                 action: () => {
                   setRuleset(prev => ({ ...prev, dashRule: dash_rules.approvate }));
-                  setSelected({value: "Approvate"});
+                  setSelected({ value: "Approvate" });
                 }
               },
               {
@@ -145,7 +165,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
                 icon: X,
                 action: () => {
                   setRuleset(prev => ({ ...prev, dashRule: dash_rules.rifiutate }));
-                  setSelected({value: "Rifiutate"});
+                  setSelected({ value: "Rifiutate" });
                 }
               },
               {
@@ -153,15 +173,14 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
                 icon: CalendarIcon,
                 separated: true,
                 action: () => {
-                  setSelected({value: "Calendario"});
+                  setSelected({ value: "Calendario" });
                 }
               },
               {
                 title: "Riepilogo",
                 icon: EyeIcon,
-                separated: false,
                 action: () => {
-                  setSelected({value: "Riepilogo"});
+                  setSelected({ value: "Riepilogo" });
                 }
               },
             ]}

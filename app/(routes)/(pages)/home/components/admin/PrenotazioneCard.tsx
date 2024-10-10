@@ -1,7 +1,7 @@
-import { PrenotazioneInfo, usePrenotazione } from "@/lib/backend/admin";
+import { PrenotazioneInfo, usePrenCardHeight, usePrenotazione } from "@/lib/backend/admin";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { ComponentProps } from "react";
+import { ComponentProps, useEffect, useRef } from "react";
 
 function getRead(id: number): boolean {
   const cookies = document.cookie.split(';');
@@ -22,11 +22,20 @@ type PrenotazioneCardProps = {
 // Still need a better way to name this
 const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
   const [prenotazione, setPrenotazione] = usePrenotazione();
+  const prenCardRef = useRef<HTMLButtonElement | null>(null);
+  const [prendCardHeight, setPrenCardHeight] = usePrenCardHeight();
 
   card.read = getRead(card.id!);
 
+  useEffect(() => {
+    if (!prenCardRef.current || prendCardHeight.height == prenCardRef.current.clientHeight) return;
+
+    setPrenCardHeight({ height: prenCardRef.current.clientHeight });
+  }, [prenCardRef.current]);
+
   return (
     <button
+      ref={prenCardRef}
       className={cn(
         "fade-in flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
         prenotazione.selected === card.id && "bg-muted"
@@ -70,13 +79,11 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
       <div className="line-clamp-2 text-xs text-muted-foreground">
         {card.data.toLocaleString("it-it", { year: 'numeric', month: '2-digit', day: '2-digit' })}
       </div>
-      {true ? (
-        <div className="flex items-center gap-2">
-          <Badge variant={getBadgeVariantFromLabel(card.label)}>
-            {card.label}
-          </Badge>
-        </div>
-      ) : null}
+      <div className="flex items-center gap-2">
+        <Badge variant={getBadgeVariantFromLabel(card.label)}>
+          {card.label}
+        </Badge>
+      </div>
     </button>
   );
 }
