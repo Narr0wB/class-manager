@@ -81,8 +81,8 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
   else {
     middle_panel =
       <>
-        <ResizablePanel defaultSize={defaultLayout[1]} minSize={defaultLayout[1] - 10}>
-          <div className="flex items-center justify-between px-4 py-2">
+        <ResizablePanel className="flex flex-col" defaultSize={defaultLayout[1]} minSize={defaultLayout[1] - 10}>
+          <div className="flex flex-0 items-center justify-between px-4 py-2">
             <h1 className="text-xl font-bold">{selected.value}</h1>
             <FiltersDropdown />
           </div>

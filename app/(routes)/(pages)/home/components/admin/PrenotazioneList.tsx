@@ -43,7 +43,7 @@ export function PrenotazioneList({ items }: PrenotazioneListProps) {
   }, []);
 
   return (
-    <div id="prenotazione-list" ref={scrollRef} className={cn("h-[75%] flex flex-col p-4 pt-0 overflow-y-scroll mx-2", `gap-${gap / 4}`)}>
+    <div id="prenotazione-list" ref={scrollRef} className={cn("flex flex-col flex-1 overflow-y-scroll p-4 pt-0 mx-2", `gap-${gap / 4}`)}>
       {
         items.map(item =>
           <PrenotazioneCard key={item.id} card={item} />
