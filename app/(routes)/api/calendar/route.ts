@@ -1,7 +1,6 @@
 import { getCalendarioAPIToken } from "@/lib/backend/auth";
 import { google } from "googleapis";
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs"; 
 import { readTmpVar, writeTmpVar } from "@/lib/backend/tmp";
 import { deleteCalendarRelationship, deletePrenotazione, getPrenotazioniCalendar, insertPrenotazioniCalendar } from "@/lib/backend/database";
 import { minutesToString } from "@/lib/utils";
@@ -61,8 +60,8 @@ export async function POST(req: NextRequest) {
       
       const aule = match ? match[0].match(/\d+/g) : [];
       
-      const event_start_ms = new Date(event_start.dateTime!).getTime() + Math.abs(new Date().getTimezoneOffset() * 60000);
-      const event_end_ms   = new Date(event_end.dateTime!).getTime() + Math.abs(new Date().getTimezoneOffset() * 60000);
+      const event_start_ms = new Date(event_start.dateTime!).getTime() + 60 * 60000;
+      const event_end_ms   = new Date(event_end.dateTime!).getTime() + 60 * 60000;
       const event_date     = new Date(event_start_ms - event_start_ms % (1000 * 60 * 60 * 24));
       
       // Check if the event's start and end are on the same day

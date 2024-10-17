@@ -5,5 +5,5 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-payload = {"token": os.getenv("CRONJOB_TOKEN")}
-r = requests.post(os.getenv("ADDRESS_BASE") + "/api/cronjob", data=json.dumps(payload))
+payload = {"token": os.getenv("CRONJOB_TOKEN")} 
+r = requests.post(str(os.getenv("ADDRESS_BASE")) + "/api/cronjob", data=json.dumps(payload))

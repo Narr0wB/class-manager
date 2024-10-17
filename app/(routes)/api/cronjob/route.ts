@@ -20,12 +20,18 @@ export async function POST(req: NextRequest) {
     })
 
     const calendar = google.calendar({version: "v3", auth: auth});
-    const r1 = await calendar.channels.stop({
-        requestBody: {
-            id: "calendar-info",
-            resourceId: process.env.CALENDAR_RESOURCE_ID
-        }
-    });
+
+    try {
+        const r1 = await calendar.channels.stop({
+            requestBody: {
+                id: "calendar-info",
+                resourceId: process.env.CALENDAR_RESOURCE_ID
+            }
+        });
+    }
+    catch (err) {
+        console.log("[DEBUG] [INFO] No active calendar channel! Opening a new one...");
+    }
 
     const r2 = await calendar.events.watch({
         calendarId: "primary",
@@ -43,6 +49,6 @@ export async function POST(req: NextRequest) {
     })
     process.env.CALENDAR_RESOURCE_ID = r2.data.resourceId!;
 
-    //console.log(r2)
+    // console.log(r2)
     return NextResponse.json({status: "success"});
 }
