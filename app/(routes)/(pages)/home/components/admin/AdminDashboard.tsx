@@ -197,7 +197,7 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
   return (
     <TooltipProvider>
       {/* Just like in HomeClient (full screen height - header height) */}
-      <div id="main-content" className="w-screen h-screen flex flex-row max-h-[calc(100dvh-5rem)]">
+      <div id="main-content" className="w-screen h-screen flex flex-row max-h-[calc(100dvh-5rem)] overflow-hidden">
         <Nav
           collapsed={navCollapsed}
           sel={sections.indexOf(selected.value)}
