@@ -35,12 +35,6 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-const statuses = [
-  "In arrivo",
-  "Approvate",
-  "Rifiutate"
-]
-
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -80,9 +74,9 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div id="table-full" className="space-y-4 flex flex-col" >
+    <div id="table-full" className="space-y-4 flex flex-col overflow-scroll" >
       <DataTableToolbar table={table} />
-      <Table className="grow rounded border overflow-y-scroll">
+      <Table className="grow-0 rounded border">
         <TableHeader>
           {
             table.getHeaderGroups().map((headerGroup) => (

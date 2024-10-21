@@ -170,7 +170,7 @@ export function PrenotazioneDisplay({ prenotazione }: MailDisplayProps) {
                 </div>
               </div>
               <Separator />
-              <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
+              <div className="flex-1 whitespace-pre-wrap p-4 text-sm overflow-scroll">
                 {prenotazione.desc}
               </div>
               <Separator className="mt-auto" />

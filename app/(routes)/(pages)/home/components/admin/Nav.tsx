@@ -16,10 +16,13 @@ type NavProps = {
     action: () => void
   }[],
   sel: number,
-  collapsed?: boolean
+  collapsed?: boolean,
+  width: number,
+  collapsedWidth?: number,
+  className?: string
 }
 
-export function Nav({ links, sel, collapsed }: NavProps) {
+export function Nav({ links, sel, collapsed, width, collapsedWidth, className }: NavProps) {
   const [selected, setSelected] = useState(0);
 
   useEffect(() => {
@@ -29,7 +32,7 @@ export function Nav({ links, sel, collapsed }: NavProps) {
   }, [sel]);
 
   return (
-    <nav className="flex flex-col gap-2 p-2">
+    <nav key={Number(collapsed)} id="nav-bar" style={{ width: collapsed ? collapsedWidth : width }} className={cn("gap-2 pt-2", className)}>
       {
         links.map((link, index) => {
           const button = (
@@ -47,16 +50,14 @@ export function Nav({ links, sel, collapsed }: NavProps) {
           );
 
           return (
-            <div key={link.title}>
+            <div key={link.title} className="px-2">
               <Separator className={cn(link.separated ? "block" : "hidden", "mb-2")} />
               {
                 collapsed ?
                   <CustomTooltip content={link.title}>
                     {button}
                   </CustomTooltip> :
-                  <>
-                    {button}
-                  </>
+                  button
               }
             </div>
           )

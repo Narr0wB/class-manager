@@ -130,9 +130,9 @@ export const DisabledDaysPicker = ({ }: Props) => {
 
   return (
     <div className="relative size-full flex justify-center items-center gap-8 p-2">
-      <div className="absolute w-full h-fit top-0 left-0 right-0 flex flex-row justify-between p-4">
+      <div className="absolute w-full h-fit top-0 left-0 right-0 flex flex-col md:flex-row gap-4 justify-between p-4">
         <h1 className="text-3xl">Giorni disattivati</h1>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-row gap-2 md:items-end">
           <Select value={mode} onValueChange={value => setMode(value as any)} defaultValue={modes[0]}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Seleziona un piano..." />
@@ -147,12 +147,10 @@ export const DisabledDaysPicker = ({ }: Props) => {
               }
             </SelectContent>
           </Select>
+          <Button variant="destructive" className="w-fit" onClick={() => setConfirmDialogOpen(true)}>
+            Reset
+          </Button>
         </div>
-      </div>
-      <div className="absolute bottom-0 right-0 p-4">
-        <Button variant="destructive" onClick={() => setConfirmDialogOpen(true)}>
-          Reset
-        </Button>
       </div>
       <Calendar
         fromYear={new Date().getFullYear()}

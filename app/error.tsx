@@ -2,8 +2,8 @@
 
 const Error = () => {
   return (
-    <div>
-      Error
+    <div className="flex items-center p-4">
+      ERRORE! Riprova più tardi
     </div>
   );
 }

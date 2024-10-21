@@ -56,7 +56,7 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
     >
       <div className="flex w-full flex-col gap-1">
         <div className="flex items-center">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mr-2">
             <div className="font-semibold">{card.name}</div>
             {
               !card.read &&

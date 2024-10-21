@@ -13,10 +13,11 @@ function calculateScrollPosition(
 }
 
 interface PrenotazioneListProps {
-  items: PrenotazioneInfo[]
+  items: PrenotazioneInfo[],
+  className?: string
 }
 
-export function PrenotazioneList({ items }: PrenotazioneListProps) {
+export function PrenotazioneList({ items, className }: PrenotazioneListProps) {
   items = items.sort((a, b) => { return (a.data_ora_prenotazione < b.data_ora_prenotazione) ? 1 : -1 });
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [prenotazione, _] = usePrenotazione();
@@ -43,7 +44,7 @@ export function PrenotazioneList({ items }: PrenotazioneListProps) {
   }, []);
 
   return (
-    <div id="prenotazione-list" ref={scrollRef} className={cn("flex flex-col flex-1 overflow-y-scroll p-4 pt-0 mx-2", `gap-${gap / 4}`)}>
+    <div id="prenotazione-list" ref={scrollRef} className={cn("flex flex-1 overflow-y-scroll p-4 pt-0 mx-2", `gap-${gap / 4}`, className)}>
       {
         items.map(item =>
           <PrenotazioneCard key={item.id} card={item} />

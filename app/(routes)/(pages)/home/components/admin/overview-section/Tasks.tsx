@@ -17,7 +17,7 @@ async function getTasks(date: Date) {
   const prenotazioni = await res.json();
 
   const arr = z.array(taskSchema).parse(prenotazioni);
-  return arr 
+  return arr
 }
 
 const Tasks: React.FC<TasksProps> = (props) => {
@@ -29,7 +29,7 @@ const Tasks: React.FC<TasksProps> = (props) => {
   }, [data])
 
   return (
-    <div className="h-full grid grid-rows-[10%_85%] gap-[5%] p-6">
+    <div id="tasks" className="h-full flex flex-col gap-4 p-4">
       <div id="riepilogo-title" className="flex flex-col space-y-2">
         <h2 className="text-2xl font-bold tracking-tight">Riepilogo</h2>
         <p className="text-muted-foreground">

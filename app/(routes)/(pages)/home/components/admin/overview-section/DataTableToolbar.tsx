@@ -23,17 +23,17 @@ export function DataTableToolbar<TData>({
 
   return (
     <div id="data-table-filters" className="flex items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2">
-
+      <div className="flex flex-1 items-start gap-2 flex-col sm:flex-row sm:items-center">
         <DatePicker date={data} setDate={setData} />
-
-        {table.getColumn("status") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={statuses}
-          />
-        )}
+        {
+          table.getColumn("status") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("status")}
+              title="Status"
+              options={statuses}
+            />
+          )
+        }
         {isFiltered && (
           <Button
             variant="ghost"

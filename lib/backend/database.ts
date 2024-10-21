@@ -48,7 +48,7 @@ function createDescription(partecipazioni: Utente[], classe: string, id_pren: nu
   let description = nome + classe_string + " ha prenotato l'aula " + aula + " per il " + data.toLocaleString("it-IT").slice(0, 10) + " dalle " + ora_inizio.substring(0, 5) + " alle " + ora_fine.substring(0, 5);
 
   if (partecipazioni.length != 0) {
-    description += " assieme con: \n\n"
+    description += " insieme a: \n\n"
   }
   for (let i = 0; i < partecipazioni.length; i++) {
     description += "  • " + partecipazioni[i].nome + " " + partecipazioni[i].classe + "\n";
