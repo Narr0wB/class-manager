@@ -28,7 +28,7 @@ import {
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
 import { dash_rules, PRENOTAZIONE_APPROVED, PRENOTAZIONE_REJECTED, PRENOTAZIONE_PENDING, useAdminSelectedSection, usePrenotazione } from "@/lib/backend/admin"
-import { useRuleset, useTrigger } from "../../HomeProvider"
+import { useRuleset } from "../../HomeProvider"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -46,7 +46,6 @@ export function DataTable<TData, TValue>({
     []
   )
   const [_, setSelected] = useAdminSelectedSection();
-  const [__, setTrigger] = useTrigger()
   const [___, setPrenotazione] = usePrenotazione()
   const [____, setRuleset] = useRuleset()
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -74,7 +73,9 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div id="table-full" className="space-y-4 flex flex-col overflow-scroll" >
+    // overflow-auto is important to make the scrollbar work but
+    // but not be present when not needed in Chrome.
+    <div id="table-full" className="space-y-4 flex flex-col overflow-auto" >
       <DataTableToolbar table={table} />
       <Table className="grow-0 rounded border">
         <TableHeader>
@@ -85,12 +86,14 @@ export function DataTable<TData, TValue>({
                   headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        {
+                          header.isPlaceholder
+                            ? null
+                            : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )
+                        }
                       </TableHead>
                     )
                   })

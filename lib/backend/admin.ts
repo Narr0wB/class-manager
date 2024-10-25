@@ -14,7 +14,7 @@ type Config = {
 }
 
 type ConfigAdminSelected = {
-  value: string
+  value: "In arrivo" | "Approvate" | "Rifiutate" | "Calendario" | "Riepilogo"
 }
 
 type ConfigPrenCardHeight = {
@@ -29,20 +29,12 @@ const configAdminSelectedAtom = atom<ConfigAdminSelected>({
   value: "In arrivo"
 })
 
-const configPrenCardHeight = atom<ConfigPrenCardHeight>({
-  height: 0
-});
-
 export function usePrenotazione() {
   return useAtom(configAtom)
 }
 
 export function useAdminSelectedSection() {
   return useAtom(configAdminSelectedAtom)
-}
-
-export function usePrenCardHeight() {
-  return useAtom(configPrenCardHeight);
 }
 
 export type DashboardRule = {

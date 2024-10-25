@@ -38,14 +38,6 @@ type AdminDashboardProps = {
   prenotazioni: PrenotazioneInfo[]
 }
 
-const sections = [
-  "In arrivo",
-  "Approvate",
-  "Rifiutate",
-  "Calendario",
-  "Riepilogo"
-]
-
 export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
   const [prenotazione] = usePrenotazione()
   const [_, setRuleset] = useRuleset();
@@ -168,7 +160,9 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
           className="flex flex-col"
         >
           <div className="flex flex-0 items-center justify-between px-4 py-2">
-            <h1 className="text-xl font-bold">{selected.value}</h1>
+            <h1 className="text-xl font-bold">
+              {selected.value}
+            </h1>
             <FiltersDropdown />
           </div>
           <Separator />
@@ -200,7 +194,6 @@ export function AdminDashboard({ prenotazioni }: AdminDashboardProps) {
       <div id="main-content" className="w-screen h-screen flex flex-row max-h-[calc(100dvh-5rem)] overflow-hidden">
         <Nav
           collapsed={navCollapsed}
-          sel={sections.indexOf(selected.value)}
           links={navLinks}
           width={navWidth}
           collapsedWidth={navCollapsedWidth}

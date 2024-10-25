@@ -7,6 +7,7 @@ import { isBefore, isSameDay, isSunday } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import { DateRange, DayMouseEventHandler } from "react-day-picker";
 import ConfirmResetDialog from "./ConfirmResetDialog";
+import Spinner from "../input-section/Spinner";
 
 type Props = {};
 
@@ -37,11 +38,14 @@ export const DisabledDaysPicker = ({ }: Props) => {
   const [initialDisabledCount, setInitialDisabledCount] = useState(0);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     readDatesFromFile().then(dates => {
       setSelectedDates(dates);
       setInitialDisabledCount(dates.length);
+      setLoading(false);
     });
   }, []);
 
@@ -131,7 +135,13 @@ export const DisabledDaysPicker = ({ }: Props) => {
   return (
     <div className="relative size-full flex justify-center items-center gap-8 p-2">
       <div className="absolute w-full h-fit top-0 left-0 right-0 flex flex-col md:flex-row gap-4 justify-between p-4">
-        <h1 className="text-3xl">Giorni disattivati</h1>
+        <h1 className="flex flex-row gap-2 text-3xl">
+          Giorni disattivati
+          {
+            loading &&
+            <Spinner content="" />
+          }
+        </h1>
         <div className="flex flex-row gap-2 md:items-end">
           <Select value={mode} onValueChange={value => setMode(value as any)} defaultValue={modes[0]}>
             <SelectTrigger className="w-[180px]">

@@ -5,6 +5,7 @@ import { DataTable } from "./DataTable"
 import { taskSchema } from "./data/Schema"
 import { useEffect, useState } from "react"
 import { useData } from "./TaskProvider"
+import Spinner from "../../input-section/Spinner"
 
 type TasksProps = {
   children?: React.ReactNode;
@@ -22,16 +23,27 @@ async function getTasks(date: Date) {
 
 const Tasks: React.FC<TasksProps> = (props) => {
   const [prenotazioni, setPrenotazioni] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [data, _] = useData();
 
   useEffect(() => {
-    getTasks(data).then(tasks => { setPrenotazioni(tasks) });
+    setLoading(true);
+    getTasks(data).then(tasks => {
+      setPrenotazioni(tasks);
+      setLoading(false);
+    });
   }, [data])
 
   return (
     <div id="tasks" className="h-full flex flex-col gap-4 p-4">
       <div id="riepilogo-title" className="flex flex-col space-y-2">
-        <h2 className="text-2xl font-bold tracking-tight">Riepilogo</h2>
+        <h2 className="flex flex-row gap-2 text-2xl font-bold tracking-tight">
+          Riepilogo
+          {
+            loading &&
+            <Spinner content="" />
+          }
+        </h2>
         <p className="text-muted-foreground">
           {data.toLocaleString("it-IT").slice(0, 10)}
         </p>
