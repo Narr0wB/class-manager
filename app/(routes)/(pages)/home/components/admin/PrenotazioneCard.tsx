@@ -47,8 +47,7 @@ const PrenotazioneCard: React.FC<PrenotazioneCardProps> = ({ card }) => {
         }
 
         setPrenotazione({
-          ...prenotazione,
-          // If already selected another will de-select it
+          // Clicking on the same card once more will de-select it
           selected: prenotazione.selected == card.id ? -1 : card.id,
         });
       }

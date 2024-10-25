@@ -26,6 +26,7 @@ const HomeClientAdmin: React.FC = () => {
   }, [ruleset, trigger]);
 
   useEffect(() => {
+    setCachelist([]);
     fetchData(100, new Date()).then(result => { setCachelist(result); });
   }, [ruleset, trigger])
 
