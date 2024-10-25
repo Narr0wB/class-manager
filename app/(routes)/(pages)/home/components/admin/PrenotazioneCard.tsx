@@ -79,6 +79,8 @@ const PrenotazioneCard = forwardRef<HTMLButtonElement, PrenotazioneCardProps>(({
 }
 )
 
+PrenotazioneCard.displayName = "PrenotazioneCard";
+
 export default PrenotazioneCard;
 
 function getBadgeVariantFromLabel(

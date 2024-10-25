@@ -33,7 +33,7 @@ export function Nav({ links, collapsed, width, collapsedWidth, className }: NavP
               variant={selected.value == link.title ? "default" : "ghost"}
               onClick={() => {
                 link.action();
-                setSelected({ value: link.title });
+                setSelected({ value: link.title as any });
               }}
               className={cn("w-full flex", collapsed ? "justify-center" : "justify-start")}
             >
