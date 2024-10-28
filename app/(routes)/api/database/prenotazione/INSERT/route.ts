@@ -14,10 +14,18 @@ export async function POST(req: NextRequest) {
   const timeframe = obj.timeframe as TimeFrame;
 
   const prenotazioniCount = await selectPrenotazioneRangeCount(new Date(timeframe.data), timeframe.inizio, timeframe.fine, obj.id_aula);
-  if (prenotazioniCount == undefined || prenotazioniCount != 0) return NextResponse.error();
+  if (prenotazioniCount == undefined || prenotazioniCount != 0) 
+    return NextResponse.json(
+      {error: "Un'altra prenotazione è già presente in questo orario/data"},
+      {status: 500}
+    );
 
   // Just in case someone has selected a day just before admins removed it
-  if (isDateDisabled(timeframe.data, disabledDates.map(str => new Date(str)))) return NextResponse.error();
+  if (isDateDisabled(timeframe.data, disabledDates.map(str => new Date(str))))
+    return NextResponse.json(
+      {error: "Non è possibile prenotare per questo giorno."},
+      {status: 500}
+    );
 
   const user_id = await IDfromEmail(obj.user_email);
   if (!user_id) return NextResponse.error();
