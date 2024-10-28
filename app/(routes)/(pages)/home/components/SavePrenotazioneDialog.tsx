@@ -15,6 +15,7 @@ import { formatDate, minutesToString } from "@/lib/utils";
 import React from "react";
 import { useRerender } from "@/app/components/LayoutProvider";
 import { Button } from "@/components/ui/button";
+import { InsertResponse } from "@/app/(routes)/api/database/prenotazione/INSERT/route";
 
 type SavePrenotazioneDialogProps = {
   open: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
@@ -60,9 +61,9 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
       })
     });
 
-    const message = (await res.json()).error;
+    const body = await res.json() as InsertResponse;
 
-    if (res.status == 200) {
+    if (body.ok) {
       rerenderMap();
       toast({
         title: "Aggiunta prenotazione",
@@ -71,7 +72,7 @@ const SavePrenotazioneDialog: React.FC<SavePrenotazioneDialogProps> = ({ open, a
     } else {
       toast({
         title: "Errore...",
-        description: message,
+        description: body.error,
         action: <Button variant={"ghost"} onClick={handleInsert}>Riprova</Button>,
         variant: "destructive"
       });

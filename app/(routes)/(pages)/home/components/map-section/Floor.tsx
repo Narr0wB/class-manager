@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Map from "@/app/(routes)/(pages)/home/components/map-section/Map";
 import SavePrenotazioneDialog from '../SavePrenotazioneDialog';
 import { useMap } from '@/app/components/LayoutProvider';
-// import { CODES, SEPARATOR } from '@/lib/backend/map';
 import { minutesToString } from '@/lib/utils';
 import InfoPrenotazioneDialog from '../InfoPrenotazioneDialog';
 
@@ -16,7 +15,6 @@ type FloorProps = {
 const Floor: React.FC<FloorProps> = ({ id }) => {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [infoDialogOpen, setInfoDialogOpen] = useState(false);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedAula, setSelectedAula] = useState("");
   const [startHour, setStartHour] = useState("");
   const [endHour, setEndHour] = useState("");

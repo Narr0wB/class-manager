@@ -2,9 +2,10 @@ import { IDfromEmail, PRENOTAZIONE_PENDING, Prenotazione, TimeFrame, insertParte
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/app/(routes)/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
-import disabledDates from '@/public/disabled.json'
 import config from "@/public/config.json";
-import { getLocaleDate, isDateDisabled } from "@/lib/utils";
+import { getLocaleDate, isDateManuallyDisabled } from "@/lib/utils";
+
+export type InsertResponse = { ok: true, id: number } | { ok: false, error: string };
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -14,27 +15,22 @@ export async function POST(req: NextRequest) {
   const timeframe = obj.timeframe as TimeFrame;
 
   const prenotazioniCount = await selectPrenotazioneRangeCount(new Date(timeframe.data), timeframe.inizio, timeframe.fine, obj.id_aula);
-  if (prenotazioniCount == undefined || prenotazioniCount != 0) 
-    return NextResponse.json(
-      {error: "Un'altra prenotazione è già presente in questo orario/data"},
-      {status: 500}
-    );
+  if (prenotazioniCount === undefined)
+    return NextResponse.json<InsertResponse>({ ok: false, error: "Errore con il database!" });
+  else if (prenotazioniCount != 0)
+    return NextResponse.json<InsertResponse>({ ok: false, error: "Un'altra prenotazione è già presente in questo orario/data" });
 
   // Just in case someone has selected a day just before admins removed it
-  if (isDateDisabled(timeframe.data, disabledDates.map(str => new Date(str))))
-    return NextResponse.json(
-      {error: "Non è possibile prenotare per questo giorno."},
-      {status: 500}
-    );
+  if (isDateManuallyDisabled(timeframe.data))
+    return NextResponse.json<InsertResponse>({ ok: false, error: "Non è possibile prenotare per questo giorno." });
 
   const user_id = await IDfromEmail(obj.user_email);
-  if (!user_id) return NextResponse.error();
+  if (!user_id)
+    return NextResponse.json<InsertResponse>({ ok: false, error: "Errore con il database!" });
 
   const pren_user = await numberPrenotazioniUtente(user_id, getLocaleDate(new Date));
-  if (pren_user > config.max.num_prenotazioni_utente - 1) return NextResponse.json(
-    { error: "Hai già 3 prenotazioni attive! Se vuoi crearne una nuova prima eliminane una." },
-    { status: 500 }
-  );
+  if (pren_user > config.max.num_prenotazioni_utente - 1)
+    return NextResponse.json<InsertResponse>({ ok: false, error: "Hai già 3 prenotazioni attive! Se vuoi crearne una nuova prima eliminane una." });
 
   const prenotazione: Prenotazione = {
     id_utente: user_id,
@@ -50,5 +46,5 @@ export async function POST(req: NextRequest) {
 
   await insertPartecipazioni(id_prenotazione, obj.partecipazioni);
 
-  return NextResponse.json({ id: id_prenotazione });
+  return NextResponse.json<InsertResponse>({ ok: true, id: id_prenotazione });
 }

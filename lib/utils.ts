@@ -12,41 +12,51 @@ export function getLocaleDate(date: Date): Date {
   return new Date(date.getTime() + Math.abs(date.getTimezoneOffset() * 60000));
 }
 
-export function getValidDate() {
-  const todayDate = getLocaleDate(new Date);
-  todayDate.setHours(2, 0, 0, 0);
+export function getNextDayDate(date: Date): Date {
+  const nextDayDate = getLocaleDate(new Date);
+  nextDayDate.setDate(date.getDate() + 1);
 
-  const tomorrowDate = getLocaleDate(new Date);
-  tomorrowDate.setDate(todayDate.getDate() + 1);
-
-  let final_date = todayDate.getHours() > config.min.ora_prenotazione ? tomorrowDate : todayDate;
-
-  if (isSunday(final_date)) final_date.setDate(final_date.getDate() + 1);
-
-  return final_date;
+  return nextDayDate;
 }
 
-export function getValidDate2() {
-  let date = getLocaleDate(new Date);
-  while (date.getHours() >= config.min.ora_prenotazione || isDateDisabled(date, disabledList.map(dateString => new Date(dateString))) || isSunday(date)) {
+export function isDateManuallyDisabled(date: Date): boolean {
+  const disabled = disabledList.map(disabledString => new Date(disabledString));
+  return disabled.some(dd => isSameDay(dd, date));
+}
+
+export function getValidDate(): Date {
+  // Note: Do not use getLocaleDate
+  let date = new Date();
+
+  // First check this case alone, as it causes an infinite loop
+  if (date.getHours() >= config.min.ora_prenotazione) {
+    date = getNextDayDate(date);
+    date.setHours(0, 0, 0, 0);
+  }
+
+  // Only check the day from this point
+  while (isDateManuallyDisabled(date) || isSunday(date)) {
     date.setDate(date.getDate() + 1);
   }
+
   return date;
 }
 
-export function isDateBeforeValidDate(date: Date) {
+export function isDateBeforeValidDate(date: Date): boolean {
   const validDate = getValidDate();
-  const locale = getLocaleDate(date); 
+  const locale = getLocaleDate(date);
 
   return isBefore(locale, validDate);
 }
 
-export function isDateDisabled(date: Date, disabled: Date[]) {
-  // const disabledDays = disabledList.map(dateString => new Date(dateString));
-  return disabled.some(dd => isSameDay(dd, date));
+export function getValidMonthDate(): Date {
+  const validDate = getValidDate();
+  const date = new Date();
+  date.setMonth(validDate.getMonth());
+  return date;
 }
 
-export function isDateInSchoolYear(date: Date) {
+export function isDateInSchoolYear(date: Date): boolean {
   const year = date.getFullYear();
   const month = date.getMonth();
   const isSecondHalf = month >= 0 && month <= 5; // 0 = January, 5 = june

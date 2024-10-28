@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { cn, isDateBeforeValidDate } from "@/lib/utils";
+import { cn, isDateBeforeValidDate, isDateManuallyDisabled } from "@/lib/utils";
 import { isBefore, isSameDay, isSunday } from "date-fns";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange, DayMouseEventHandler } from "react-day-picker";
 import ConfirmResetDialog from "./ConfirmResetDialog";
 import Spinner from "../input-section/Spinner";
@@ -40,15 +40,6 @@ export const DisabledDaysPicker = ({ }: Props) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setLoading(true);
-    readDatesFromFile().then(dates => {
-      setSelectedDates(dates);
-      setInitialDisabledCount(dates.length);
-      setLoading(false);
-    });
-  }, []);
-
   async function readDatesFromFile() {
     const res = await fetch("/api/disabled/read", { method: "GET" });
     if (!res.ok) {
@@ -71,7 +62,11 @@ export const DisabledDaysPicker = ({ }: Props) => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(selectedDates), // converts dates to ISO strings
+      body: JSON.stringify(selectedDates.map(date => {
+        date.setHours(0, 0, 0, 0);
+        date.toISOString();
+        return date;
+      })),
     });
     if (!res.ok) {
       toast({
@@ -83,6 +78,15 @@ export const DisabledDaysPicker = ({ }: Props) => {
     }
   };
 
+  useEffect(() => {
+    setLoading(true);
+    readDatesFromFile().then(dates => {
+      setSelectedDates(dates);
+      setInitialDisabledCount(dates.length);
+      setLoading(false);
+    });
+  }, []);
+
   const handleReset = () => {
     setRangeFrom(undefined);
     setSelectedDates([]);
@@ -93,7 +97,9 @@ export const DisabledDaysPicker = ({ }: Props) => {
     setInitialDisabledCount(selectedDates.length);
   }
 
-  const isDisabled = (day: Date) => isDateBeforeValidDate(day) || isSunday(day);
+  // Let admins select only dates after the valid date that were not
+  // selected manually. Exclude sundays
+  const isDisabled = (day: Date) => (isDateBeforeValidDate(day) || isSunday(day)) && !isDateManuallyDisabled(day);
 
   const handleDayClick: DayMouseEventHandler = (day, modifiers) => {
     let selected = Array.from(selectedDates);
